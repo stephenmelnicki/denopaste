@@ -1,11 +1,9 @@
-# fresh project
+![](static/screenshot.png)
 
-### Usage
+# Deno Paste
 
-Start the project:
+A minimal log upload service. 
 
 ```
 deno task start
 ```
-
-This will watch the project directory and restart as necessary.
