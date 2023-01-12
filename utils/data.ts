@@ -1,4 +1,4 @@
-export const MAX_PASTE_CHARACTERS = 2 * 1000 * 10;
+export const MAX_PASTE_CHARACTERS = 2000;
 
 export function uploadText(text: string): Promise<void> {
   console.log("UPLOAD TEXT: ", text.length);
