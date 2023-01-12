@@ -2,7 +2,7 @@
 
 # Deno Paste
 
-A minimal log upload service. 
+A minimal log upload service.
 
 ```
 deno task start
