@@ -34,4 +34,4 @@ jobs:
           deno-version: v1.x
 
       - name: Run tests
-        run: deno task test
+        run: deno test

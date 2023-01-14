@@ -1,23 +1,25 @@
-import { Handlers } from "$fresh/server.ts";
-import { MAX_PASTE_CHARACTERS } from "@/utils/data.ts";
+import { Handler, HandlerContext } from "$fresh/server.ts";
 
-export const handler: Handlers = {
-  GET(req, ctx) {
-    if (ctx.params.id !== "hello") {
-      return ctx.renderNotFound();
+import db from "@/utils/database.ts";
+
+interface Data {
+  contents: string;
+}
+
+export const handler: Handler<Data> = async (
+  _req: Request,
+  ctx: HandlerContext<Data>,
+): Promise<Response> => {
+  try {
+    const contents = await db.getEntry(ctx.params.id);
+
+    if (contents === undefined) {
+      return new Response("entry not found", { status: 404 });
     }
 
-    return new Response("hello");
-  },
-  OPTIONS(req, ctx) {
-    return new Response(undefined, {
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Methods": "GET, PUT",
-        "Access-Control-Allow-Headers": "Content-Type",
-      },
-    });
-  },
-  //PUT(req, ctx){}
-  //POST(_req: Request, _ctx: HandlerContext){}
+    return new Response(contents, { status: 200 });
+  } catch (err) {
+    console.error(err);
+    return new Response("server error", { status: 500 });
+  }
 };

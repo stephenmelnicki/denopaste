@@ -10,6 +10,7 @@
     "twind": "https://esm.sh/twind@0.16.17",
     "twind/": "https://esm.sh/twind@0.16.17/",
     "icons/": "https://deno.land/x/tabler_icons_tsx@0.0.2/tsx/",
-    "$std/": "https://deno.land/std@0.154.0/"
+    "$std/": "https://deno.land/std@0.154.0/",
+    "supabase": "https://esm.sh/@supabase/supabase-js@1.35.3"
   }
 }

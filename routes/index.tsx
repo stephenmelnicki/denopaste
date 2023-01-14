@@ -1,33 +1,41 @@
-import { asset, Head } from "$fresh/runtime.ts";
-import { PageProps } from "$fresh/server.ts";
+import { Handlers, PageProps } from "$fresh/server.ts";
 
+import db from "@/utils/database.ts";
+import { generateEntryId } from "@/utils/random.ts";
+
+import ContentMeta from "@/components/ContentMeta.tsx";
 import Header from "@/components/Header.tsx";
 import Footer from "@/components/Footer.tsx";
 import UploadForm from "@/islands/UploadForm.tsx";
 
-const TITLE = "Deno Paste";
-const DESCRIPTION = "A minimal log upload service";
+const MAX_TEXT_LENGTH = 262144000;
+
+export const handler: Handlers = {
+  async POST(req, _ctx) {
+    const id = generateEntryId();
+    const contents = await req.text();
+
+    if (contents.length > MAX_TEXT_LENGTH) {
+      return new Response("contents exceed maximum length", { status: 400 });
+    }
+
+    try {
+      await db.insertEntry(id, contents);
+      return new Response(id, { status: 201 });
+    } catch (err) {
+      console.error(err);
+      return new Response("server error", { status: 500 });
+    }
+  },
+};
 
 export default function MainPage(props: PageProps) {
-  const ogImageUrl = new URL(asset("/og-image.png"), props.url).href;
-
   return (
-    <>
-      <Head>
-        <title>{TITLE}</title>
-        <meta name="description" content={DESCRIPTION} />
-        <meta property="og:title" content={TITLE} />
-        <meta property="og:description" content={DESCRIPTION} />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={props.url.href} />
-        <meta property="og:image" content={ogImageUrl} />
-      </Head>
-
-      <div class="bg-white flex flex-col w-full max-w-screen-sm mx-auto gap-8 px-8 py-8">
-        <Header />
-        <UploadForm />
-        <Footer />
-      </div>
-    </>
+    <body class="flex flex-col w-full h-full max-w-screen-sm mx-auto py-6 px-4 text-gray-900">
+      <ContentMeta url={props.url} />
+      <Header />
+      <UploadForm />
+      <Footer />
+    </body>
   );
 }

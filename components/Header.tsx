@@ -2,13 +2,12 @@ import DenoIcon from "icons/brand-deno.tsx";
 
 export default function Header() {
   return (
-    <div class="flex-1">
+    <header>
       <div class="flex items-center gap-2">
-        <DenoIcon />
+        <DenoIcon alt="Deno logo" />
         <h2 class="font-bold text-2xl">Deno Paste</h2>
       </div>
-
-      <p class="text-gray-700">A minimal log upload service</p>
-    </div>
+      <p>A minimal text storage service</p>
+    </header>
   );
 }
