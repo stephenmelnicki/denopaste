@@ -1,9 +1,9 @@
 import { assertEquals } from "$std/testing/asserts.ts";
-import { CHARS, generateEntryId, LENGTH } from "./random.ts";
+import { CHARS, generateId, LENGTH } from "./random.ts";
 
-Deno.test("generateEntryId", () => {
+Deno.test("generateId", () => {
   const ids = Array.from({ length: 10 }, (_, key) => key).map(() =>
-    generateEntryId()
+    generateId()
   );
 
   const result = ids.every((id) => {
