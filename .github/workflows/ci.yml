@@ -22,6 +22,9 @@ jobs:
       - name: Lint
         run: deno lint
 
+      - name: Type Check
+        run: deno check main.ts
+
   test:
     runs-on: ubuntu-22.04
     steps:
