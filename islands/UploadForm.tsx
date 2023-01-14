@@ -42,7 +42,7 @@ export default function UploadForm() {
         .then((id) =>
           message.value = {
             type: "success",
-            contents: "Entry Saved.",
+            contents: "Text Saved.",
             url: new URL(`${document.location}${id}`),
           }
         )

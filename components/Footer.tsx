@@ -26,5 +26,3 @@ export default function Footer() {
     </footer>
   );
 }
-
-// hover:(bg-green-200 border-green-500)
