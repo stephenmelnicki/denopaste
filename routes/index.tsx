@@ -1,7 +1,7 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 
 import db from "@/utils/database.ts";
-import { generateEntryId } from "@/utils/random.ts";
+import { generateId } from "@/utils/random.ts";
 
 import ContentMeta from "@/components/ContentMeta.tsx";
 import Header from "@/components/Header.tsx";
@@ -12,7 +12,7 @@ const MAX_TEXT_LENGTH = 262144000;
 
 export const handler: Handlers = {
   async POST(req, _ctx) {
-    const id = generateEntryId();
+    const id = generateId();
     const contents = await req.text();
 
     if (contents.length > MAX_TEXT_LENGTH) {
