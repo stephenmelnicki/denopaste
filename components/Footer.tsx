@@ -16,7 +16,7 @@ export default function Footer() {
 
       <a
         class="flex items-center gap-1 hover:underline focus:underline"
-        href="https://github.com/stephenmelnicki/denopaste"
+        href="https://github.com/stephenmelnicki/deno_paste"
         rel="noopener noreferrer"
         target="_blank"
       >
