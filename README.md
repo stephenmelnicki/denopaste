@@ -12,7 +12,7 @@ Set up your `.env` with Supabase credentials:
 cp .env.example .env
 ```
 
-Create a supabase project:
+Create a Supabase project:
 
 * Navigate to https://app.supabase.io/
 * Create a New Project
