@@ -1,6 +1,5 @@
 import { Signal, useSignal } from "@preact/signals";
-
-import Alert, { Message } from "./Alert.tsx";
+import Alert, { Message } from "@/components/Alert.tsx";
 
 const MAX_TEXT_LENGTH = 262144000;
 
