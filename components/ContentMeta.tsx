@@ -1,6 +1,5 @@
 import { asset, Head } from "$fresh/runtime.ts";
 
-const TITLE = "Deno Paste";
 const DESCRIPTION = "A minimal text storage service";
 const KEYWORDS = [
   "deno",
@@ -14,6 +13,7 @@ const TYPE = "website";
 const LOCALE = "en_US";
 
 interface ContentMetaProps {
+  title: string;
   url: URL;
 }
 
@@ -22,9 +22,9 @@ export default function ContentMeta(props: ContentMetaProps) {
 
   return (
     <Head>
-      <title>{TITLE}</title>
+      <title>{props.title}</title>
       <meta name="description" content={DESCRIPTION} />
-      <meta property="og:title" content={TITLE} />
+      <meta property="og:title" content={props.title} />
       <meta property="og:description" content={DESCRIPTION} />
       <meta property="og:url" content={props.url.href} />
       <meta property="og:image" content={ogImageUrl} />
