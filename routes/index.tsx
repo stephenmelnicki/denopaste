@@ -32,7 +32,7 @@ export const handler: Handlers = {
 
 export default function MainPage(props: PageProps) {
   return (
-    <body class="max-w-screen-sm mx-auto my-6 text-gray-900">
+    <body class="w-full max-w-screen-sm mx-auto my-6 text-gray-900">
       <ContentMeta title={TITLE} url={props.url} />
       <Header />
       <UploadForm />

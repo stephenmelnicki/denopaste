@@ -31,7 +31,7 @@ interface EntryPageProps extends PageProps {
 
 export default function EntryPage(props: EntryPageProps) {
   return (
-    <body class="flex flex-col w-full h-full max-w-screen-sm mx-auto py-6 px-4 text-gray-900">
+    <body class="w-full max-w-screen-sm mx-auto py-6 px-4 text-gray-900">
       <ContentMeta title={TITLE} url={props.url} />
       <Header />
       <Entry contents={props.data.contents} />
