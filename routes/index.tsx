@@ -13,13 +13,13 @@ const MAX_TEXT_LENGTH = 262144000;
 
 export const handler: Handlers = {
   async POST(req, _ctx) {
-    const id = generateId();
     const contents = await req.text();
 
     if (contents.length > MAX_TEXT_LENGTH) {
       return new Response("contents exceed maximum length", { status: 400 });
     }
 
+    const id = generateId();
     try {
       await db.insertEntry(id, contents);
       return new Response(id, { status: 201 });
@@ -32,7 +32,7 @@ export const handler: Handlers = {
 
 export default function MainPage(props: PageProps) {
   return (
-    <body class="w-full max-w-screen-sm mx-auto my-6 text-gray-900">
+    <body class="w-full max-w-screen-sm mx-auto py-6 px-4 text-gray-900">
       <ContentMeta title={TITLE} url={props.url} />
       <Header />
       <UploadForm />

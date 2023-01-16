@@ -9,7 +9,7 @@ const TITLE = "Server Error | Deno Paste";
 
 export default function ServerError(props: ErrorPageProps) {
   return (
-    <body class="flex flex-col w-full h-full max-w-screen-sm mx-auto py-6 px-4 text-gray-900">
+    <body class="w-full max-w-screen-sm mx-auto py-6 px-4 text-gray-900">
       <ContentMeta title={TITLE} url={props.url} />
       <Header />
       <ErrorCode

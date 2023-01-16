@@ -1,12 +1,7 @@
 import { createClient, SupabaseClient } from "supabase";
 
-export interface Database {
-  insertEntry(id: string, contents: string): Promise<string>;
-  getEntry(id: string): Promise<string | undefined>;
-}
-
-class Db implements Database {
-  private client: SupabaseClient;
+class Database {
+  private readonly client: SupabaseClient;
 
   constructor() {
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
@@ -29,19 +24,20 @@ class Db implements Database {
     return id;
   }
 
-  async getEntry(id: string): Promise<string | undefined> {
+  async getEntry(id: string) {
     const { data, error } = await this.client
       .from("entries")
       .select("contents")
-      .eq("id", id);
+      .eq("id", id)
+      .limit(1);
 
     if (error) {
       throw new Error(error.message);
     }
 
-    return data.length === 0 ? undefined : data[0].contents;
+    return data[0];
   }
 }
 
-const db: Database = new Db();
+const db = new Database();
 export default db;
