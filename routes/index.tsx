@@ -8,6 +8,7 @@ import Header from "@/components/Header.tsx";
 import Footer from "@/components/Footer.tsx";
 import UploadForm from "@/islands/UploadForm.tsx";
 
+const TITLE = "Deno Paste";
 const MAX_TEXT_LENGTH = 262144000;
 
 export const handler: Handlers = {
@@ -31,8 +32,8 @@ export const handler: Handlers = {
 
 export default function MainPage(props: PageProps) {
   return (
-    <body class="flex flex-col w-full h-full max-w-screen-sm mx-auto py-6 px-4 text-gray-900">
-      <ContentMeta url={props.url} />
+    <body class="max-w-screen-sm mx-auto my-6 text-gray-900">
+      <ContentMeta title={TITLE} url={props.url} />
       <Header />
       <UploadForm />
       <Footer />
