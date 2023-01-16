@@ -71,7 +71,7 @@ export default function UploadForm() {
           id="upload-textarea"
           name="upload-textarea"
           aria-label="upload textarea"
-          class="min-w-full h-44 px-2 py-2 border-2 border-black rounded font-mono"
+          class="min-w-full h-44 p-2 border-2 border-black rounded font-mono"
           type="text"
           placeholder="Enter your text here."
           maxLength={MAX_TEXT_LENGTH}
