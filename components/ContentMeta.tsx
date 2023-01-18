@@ -1,6 +1,6 @@
 import { asset, Head } from "$fresh/runtime.ts";
 
-const DESCRIPTION = "A minimal text storage service";
+const DESCRIPTION = "A minimal plain text storage service";
 const KEYWORDS = [
   "deno",
   "fresh",

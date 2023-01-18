@@ -1,17 +1,17 @@
 import { Signal, useSignal } from "@preact/signals";
-import Alert, { Message } from "@/components/Alert.tsx";
+import Alert from "@/components/Alert.tsx";
 
 const MAX_TEXT_LENGTH = 262144000;
 
 export default function UploadForm() {
   const text: Signal<string> = useSignal("");
+  const message: Signal<string | undefined> = useSignal(undefined);
   const isUploading: Signal<boolean> = useSignal(false);
-  const message: Signal<Message | undefined> = useSignal(undefined);
 
-  const onInput = (event: Event) => {
-    if (event.target instanceof HTMLTextAreaElement) {
-      event.preventDefault();
-      text.value = event.target.value;
+  const onInput = (e: Event) => {
+    if (e.target instanceof HTMLTextAreaElement) {
+      e.preventDefault();
+      text.value = e.target.value;
     }
   };
 
@@ -34,23 +34,14 @@ export default function UploadForm() {
     e.preventDefault();
 
     if (text.value.length > 0) {
-      message.value = undefined;
       isUploading.value = true;
+      message.value = undefined;
 
       return await createNewEntry(text.value)
-        .then((id) =>
-          message.value = {
-            type: "success",
-            contents: "Saved.",
-            url: new URL(`${document.location}${id}`),
-          }
-        )
+        .then((id) => window.location.pathname = `/${id}`)
         .catch((err) => {
           console.error(err);
-          message.value = {
-            type: "error",
-            contents: "Failed to save text. Please try again.",
-          } as Message;
+          message.value = "Failed to save text. Please try again.";
         })
         .finally(() => isUploading.value = false);
     }
@@ -80,7 +71,7 @@ export default function UploadForm() {
           required
         />
         <small class="py-1 text-xs text-right">
-          Saved text is wiped every few hours.
+          Stored text is wiped every few hours.
         </small>
         <div class="ml-auto py-4">
           <button
@@ -88,7 +79,7 @@ export default function UploadForm() {
             class="px-3 py-2 border-2 border-black rounded hover:underline focus:underline disabled:(opacity-40 cursor-not-allowed)"
             disabled={isUploading.value}
           >
-            {isUploading.value ? "Submitting..." : "Submit"}
+            {isUploading.value ? "Pasting..." : "Paste"}
           </button>
         </div>
       </form>

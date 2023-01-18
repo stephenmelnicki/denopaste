@@ -7,7 +7,7 @@ export default function Header() {
         <DenoIcon alt="Deno logo" />
         <h2 class="font-bold text-2xl">Deno Paste</h2>
       </a>
-      <p>A minimal text storage service</p>
+      <p>A minimal plain text storage service</p>
     </header>
   );
 }
