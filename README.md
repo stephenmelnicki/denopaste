@@ -2,7 +2,7 @@
 
 # Deno Paste
 
-A minimal text storage service built using [Fresh](https://fresh.deno.dev/),
+A minimal plain text storage service built using [Deno](https://deno.land/), [Fresh](https://fresh.deno.dev/),
 [twind](https://twind.dev/) and [Supabase](https://supabase.io/).
 
 ## Quickstart
