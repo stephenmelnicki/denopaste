@@ -51,7 +51,7 @@ export default function UploadForm() {
     <main class="relative">
       <Alert message={message.value} />
       <form
-        class="flex flex-col flex-1 w-full py-6 relative"
+        class="flex flex-col flex-1 w-full py-8 relative"
         onSubmit={onSubmit}
       >
         <label class="sr-only" for="upload-textarea">
@@ -70,7 +70,7 @@ export default function UploadForm() {
           autoFocus
           required
         />
-        <small class="py-1 text-xs text-right">
+        <small class="py-1 text-right">
           Stored text is wiped every few hours.
         </small>
         <div class="ml-auto py-4">

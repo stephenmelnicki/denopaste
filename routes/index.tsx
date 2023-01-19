@@ -32,11 +32,9 @@ export const handler: Handlers = {
 
 export default function MainPage(props: PageProps) {
   return (
-    <body class="w-full max-w-screen-sm mx-auto py-6 px-4 text-gray-900">
-      <ContentMeta title={TITLE} url={props.url} />
-      <Header />
+    <div>
+      <ContentMeta title="Deno Paste" url={props.url} />
       <UploadForm />
-      <Footer />
-    </body>
+    </div>
   );
 }

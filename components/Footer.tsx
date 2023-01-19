@@ -3,9 +3,9 @@ import GithubIcon from "icons/brand-github.tsx";
 
 export default function Footer() {
   return (
-    <footer class="flex flex-row justify-end gap-4 text-sm">
+    <footer class="flex flex-row justify-end gap-4">
       <a
-        class="flex flex-row items-center gap-1 hover:underline focus:underline"
+        class="flex flex-row items-center gap-2 hover:underline focus:underline"
         href="https://fresh.deno.dev"
         rel="noopener noreferrer"
         target="_blank"
@@ -15,7 +15,7 @@ export default function Footer() {
       </a>
 
       <a
-        class="flex flex-row items-center gap-1 hover:underline focus:underline"
+        class="flex flex-row items-center gap-2 hover:underline focus:underline"
         href="https://github.com/stephenmelnicki/deno_paste"
         rel="noopener noreferrer"
         target="_blank"
