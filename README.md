@@ -17,9 +17,11 @@ cp .env.example .env
 Create a Supabase project:
 
 - Navigate to https://app.supabase.com/
-- Create a New Project
-- Enter project details and launch
-- Copy the URL and api key and save them to `.env`
+- Create a new project
+- Add a new database table to your project and name it `entries`.
+- Change the `id` column type from `int8` to `text`.
+- Add a new column to your table named `contents` with type `text`.
+- Finally, go to Settings > API, copy the URL and api key and save to `.env`.
 
 Then start the server:
 
