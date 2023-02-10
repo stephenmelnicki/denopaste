@@ -4,8 +4,6 @@ import db from "@/utils/database.ts";
 import { generateId } from "@/utils/random.ts";
 
 import ContentMeta from "@/components/ContentMeta.tsx";
-import Header from "@/components/Header.tsx";
-import Footer from "@/components/Footer.tsx";
 import UploadForm from "@/islands/UploadForm.tsx";
 
 const TITLE = "Deno Paste";
