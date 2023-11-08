@@ -51,7 +51,7 @@ export default function UploadForm() {
         id="upload-textarea"
         name="upload-textarea"
         aria-label="upload textarea"
-        class="min-w-full h-44 p-2 border rounded-md"
+        class="min-w-full h-44 p-2 border rounded-md border-gray-200 hover:border-gray-400"
         type="text"
         placeholder="Enter your text here"
         maxLength={MAX_INPUT_LENGTH}
@@ -61,10 +61,13 @@ export default function UploadForm() {
         required
       >
       </textarea>
-      <div class="ml-auto mt-4">
+      <p class="py-1 text-right text-sm text-gray-600">
+        Stored text is wiped every few hours.
+      </p>
+      <div class="ml-auto my-4">
         <button
           type="submit"
-          class="px-4 py-2 text-sm text-white font-semibold bg-blue-500 rounded"
+          class="px-4 py-2 text-sm border rounded border-blue-500 font-semibold text-white bg-blue-500 hover:bg-white hover:text-blue-500"
           disabled={inProgress.value}
         >
           Submit

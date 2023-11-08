@@ -7,7 +7,6 @@ A minimal plain text storage service built with Deno and Fresh.
 ## Features
 
 - Global persistent data using Deno KV
-- Sends updates from server to clients using EventSource (server-sent events)
 
 This project is hosted on Deno Deploy:
 
