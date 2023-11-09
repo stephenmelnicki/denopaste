@@ -4,12 +4,11 @@ const db = await Deno.openKv();
 
 const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 
-export async function createEntry(
+export async function createNewEntry(
   entry: Entry,
   expireIn: number = ONE_HOUR_IN_MS,
 ) {
   await db.set(["entries", entry.id], entry, { expireIn });
-  return entry.id;
 }
 
 export async function getEntryById(id: string) {

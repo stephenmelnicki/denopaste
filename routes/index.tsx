@@ -5,19 +5,34 @@ import Header from "components/Header.tsx";
 import Footer from "components/Footer.tsx";
 import UploadForm from "islands/UploadForm.tsx";
 
-import { createEntry } from "utils/db.ts";
+import { createNewEntry } from "utils/db.ts";
 import { createId } from "utils/id.ts";
 import type { Entry } from "utils/types.ts";
-import { exceedsStorageLimit } from "utils/limit.ts";
 
 export const handler: Handlers = {
+  OPTIONS(req, _ctx) {
+    const origin = req.headers.get("Origin") || "*";
+    const resp = new Response(null, { status: 204 });
+    const headers = resp.headers;
+
+    headers.set("Access-Control-Allow-Origin", origin);
+    headers.set("Access-Control-Allow-Headers", "Accept, Content-Type");
+    headers.set("Access-Control-Allow-Methods", "OPTIONS, GET, POST");
+
+    return resp;
+  },
   async POST(req, _ctx) {
     const contents = await req.text();
 
-    if (exceedsStorageLimit(contents)) {
-      console.log("error saving text. request body too large.");
-      return new Response("request body exceeds limit of 64 KiB", {
-        headers: { "Content-Type": "text/plain; charset=UTF-8" },
+    if (contents.length === 0) {
+      console.log("request body was empty.");
+      return new Response("request body empty", { status: 400 });
+    }
+
+    // values in KV have a maximum size limit of 64 KiB
+    if (new TextEncoder().encode(contents).length > (64 * 1024)) {
+      console.log("request body too large.");
+      return new Response("request body cannot exceed maximum size of 64 KiB", {
         status: 400,
       });
     }
@@ -28,20 +43,17 @@ export const handler: Handlers = {
     };
 
     try {
-      await createEntry(entry);
+      await createNewEntry(entry);
       console.log(
         `entry "${entry.id}" saved (${entry.contents.length} characters).`,
       );
-      return new Response(JSON.stringify({ "id": entry.id }), {
+      return new Response(JSON.stringify({ id: entry.id }), {
         headers: { "Content-Type": "application/json" },
         status: 201,
       });
     } catch (err) {
       console.log("failed to save entry:", err);
-      return new Response("server error", {
-        headers: { "Content-Type": "text/plain; charset=UTF-8" },
-        status: 500,
-      });
+      return new Response("server error", { status: 500 });
     }
   },
 };

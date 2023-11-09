@@ -8,15 +8,9 @@ export const handler: Handlers<Entry> = {
     const entry = await getEntryById(ctx.params.id);
 
     if (entry === null) {
-      return new Response("entry not found", {
-        headers: { "Content-Type": "text/plain; charset=UTF-8" },
-        status: 404,
-      });
+      return new Response("entry not found", { status: 404 });
     }
 
-    return new Response(entry.contents, {
-      headers: { "Content-Type": "text/plain; charset=UTF-8" },
-      status: 200,
-    });
+    return new Response(entry.contents, { status: 200 });
   },
 };
