@@ -67,7 +67,7 @@ export default function UploadForm() {
       <div class="ml-auto my-4">
         <button
           type="submit"
-          class="px-4 py-2 text-sm border rounded border-blue-500 font-semibold text-white bg-blue-500 hover:bg-white hover:text-blue-500"
+          class="px-4 py-2 text-sm border rounded border-blue-600 font-semibold text-white bg-blue-600 hover:bg-white hover:text-blue-600"
           disabled={inProgress.value}
         >
           Submit
