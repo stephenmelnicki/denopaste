@@ -28,7 +28,8 @@ export default function UploadForm() {
     });
 
     if (!response.ok) {
-      throw new Error(response.statusText);
+      const message = await response.text();
+      throw new Error(message);
     }
 
     const data = await response.json();
@@ -48,7 +49,7 @@ export default function UploadForm() {
       const entry = await createEntry(text.value);
       window.location.pathname = `/${entry.id}`;
     } catch (err) {
-      error.value = err.message === "Bad Request"
+      error.value = err.message !== "server error"
         ? "Pastes are limited to a maximum size of 64 KiB."
         : "Failed to save entry. Please try again.";
     } finally {
