@@ -16,7 +16,10 @@ export const handler: Handlers = {
     const contents = await req.text();
 
     if (contents.length > MAX_TEXT_LENGTH) {
-      return new Response("contents exceed maximum length", { status: 400 });
+      return new Response("contents exceed maximum length", {
+        headers: { "Content-Type": "text/plain; charset=UTF-8" },
+        status: 400,
+      });
     }
 
     const entry: Entry = {
@@ -26,13 +29,17 @@ export const handler: Handlers = {
 
     try {
       await createEntry(entry);
+      console.log("entry created", entry);
       return new Response(JSON.stringify({ "id": entry.id }), {
         headers: { "Content-Type": "application/json" },
         status: 201,
       });
     } catch (err) {
-      console.error(err);
-      return new Response("server error", { status: 500 });
+      console.error("failed to create entry", err, entry);
+      return new Response("server error", {
+        headers: { "Content-Type": "text/plain; charset=UTF-8" },
+        status: 500,
+      });
     }
   },
 };
