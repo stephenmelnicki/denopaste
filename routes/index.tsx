@@ -8,15 +8,15 @@ import UploadForm from "islands/UploadForm.tsx";
 import { createEntry } from "utils/db.ts";
 import { createId } from "utils/id.ts";
 import type { Entry } from "utils/types.ts";
-
-const MAX_TEXT_LENGTH = 262144000;
+import { exceedsStorageLimit } from "utils/limit.ts";
 
 export const handler: Handlers = {
   async POST(req, _ctx) {
     const contents = await req.text();
 
-    if (contents.length > MAX_TEXT_LENGTH) {
-      return new Response("contents exceed maximum length", {
+    if (exceedsStorageLimit(contents)) {
+      console.log("error saving text. request body too large.");
+      return new Response("request body exceeds limit of 64 KiB", {
         headers: { "Content-Type": "text/plain; charset=UTF-8" },
         status: 400,
       });
@@ -29,13 +29,15 @@ export const handler: Handlers = {
 
     try {
       await createEntry(entry);
-      console.log("entry created", entry);
+      console.log(
+        `entry "${entry.id}" saved (${entry.contents.length} characters).`,
+      );
       return new Response(JSON.stringify({ "id": entry.id }), {
         headers: { "Content-Type": "application/json" },
         status: 201,
       });
     } catch (err) {
-      console.error("failed to create entry", err, entry);
+      console.log("failed to save entry:", err);
       return new Response("server error", {
         headers: { "Content-Type": "text/plain; charset=UTF-8" },
         status: 500,
