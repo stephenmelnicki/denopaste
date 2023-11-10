@@ -46,8 +46,8 @@ export default function UploadForm() {
 
     inProgress.value = true;
     try {
-      const entry = await createEntry(text.value);
-      window.location.pathname = `/${entry.id}`;
+      const id = await createEntry(text.value);
+      window.location.pathname = `/${id}`;
     } catch (err) {
       error.value = err.message !== "server error"
         ? "Pastes are limited to a maximum size of 64 KiB."
