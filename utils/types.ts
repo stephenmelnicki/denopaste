@@ -1,4 +1,4 @@
-export interface Entry {
+export interface Paste {
   id: string;
   contents: string;
 }

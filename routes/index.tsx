@@ -5,9 +5,11 @@ import Header from "components/Header.tsx";
 import Footer from "components/Footer.tsx";
 import UploadForm from "islands/UploadForm.tsx";
 
-import { createNewEntry } from "utils/db.ts";
+import { createNewPaste } from "utils/db.ts";
 import { createId } from "utils/id.ts";
-import type { Entry } from "utils/types.ts";
+import type { Paste } from "utils/types.ts";
+
+const MAX_SIZE = 64 * 1024; // 64 KiB
 
 export const handler: Handlers = {
   OPTIONS(req, _ctx) {
@@ -22,37 +24,40 @@ export const handler: Handlers = {
     return resp;
   },
   async POST(req, _ctx) {
-    const contents = await req.text();
-
-    if (contents.length === 0) {
-      console.log("request body was empty.");
-      return new Response("request body empty", { status: 400 });
-    }
-
-    // values in KV have a maximum size limit of 64 KiB
-    if (new TextEncoder().encode(contents).length > (64 * 1024)) {
-      console.log("request body too large.");
-      return new Response("request body cannot exceed maximum size of 64 KiB", {
-        status: 400,
-      });
-    }
-
-    const entry: Entry = {
-      id: createId(),
-      contents,
-    };
-
     try {
-      await createNewEntry(entry);
+      const contents = await req.text();
+
+      if (contents.length === 0) {
+        console.log("request body was empty.");
+        return new Response("request body empty", { status: 400 });
+      }
+
+      // values in KV have a maximum size limit of 64 KiB
+      if (new TextEncoder().encode(contents).length > MAX_SIZE) {
+        console.log("request body too large.");
+        return new Response(
+          "request body cannot exceed maximum size of 64 KiB",
+          {
+            status: 400,
+          },
+        );
+      }
+
+      const paste: Paste = {
+        id: createId(),
+        contents,
+      };
+
+      await createNewPaste(paste);
       console.log(
-        `entry "${entry.id}" saved (${entry.contents.length} characters).`,
+        `paste "${paste.id}" saved (${paste.contents.length} characters).`,
       );
-      return new Response(JSON.stringify({ id: entry.id }), {
+      return new Response(JSON.stringify({ id: paste.id }), {
         headers: { "Content-Type": "application/json" },
         status: 201,
       });
     } catch (err) {
-      console.log("failed to save entry:", err);
+      console.log("failed to save paste:", err);
       return new Response("server error", { status: 500 });
     }
   },

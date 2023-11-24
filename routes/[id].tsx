@@ -1,16 +1,16 @@
 import { Handlers } from "$fresh/server.ts";
 
-import { Entry } from "utils/types.ts";
-import { getEntryById } from "utils/db.ts";
+import { Paste } from "utils/types.ts";
+import { getPasteById } from "utils/db.ts";
 
-export const handler: Handlers<Entry> = {
+export const handler: Handlers<Paste> = {
   async GET(_req, ctx) {
-    const entry = await getEntryById(ctx.params.id);
+    const paste = await getPasteById(ctx.params.id);
 
-    if (entry === null) {
-      return new Response("entry not found", { status: 404 });
+    if (paste === null) {
+      return new Response("paste not found", { status: 404 });
     }
 
-    return new Response(entry.contents, { status: 200 });
+    return new Response(paste.contents, { status: 200 });
   },
 };

@@ -21,7 +21,7 @@ export default function UploadForm() {
     }
   };
 
-  const createEntry = async (contents: string) => {
+  const createPaste = async (contents: string) => {
     const response = await fetch("/", {
       method: "POST",
       body: contents,
@@ -46,7 +46,7 @@ export default function UploadForm() {
 
     inProgress.value = true;
     try {
-      const id = await createEntry(text.value);
+      const id = await createPaste(text.value);
       window.location.pathname = `/${id}`;
     } catch (err) {
       error.value = err.message !== "server error"
@@ -60,22 +60,21 @@ export default function UploadForm() {
   return (
     <form class="flex flex-col my-6" onSubmit={onSubmit}>
       <label class="sr-only" for="upload-textarea">
-        Contents
+        Enter your text here
       </label>
       <textarea
         ref={textarea}
         id="upload-textarea"
         name="upload-textarea"
         aria-label="upload textarea"
-        class="min-w-full h-44 p-2 border rounded-md border-gray-200 hover:border-gray-400 font-mono"
+        class="min-w-full h-44 p-2 font-mono border rounded-md border-gray-200 hover:border-gray-400"
         type="text"
         placeholder="Your text goes here..."
         value={text.value}
         onInput={onInput}
         autoFocus
         required
-      >
-      </textarea>
+      />
       {error.value && (
         <p class="pt-1 text-right text-sm text-red-500">
           {error.value}

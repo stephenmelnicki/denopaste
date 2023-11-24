@@ -1,17 +1,17 @@
-import { Entry } from "utils/types.ts";
+import { Paste } from "utils/types.ts";
 
-const db = await Deno.openKv();
+const kv = await Deno.openKv();
 
 const ONE_HOUR_IN_MS = 60 * 60 * 1000;
 
-export async function createNewEntry(
-  entry: Entry,
+export async function createNewPaste(
+  paste: Paste,
   expireIn: number = ONE_HOUR_IN_MS,
 ) {
-  await db.set(["entries", entry.id], entry, { expireIn });
+  await kv.set(["pastes", paste.id], paste, { expireIn });
 }
 
-export async function getEntryById(id: string) {
-  const res = await db.get<Entry>(["entries", id]);
+export async function getPasteById(id: string) {
+  const res = await kv.get<Paste>(["pastes", id]);
   return res.value;
 }

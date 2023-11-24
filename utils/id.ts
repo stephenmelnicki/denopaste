@@ -1,13 +1,10 @@
-export const LENGTH = 8;
 export const CHARS =
-  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    .split("");
+  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 function getRandomCharacter(): string {
-  const index = Math.floor(Math.random() * CHARS.length - 1) + 1;
-  return CHARS[index];
+  return CHARS.charAt(Math.floor(Math.random() * CHARS.length));
 }
 
-export function createId(length = LENGTH): string {
+export function createId(length = 8): string {
   return Array.from({ length }, getRandomCharacter).join("");
 }
