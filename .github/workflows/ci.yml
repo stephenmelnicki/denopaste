@@ -14,7 +14,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        deno: ["canary", "v1.x"]
+        deno: ["v1.x"]
         os: [macOS-latest, windows-latest, ubuntu-latest]
         include:
         - os: ubuntu-latest
@@ -38,19 +38,6 @@ jobs:
 
       - name: Run linter
         run: deno lint
-
-      - name: Cache dependencies and Chrome
-        uses: actions/cache@v4
-        with:
-          path: |
-            ${{ matrix.cache_path }}deps
-            ${{ matrix.cache_path }}deno_puppeteer
-          key: ${{ runner.os }}-${{ hashFiles('**/*deps.ts', 'tests/fixture_twind_hydrate/twind.config.ts') }}
-
-      - name: Install Chromium
-        run: deno run -A --unstable https://deno.land/x/puppeteer@16.2.0/install.ts
-        env:
-          PUPPETEER_PRODUCT: chrome
 
       - name: Type check project
         run: deno task check
