@@ -1,12 +1,11 @@
 # Deno Paste
 
-![Screenshot](./static/screenshot.png)
-
 A minimal plain text storage service built with Deno and Fresh.
 
 ## Features
 
-- Global persistent data using Deno KV
+- Persistent text storage using Deno KV
+- Stored pastes are automatically removed after one hour
 
 This project is hosted on Deno Deploy:
 
@@ -16,6 +15,12 @@ This project is hosted on Deno Deploy:
 - Code is deployed automatically when pushed to GitHub
 - Automatic HTTPS (even for custom domains)
 - Free for most hobby use cases
+
+## Example
+
+You can try it out at https://deno-paste.deno.dev
+
+![Screenshot](./static/screenshot.png)
 
 ## Development
 
