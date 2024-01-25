@@ -58,41 +58,43 @@ export default function UploadForm() {
   };
 
   return (
-    <form class="flex flex-col my-6" onSubmit={onSubmit}>
-      <label class="sr-only" for="upload-textarea">
-        Enter your text here
-      </label>
-      <textarea
-        ref={textarea}
-        id="upload-textarea"
-        name="upload-textarea"
-        aria-label="upload textarea"
-        class="min-w-full h-44 p-2 font-mono border rounded-md border-gray-200 hover:border-gray-400"
-        type="text"
-        placeholder="Your text goes here..."
-        value={text.value}
-        onInput={onInput}
-        autoFocus
-        required
-      />
-      {error.value && (
-        <p class="pt-1 text-right text-sm text-red-500">
-          {error.value}
-        </p>
-      )}
+    <main>
+      <form class="flex flex-col my-6" onSubmit={onSubmit}>
+        <label class="sr-only" for="upload-textarea">
+          Enter your text here
+        </label>
+        <textarea
+          ref={textarea}
+          id="upload-textarea"
+          name="upload-textarea"
+          aria-label="upload textarea"
+          class="min-w-full h-44 p-2 font-mono border rounded-md border-gray-200 hover:border-gray-400"
+          type="text"
+          placeholder="Your text goes here..."
+          value={text.value}
+          onInput={onInput}
+          autoFocus
+          required
+        />
+        {error.value && (
+          <p class="pt-1 text-right text-sm text-red-500">
+            {error.value}
+          </p>
+        )}
 
-      <p class="py-1 text-right text-sm text-gray-600">
-        Pastes expire in one hour.
-      </p>
-      <div class="ml-auto my-4">
-        <button
-          type="submit"
-          class="px-4 py-2 text-sm border rounded border-blue-600 font-semibold text-white bg-blue-600 hover:bg-white hover:text-blue-600"
-          disabled={inProgress.value}
-        >
-          Paste
-        </button>
-      </div>
-    </form>
+        <p class="py-1 text-right text-sm text-gray-600">
+          Pastes expire in one hour.
+        </p>
+        <div class="ml-auto my-4">
+          <button
+            type="submit"
+            class="px-4 py-2 text-sm border rounded border-blue-600 font-semibold text-white bg-blue-600 hover:bg-white hover:text-blue-600"
+            disabled={inProgress.value}
+          >
+            Paste
+          </button>
+        </div>
+      </form>
+    </main>
   );
 }

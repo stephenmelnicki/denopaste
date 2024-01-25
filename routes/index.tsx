@@ -1,6 +1,5 @@
 import { Handlers } from "$fresh/server.ts";
 
-import ContentMeta from "components/ContentMeta.tsx";
 import Header from "components/Header.tsx";
 import Footer from "components/Footer.tsx";
 import UploadForm from "islands/UploadForm.tsx";
@@ -66,7 +65,6 @@ export const handler: Handlers = {
 export default function Home() {
   return (
     <body class="px-4 py-8 mx-auto max-w-screen-sm">
-      <ContentMeta />
       <Header />
       <UploadForm />
       <Footer />

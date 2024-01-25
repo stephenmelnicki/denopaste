@@ -2,7 +2,7 @@ export default function Footer() {
   return (
     <footer class="flex justify-between mt-14 text-sm text-gray-600">
       <span>
-        © 2023 Stephen Melnicki
+        © 2024 Stephen Melnicki
       </span>
       <div class="flex justify-end gap-4">
         <a
