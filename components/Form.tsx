@@ -1,29 +1,27 @@
 export default function Form() {
   return (
-    <main>
-      <form class="flex flex-col my-6" action="/" method="post">
+    <main class="my-6">
+      <form id="form" class="flex flex-col" method="post" name="form">
         <label class="sr-only" for="content">
-          Enter your text here
+          Content
         </label>
         <textarea
-          class="min-w-full h-44 p-2 font-mono border rounded-md border-gray-200 hover:border-gray-400"
+          class="min-w-full h-44 p-2 font-mono border rounded-md border-gray-600"
+          id="content"
           name="content"
           type="text"
-          placeholder="Your text goes here..."
           autoFocus
           required
         />
-        <p class="py-1 text-right text-sm text-gray-600">
+        <p class="mt-2 leading-6 text-sm text-gray-600">
           Pastes expire in one hour.
         </p>
-        <div class="ml-auto my-4">
-          <button
-            type="submit"
-            class="px-4 py-2 text-sm border rounded border-blue-600 font-semibold text-white bg-blue-600 hover:bg-white hover:text-blue-600"
-          >
-            Submit
-          </button>
-        </div>
+        <button
+          type="submit"
+          class="mt-8 px-4 py-2 ml-auto font-semibold border rounded-md bg-blue-600 border-blue-600 text-white hover:bg-white hover:text-blue-600"
+        >
+          Submit
+        </button>
       </form>
     </main>
   );
