@@ -15,7 +15,7 @@ export default function Paste({ id, contents }: PasteProps) {
         </a>
         <button
           id="copy-btn"
-          class="px-4 py-2 font-semibold rounded-md bg-blue-600 text-white"
+          class="px-4 py-2 font-semibold rounded-md bg-blue-600 text-white focus:ring-1 focus:ring-offset-1"
           type="button"
         >
           Copy to clipboard

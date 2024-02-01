@@ -18,7 +18,7 @@ export default function Form() {
         </p>
         <button
           type="submit"
-          class="mt-8 ml-auto px-4 py-2 font-semibold rounded-md bg-blue-600 text-white"
+          class="mt-8 ml-auto px-4 py-2 font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-500 focus:ring-1 focus:ring-offset-1"
         >
           Submit
         </button>

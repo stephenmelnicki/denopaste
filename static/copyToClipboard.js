@@ -13,4 +13,4 @@ document
   .addEventListener("click", function () {
     const text = document.getElementsByTagName("pre").item(0).innerText;
     copyToClipboard(text);
-  });
+  }, false);
