@@ -6,7 +6,7 @@ export default function Form() {
           Content
         </label>
         <textarea
-          class="min-w-full h-44 px-3 py-2 font-mono shadow-sm border-0 rounded-md ring-1 ring-inset ring-gray-600"
+          class="min-w-full h-44 px-4 py-2 border rounded-md border-gray-600 font-mono"
           id="content"
           name="content"
           type="text"
