@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer class="flex justify-between mt-14 text-sm text-gray-600">
+    <footer class="flex justify-between mt-14 text-sm text-gray-600 dark:text-gray-400">
       <span>&copy; 2024 Stephen Melnicki</span>
       <ul class="flex justify-end gap-4">
         <li>

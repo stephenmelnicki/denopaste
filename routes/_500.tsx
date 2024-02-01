@@ -13,8 +13,8 @@ export default function Error({ error }: PageProps) {
       </Head>
       <main class="my-24 text-center">
         <h2 class="text-3xl font-bold mb-4">Server error</h2>
-        <p class="mb-8">{message}</p>
-        <a class="text-gray-900 hover:underline" href="/">
+        <p class="mb-8 text-gray-600 dark:text-gray-400">{message}</p>
+        <a class="hover:underline" href="/">
           Back to home
         </a>
       </main>

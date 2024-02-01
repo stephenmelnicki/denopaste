@@ -8,13 +8,13 @@ export default function NotFound() {
       </Head>
       <main class="my-24 text-center">
         <h2 class="text-3xl font-bold mb-4">Paste not found</h2>
-        <p>
+        <p class="text-gray-600 dark:text-gray-400">
           Sorry, we couldn't find the paste you're looking for.
         </p>
-        <p class="mb-8">
+        <p class="mb-8 text-gray-600 dark:text-gray-400">
           Pastes are automatically deleted after one hour.
         </p>
-        <a class="text-gray-900 hover:underline" href="/">
+        <a class="hover:underline" href="/">
           Back to home
         </a>
       </main>

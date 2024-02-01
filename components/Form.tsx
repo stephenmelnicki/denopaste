@@ -6,19 +6,19 @@ export default function Form() {
           Content
         </label>
         <textarea
-          class="min-w-full h-44 p-2 font-mono border rounded-md border-gray-600"
+          class="min-w-full h-44 px-3 py-2 font-mono shadow-sm border-0 rounded-md ring-1 ring-inset ring-gray-600"
           id="content"
           name="content"
           type="text"
           autoFocus
           required
         />
-        <p class="mt-2 leading-6 text-sm text-gray-600">
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
           Pastes expire in one hour.
         </p>
         <button
           type="submit"
-          class="mt-8 px-4 py-2 ml-auto font-semibold border rounded-md bg-blue-600 border-blue-600 text-white hover:bg-white hover:text-blue-600"
+          class="mt-8 ml-auto px-4 py-2 font-semibold rounded-md bg-blue-600 text-white"
         >
           Submit
         </button>
