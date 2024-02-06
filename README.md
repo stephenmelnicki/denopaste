@@ -21,7 +21,10 @@ This project is hosted on Deno Deploy:
 
 You can try it out at https://deno-paste.deno.dev
 
-![Screenshot](./static/screenshot.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./static/screenshot_dark.png">
+  <img alt="screenshot" src="./static/screenshot.png">
+</picture>
 
 ## Development
 
