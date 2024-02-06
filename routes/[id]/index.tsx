@@ -20,13 +20,5 @@ export const handler: Handlers<Paste> = {
 };
 
 export default function PasteById(props: PageProps<Paste>) {
-  return (
-    <>
-      <Paste
-        id={props.params.id}
-        contents={props.data.contents}
-      />
-      <script type="text/javascript" src="/copyToClipboard.js" />
-    </>
-  );
+  return <Paste id={props.params.id} contents={props.data.contents} />;
 }

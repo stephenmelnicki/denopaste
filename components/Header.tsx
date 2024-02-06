@@ -2,7 +2,7 @@ export default function Header() {
   return (
     <header>
       <a class="inline-block" href="/">
-        <h1 class="font-bold text-4xl">
+        <h1 class="font-bold text-4xl text-gray-900 dark:text-white">
           Deno Paste
         </h1>
       </a>

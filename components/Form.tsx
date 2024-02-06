@@ -1,28 +1,38 @@
 export default function Form() {
   return (
-    <main class="my-6">
+    <main class="my-8">
       <form id="form" class="flex flex-col" method="post" name="form">
         <label class="sr-only" for="content">
           Content
         </label>
         <textarea
-          class="min-w-full h-44 px-4 py-2 border rounded-md border-gray-600 font-mono"
+          class="min-w-full h-44 px-4 py-2 border rounded-md border-gray-300 dark:border-gray-500 font-mono text-gray-900 dark:text-white"
           id="content"
           name="content"
           type="text"
           autoFocus
           required
         />
-        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
           Pastes expire in one hour.
         </p>
-        <button
-          type="submit"
-          class="mt-8 ml-auto px-4 py-2 font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-500 focus:ring-1 focus:ring-offset-1"
-        >
-          Submit
-        </button>
+        <div class="flex justify-end items-center gap-x-4 mt-8">
+          <button
+            class="px-4 py-2 font-semibold rounded-md text-gray-900 dark:text-white"
+            id="reset-btn"
+            type="button"
+          >
+            Reset
+          </button>
+          <button
+            class="px-4 py-2 font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-500"
+            type="submit"
+          >
+            Submit
+          </button>
+        </div>
       </form>
+      <script type="text/javascript" src="/reset.js" />
     </main>
   );
 }
