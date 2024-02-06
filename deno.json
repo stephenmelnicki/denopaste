@@ -1,5 +1,5 @@
 {
-  "lock": false,
+  "lock": true,
   "tasks": {
     "check": "deno check **/*.ts && deno check **/*.tsx",
     "test": "deno test -A --parallel --unstable-kv",
@@ -25,9 +25,7 @@
     "tailwindcss/": "npm:/tailwindcss@3.3.5/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.3.5/plugin.js",
     "$std/": "https://deno.land/std@0.211.0/",
-    "utils/": "./utils/",
-    "components/": "./components/",
-    "islands/": "./islands/"
+    "@/": "./"
   },
   "compilerOptions": {
     "jsx": "react-jsx",
