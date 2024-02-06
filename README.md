@@ -1,6 +1,7 @@
 # Deno Paste
 
-A minimal plain text storage service built with [Deno](https://deno.land) and [Fresh](https://fresh.deno.dev).
+A minimal plain text storage service built with [Deno](https://deno.land) and
+[Fresh](https://fresh.deno.dev).
 
 ## Features
 
