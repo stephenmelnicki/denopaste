@@ -36,7 +36,7 @@ Deno.test("POST /", async () => {
   assertExists(response.headers.get("Location"));
 });
 
-Deno.test("POST / invalid request", async () => {
+Deno.test("POST / bad request", async () => {
   const formData = new FormData();
 
   const response = await handler(
@@ -46,7 +46,7 @@ Deno.test("POST / invalid request", async () => {
 
   assertEquals(response.status, 400);
   const body = await response.text();
-  assertEquals(body, "invalid request");
+  assertEquals(body, "bad request");
 });
 
 Deno.test("GET /:id", async () => {
