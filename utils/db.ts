@@ -1,4 +1,4 @@
-import { createId } from "utils/id.ts";
+import { createId } from "@/utils/id.ts";
 
 const db = await Deno.openKv();
 

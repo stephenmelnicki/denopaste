@@ -1,7 +1,8 @@
 import { createHandler, ServeHandlerInfo } from "$fresh/server.ts";
-import manifest from "../fresh.gen.ts";
-import config from "../fresh.config.ts";
 import { assertEquals, assertExists } from "$std/assert/mod.ts";
+
+import manifest from "@/fresh.gen.ts";
+import config from "@/fresh.config.ts";
 
 const CONNECTION_INFO: ServeHandlerInfo = {
   remoteAddr: {

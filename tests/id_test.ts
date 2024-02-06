@@ -1,5 +1,5 @@
 import { assertEquals, assertMatch } from "$std/assert/mod.ts";
-import { createId } from "utils/id.ts";
+import { createId } from "@/utils/id.ts";
 
 Deno.test("returns a string of length 8 by default", () => {
   const id = createId();

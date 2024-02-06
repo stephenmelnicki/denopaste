@@ -1,7 +1,7 @@
 import { PageProps } from "$fresh/server.ts";
 
-import Header from "components/Header.tsx";
-import Footer from "components/Footer.tsx";
+import Header from "@/components/Header.tsx";
+import Footer from "@/components/Footer.tsx";
 
 export default function App({ Component }: PageProps) {
   return (
@@ -12,7 +12,7 @@ export default function App({ Component }: PageProps) {
         <title>Deno Paste</title>
         <meta
           name="description"
-          content="A minimal plain text storage service"
+          content="A plain text storage service for Deno 🦕"
         />
         <link rel="stylesheet" type="text/css" href="/styles.css" />
       </head>

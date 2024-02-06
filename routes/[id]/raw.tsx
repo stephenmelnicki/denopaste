@@ -1,5 +1,5 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { getPasteById } from "utils/db.ts";
+import { getPasteById } from "@/utils/db.ts";
 
 interface Paste {
   id: string;

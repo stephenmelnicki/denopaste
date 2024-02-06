@@ -1,7 +1,7 @@
 import { Handlers } from "$fresh/server.ts";
 
-import Form from "components/Form.tsx";
-import { createNewPaste } from "utils/db.ts";
+import Form from "@/components/Form.tsx";
+import { createNewPaste } from "@/utils/db.ts";
 
 const MAX_SIZE = 64 * 1024; // 64 KiB
 

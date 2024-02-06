@@ -7,7 +7,7 @@ export default function Header() {
         </h1>
       </a>
       <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-        A minimal plain text storage service.
+        A plain text storage service for Deno 🦕
       </p>
     </header>
   );
