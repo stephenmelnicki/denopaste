@@ -7,7 +7,9 @@ export default function NotFoundPage() {
         <title>Paste not found</title>
       </Head>
       <main class="my-24 text-center">
-        <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">Paste not found</h2>
+        <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+          Paste not found
+        </h2>
         <p class="text-gray-600 dark:text-gray-400">
           Sorry, we couldn't find the paste you're looking for.
         </p>
