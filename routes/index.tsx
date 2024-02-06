@@ -11,7 +11,7 @@ export const handler: Handlers = {
     const contents = data.get("content");
 
     if (typeof contents !== "string" || contents.length === 0) {
-      return new Response("invalid request", { status: 400 });
+      return new Response("bad request", { status: 400 });
     }
 
     const id = await createNewPaste(contents);
