@@ -20,6 +20,13 @@ export default function App({ Component }: PageProps) {
         >
         </link>
         <link rel="stylesheet" type="text/css" href="/styles.css" />
+        <script
+          defer
+          type="text/javascript"
+          src="https://api.pirsch.io/pirsch.js"
+          id="pirschjs"
+          data-code="9jh7DrVB52WK1kMydZdmjpsvR9cmZAEP"
+        />
       </head>
       <body class="px-4 py-8 mx-auto max-w-screen-md">
         <Header />
