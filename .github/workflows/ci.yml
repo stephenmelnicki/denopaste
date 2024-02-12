@@ -1,46 +1,27 @@
 name: ci
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: [push, pull_request]
 
 jobs:
-  test:
-    runs-on: ${{ matrix.os }}
-    timeout-minutes: 10
-
-    strategy:
-      fail-fast: false
-      matrix:
-        deno: ["v1.x"]
-        os: [macOS-latest, windows-latest, ubuntu-latest]
-        include:
-        - os: ubuntu-latest
-          cache_path: ~/.cache/deno/
-        - os: macos-latest
-          cache_path: ~/Library/Caches/deno/
-        - os: windows-latest
-          cache_path: ~\AppData\Local\deno\
-
+  deno:
+    runs-on: ubuntu-latest
     steps:
-      - name: Checkout repo
+      - name: clone repository
         uses: actions/checkout@v4
 
-      - name: Setup Deno
+      - name: install Deno
         uses: denoland/setup-deno@v1
         with:
-          deno-version: ${{ matrix.deno }}
+          deno-version: 1.x
 
-      - name: Verify formatting
+      - name: format
         run: deno fmt --check
 
-      - name: Run linter
+      - name: lint
         run: deno lint
 
-      - name: Type check project
+      - name: check
         run: deno task check
 
-      - name: Run tests
+      - name: test
         run: deno task test
