@@ -3,7 +3,7 @@ import { type FreshContext } from "$fresh/server.ts";
 import { Queue } from "@/plugins/pirsch/src/queue.ts";
 import { PirschPluginOptions } from "@/plugins/pirsch/src/types.ts";
 
-export interface Reporter {
+interface Reporter {
   (
     request: Request,
     context: FreshContext,

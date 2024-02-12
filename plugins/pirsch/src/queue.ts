@@ -4,6 +4,26 @@ import { delay } from "$std/async/mod.ts";
 
 const UPLOAD_DELAY = 1000;
 
+function createHit(request: Request, context: FreshContext): PirschHit {
+  return {
+    url: request.url,
+    ip: context.remoteAddr.hostname,
+    dnt: request.headers.get("dnt"),
+    user_agent: request.headers.get("user-agent")!,
+    accept_language: request.headers.get("accept-language"),
+    sec_ch_ua: request.headers.get("sec-ch-ua"),
+    sec_ch_ua_mobile: request.headers.get("sec-ch-ua-mobile"),
+    sec_ch_ua_platform: request.headers.get("sec-ch-ua-platform"),
+    sec_ch_ua_platform_version: request.headers.get(
+      "sec-ch-ua-platform-version",
+    ),
+    sec_ch_width: request.headers.get("sec-ch-width"),
+    sec_ch_viewport_width: request.headers.get("sec-ch-viewport-width"),
+    title: request.headers.get("title"),
+    referrer: request.headers.get("referer"),
+  } as PirschHit;
+}
+
 export class Queue {
   private items: PirschHit[] = [];
   private uploading = false;
@@ -27,22 +47,12 @@ export class Queue {
   }
 
   enqueue(request: Request, context: FreshContext) {
-    this.items.push(this.createHit(request, context));
+    this.items.push(createHit(request, context));
 
     if (!this.uploading) {
       this.uploading = true;
       setTimeout(this.upload.bind(this), UPLOAD_DELAY);
     }
-  }
-
-  private createHit(request: Request, context: FreshContext): PirschHit {
-    return {
-      url: request.url,
-      ip: context.remoteAddr.hostname,
-      user_agent: request.headers.get("user-agent")!,
-      accept_language: request.headers.get("accept-language") || undefined,
-      referrer: request.headers.get("referrer") || undefined,
-    } as PirschHit;
   }
 
   private async upload() {
