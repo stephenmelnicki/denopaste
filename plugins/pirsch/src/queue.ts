@@ -30,16 +30,17 @@ export class Queue {
 
   private readonly client?: PirschNodeApiClient;
 
-  constructor(hostname?: string, id?: string, secret?: string) {
-    if (!hostname || !id || !secret) {
+  constructor(hostname?: string, clientId?: string, clientSecret?: string) {
+    if (!hostname || !clientId || !clientSecret) {
       return;
     }
 
     this.client = new Pirsch({
       hostname,
-      clientId: id,
-      clientSecret: secret,
+      clientId,
+      clientSecret,
     });
+    console.log("client created.");
   }
 
   get length() {
@@ -60,7 +61,10 @@ export class Queue {
       const item = this.items.shift();
 
       try {
-        if (this.client) await this.client.hit(item!);
+        if (this.client) {
+          await this.client.hit(item!);
+          console.log("hit sent.");
+        }
       } catch (err) {
         console.error(err);
         await delay(UPLOAD_DELAY);

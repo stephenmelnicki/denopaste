@@ -38,6 +38,9 @@ export function createReporter(options: PirschPluginOptions): Reporter {
       return;
     }
 
+    console.log(
+      `${request.method.toUpperCase()} ${request.url} - ${context.remoteAddr.hostname}`,
+    );
     queue.enqueue(request, context);
   };
 }
