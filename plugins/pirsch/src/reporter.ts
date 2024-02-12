@@ -14,7 +14,7 @@ export interface Reporter {
 function createHit(request: Request, context: FreshContext): PirschHit {
   return {
     url: request.url,
-    ip: context.localAddr!.hostname,
+    ip: context.remoteAddr.hostname,
     user_agent: request.headers.get("user-agent")!,
     accept_language: request.headers.get("accept-language") || undefined,
     referrer: request.headers.get("referrer") || undefined,
