@@ -1,26 +1,25 @@
 name: ci
-
 on: [push, pull_request]
 
 jobs:
   deno:
     runs-on: ubuntu-latest
     steps:
-      - name: clone repository
+      - name: Clone Repository
         uses: actions/checkout@v4
 
-      - name: install Deno
+      - name: Install Deno
         uses: denoland/setup-deno@v1
         with:
           deno-version: 1.x
 
-      - name: format
+      - name: Format Check
         run: deno fmt --check
 
-      - name: lint
+      - name: Lint
         run: deno lint
 
-      - name: check
+      - name: Type Check
         run: deno task check
 
       # - name: test
