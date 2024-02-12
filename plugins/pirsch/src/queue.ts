@@ -40,14 +40,13 @@ export class Queue {
       clientId,
       clientSecret,
     });
-    console.log("client created.");
   }
 
   get length() {
     return this.items.length;
   }
 
-  enqueue(request: Request, context: FreshContext) {
+  push(request: Request, context: FreshContext) {
     this.items.push(createHit(request, context));
 
     if (!this.uploading) {
@@ -61,10 +60,7 @@ export class Queue {
       const item = this.items.shift();
 
       try {
-        if (this.client) {
-          await this.client.hit(item!);
-          console.log("hit sent.");
-        }
+        await this.client?.hit(item!);
       } catch (err) {
         console.error(err);
         await delay(UPLOAD_DELAY);
