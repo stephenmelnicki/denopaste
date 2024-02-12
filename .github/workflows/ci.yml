@@ -22,5 +22,5 @@ jobs:
       - name: Type Check
         run: deno task check
 
-      # - name: test
-      #   run: deno task test
+      - name: test
+        run: deno task test

@@ -14,7 +14,7 @@
       "tags": ["fresh", "recommended"]
     }
   },
-  "exclude": ["**/_fresh/*"],
+  "exclude": ["**/_fresh/*", "**/node_modules/*"],
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.6.3/",
     "preact": "https://esm.sh/preact@10.19.2",

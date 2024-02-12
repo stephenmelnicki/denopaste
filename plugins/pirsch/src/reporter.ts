@@ -1,5 +1,4 @@
 import { type FreshContext } from "$fresh/server.ts";
-import { Pirsch, PirschHit, PirschNodeApiClient } from "pirsch";
 
 import { Queue } from "@/plugins/pirsch/src/queue.ts";
 import { PirschPluginOptions } from "@/plugins/pirsch/src/types.ts";
@@ -11,31 +10,34 @@ export interface Reporter {
   ): void;
 }
 
-function createHit(request: Request, context: FreshContext): PirschHit {
-  return {
-    url: request.url,
-    ip: context.remoteAddr.hostname,
-    user_agent: request.headers.get("user-agent")!,
-    accept_language: request.headers.get("accept-language") || undefined,
-    referrer: request.headers.get("referrer") || undefined,
-  } as PirschHit;
-}
-
 export function createReporter(options: PirschPluginOptions): Reporter {
-  const client: PirschNodeApiClient = new Pirsch({
-    hostname: options.hostname,
-    clientId: options.id,
-    clientSecret: options.secret,
-  });
+  const {
+    hostname = Deno.env.get("PIRSCH_HOSTNAME"),
+    id = Deno.env.get("PIRSCH_CLIENT"),
+    secret = Deno.env.get("PIRSCH_SECRET"),
+    filter = () => true,
+  } = options;
 
-  const queue = new Queue(client);
+  if (!hostname || !id || !secret) {
+    console.log(
+      "PIRSCH_HOSTNAME, PIRSCH_CLIENT, and PIRSCH_SECRET environment variables not set. Pirsch reporting disabled.",
+    );
+  }
+
+  const queue = new Queue(hostname, id, secret);
 
   return function report(
     request: Request,
     context: FreshContext,
   ) {
-    const hit = createHit(request, context);
-    console.log(JSON.stringify(hit, null, 2));
-    queue.enqueue(hit);
+    if (!hostname || !id || !secret) {
+      return;
+    }
+
+    if (!filter(request)) {
+      return;
+    }
+
+    queue.enqueue(request, context);
   };
 }
