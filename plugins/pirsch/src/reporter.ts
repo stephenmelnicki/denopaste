@@ -34,6 +34,8 @@ export function createReporter(options: PirschPluginOptions): Reporter {
     request: Request,
     context: FreshContext,
   ) {
-    queue.enqueue(createHit(request, context));
+    const hit = createHit(request, context);
+    console.log(JSON.stringify(hit, null, 2));
+    queue.enqueue(hit);
   };
 }
