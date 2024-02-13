@@ -1,5 +1,4 @@
 {
-  "lock": true,
   "tasks": {
     "check": "deno check **/*.ts && deno check **/*.tsx",
     "test": "deno test -A --parallel --unstable-kv",
@@ -17,6 +16,7 @@
   "exclude": ["**/_fresh/*", "**/node_modules/*"],
   "imports": {
     "$fresh/": "https://deno.land/x/fresh@1.6.3/",
+    "freshPirsch": "https://deno.land/x/fresh_pirsch@1.0.0/mod.ts",
     "preact": "https://esm.sh/preact@10.19.2",
     "preact/": "https://esm.sh/preact@10.19.2/",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.1",
@@ -24,8 +24,6 @@
     "tailwindcss": "npm:tailwindcss@3.3.5",
     "tailwindcss/": "npm:/tailwindcss@3.3.5/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.3.5/plugin.js",
-    "pirsch": "npm:pirsch-sdk@2.5.0",
-    "pirsch/": "npm:pirsch-sdk@2.5.0/",
     "$std/": "https://deno.land/std@0.211.0/",
     "@/": "./"
   },
