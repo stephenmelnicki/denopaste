@@ -5,8 +5,8 @@ import { pirschPlugin, PirschPluginOptions } from "freshPirsch";
 
 const options: PirschPluginOptions = {
   hostname: Deno.env.get("PIRSCH_HOSTNAME"),
-  id: Deno.env.get("PIRSCH_CLIENT_ID"),
-  secret: Deno.env.get("PIRSCH_CLIENT_SECRET"),
+  accessToken: Deno.env.get("PIRSCH_TOKEN"),
+  protocol: "https",
   filter: (req: Request) => {
     return !req.url.includes(".ico") &&
       !req.url.includes(".css") &&
