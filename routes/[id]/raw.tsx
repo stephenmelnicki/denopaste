@@ -1,12 +1,7 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { Handlers } from "$fresh/server.ts";
 import { getPasteById } from "@/utils/db.ts";
 
-interface Paste {
-  id: string;
-  contents: string;
-}
-
-export const handler: Handlers<Paste> = {
+export const handler: Handlers = {
   async GET(_req, ctx) {
     const id = ctx.params.id;
     const contents = await getPasteById(id);
