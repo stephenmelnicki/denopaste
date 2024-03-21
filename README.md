@@ -7,25 +7,29 @@
 A plain text paste service built with [Deno](https://deno.land) and
 [Fresh](https://fresh.deno.dev). 🦕🍋
 
-## Features
-
-- Runs in a single Docker container
-- Syncs pastes to any S3-compatible cloud object storage
-
-## Example
-
-You can try it out at [denopaste.com](https://denopaste.com)
-
 <picture>
   <source
     media="(prefers-color-scheme: dark)"
     srcset="https://raw.githubusercontent.com/stephenmelnicki/deno_paste/main/.readme-assets/screenshot_dark.png"
   >
+  <source
+    media="(prefers-color-scheme: light)"
+    srcset="https://raw.githubusercontent.com/stephenmelnicki/deno_paste/main/.readme-assets/screenshot.png"
+  >
   <img
-    alt="screenshot"
+    alt="denopaste.com screenshot"
     src="https://raw.githubusercontent.com/stephenmelnicki/deno_paste/main/.readme-assets/screenshot.png"
   >
 </picture>
+
+## Features
+
+- Runs in a single Docker container
+- Syncs pastes to any S3-compatible cloud object storage
+
+## Demo
+
+[https://denopaste.com](https://denopaste.com)
 
 ## Development
 
