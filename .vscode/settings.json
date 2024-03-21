@@ -14,6 +14,12 @@
   "[javascript]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
+  "[dockercompose]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
+  "[dockerfile]": {
+    "editor.defaultFormatter": "ms-azuretools.vscode-docker"
+  },
   "css.customData": [
     ".vscode/tailwind.json"
   ]
