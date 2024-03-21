@@ -10,8 +10,10 @@
 README.md
 LICENSE
 tests/
+certs/
 
 *.env
 
 node_modules/
 _fresh/
+data/

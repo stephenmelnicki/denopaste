@@ -21,7 +21,7 @@ services:
     depends_on:
       - denopaste
     volumes:
-      # - ./certs:/etc/nginx/certs
+      - ./certs:/etc/nginx/certs
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
     networks:
       - denopaste-network
