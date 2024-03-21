@@ -16,8 +16,6 @@ RUN tar -C /usr/local/bin -xzf /tmp/litestream.tar.gz
 
 RUN apk add --no-cache bash
 
-EXPOSE 8000
-
 COPY litestream.yml /etc/litestream.yml
 COPY scripts/run.sh /app/run.sh
 

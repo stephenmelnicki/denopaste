@@ -1,6 +1,7 @@
 # Deno Paste
 
 [![Deno Paste](https://github.com/stephenmelnicki/deno_paste/actions/workflows/ci.yml/badge.svg)](https://github.com/stephenmelnicki/deno_paste/actions/workflows/ci.yml)
+[![Docker Pulls](https://img.shields.io/docker/pulls/smelnicki/denopasate.svg?maxAge=604800)](https://hub.docker.com/r/smelnicki/denopaste)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A plain text paste service built with [Deno](https://deno.land) and
@@ -16,12 +17,12 @@ A plain text paste service built with [Deno](https://deno.land) and
 You can try it out at https://deno-paste.deno.dev
 
 <picture>
-  <source 
-    media="(prefers-color-scheme: dark)" 
+  <source
+    media="(prefers-color-scheme: dark)"
     srcset="https://raw.githubusercontent.com/stephenmelnicki/deno_paste/main/.readme-assets/screenshot_dark.png"
   >
-  <img 
-    alt="screenshot" 
+  <img
+    alt="screenshot"
     src="https://raw.githubusercontent.com/stephenmelnicki/deno_paste/main/.readme-assets/screenshot.png"
   >
 </picture>
@@ -44,7 +45,7 @@ docker run \
   -p 8000:8000 \
   --volume "${PWD}/data:/data" \
   --name denopaste \
-  denopaste
+  smelnicki/denopaste
 ```
 
 ### From Docker with data replication
@@ -65,5 +66,5 @@ docker run \
   -e "DB_REPLICA_URL=$DB_REPLICA_URL" \
   -p 8000:8000 \
   --name denopaste \
-  denopaste
+  smelnicki/denopaste
 ```

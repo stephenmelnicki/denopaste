@@ -2,10 +2,8 @@ version: "3.9"
 
 services:
   denopaste:
-    image: denopaste:latest
+    image: smelnicki/denopaste:latest
     container_name: denopaste
-    ports:
-      - "8000:8000"
     restart: always
     environment:
       - LITESTREAM_ACCESS_KEY_ID=${LITESTREAM_ACCESS_KEY_ID}
