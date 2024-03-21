@@ -1,7 +1,7 @@
 # Deno Paste
 
-[![Deno Paste](https://github.com/stephenmelnicki/deno_paste/actions/workflows/ci.yml/badge.svg)](https://github.com/stephenmelnicki/deno_paste/actions/workflows/ci.yml)
-[![Docker Pulls](https://img.shields.io/docker/pulls/smelnicki/denopasate.svg?maxAge=604800)](https://hub.docker.com/r/smelnicki/denopaste)
+[![Deno Paste](https://github.com/stephenmelnicki/denopaste/actions/workflows/ci.yml/badge.svg)](https://github.com/stephenmelnicki/denopaste/actions/workflows/ci.yml)
+[![Docker Pulls](https://img.shields.io/docker/pulls/smelnicki/denopaste.svg?maxAge=604800)](https://hub.docker.com/r/smelnicki/denopaste)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 A plain text paste service built with [Deno](https://deno.land) and
