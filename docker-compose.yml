@@ -12,9 +12,9 @@ services:
     networks:
       - denopaste-network
 
-  proxy:
+  nginx:
     image: nginx:stable-alpine
-    container_name: proxy
+    container_name: nginx
     ports:
       - "80:80"
       - "443:443"

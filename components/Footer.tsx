@@ -6,7 +6,7 @@ export default function Footer() {
         <li>
           <a
             class="hover:underline"
-            href="https://github.com/stephenmelnicki/deno_paste"
+            href="https://github.com/stephenmelnicki/denopaste"
             rel="noopener noreferrer"
             target="_blank"
           >
@@ -16,7 +16,7 @@ export default function Footer() {
         <li>
           <a
             class="hover:underline"
-            href="https://raw.githubusercontent.com/stephenmelnicki/deno_paste/main/LICENSE"
+            href="https://raw.githubusercontent.com/stephenmelnicki/denopaste/main/LICENSE"
             rel="noopener noreferrer"
             target="_blank"
           >
