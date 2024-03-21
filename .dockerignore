@@ -1,0 +1,16 @@
+.dockerignore
+.gitignore
+.gitattributes
+
+.git
+.github
+.vscode
+
+README.md
+LICENSE
+tests/
+
+*.env
+
+node_modules/
+_fresh/

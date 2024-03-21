@@ -1,4 +1,5 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
+import CopyToClipboardButton from "../../islands/copy-to-clipboard-button.tsx";
 
 import { getPasteById } from "@/utils/db.ts";
 import Line from "@/components/Line.tsx";
@@ -9,11 +10,11 @@ interface Paste {
 }
 
 export const handler: Handlers = {
-  async GET(_req, ctx) {
+  GET(_req, ctx) {
     const id = ctx.params.id;
-    const contents = await getPasteById(id);
+    const contents = getPasteById(id);
 
-    return contents === null
+    return contents === undefined
       ? ctx.renderNotFound()
       : ctx.render({ id, contents });
   },
@@ -29,13 +30,7 @@ export default function PasteById(props: PageProps<Paste>) {
         >
           View raw
         </a>
-        <button
-          id="copy-btn"
-          class="px-4 py-2 font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-500"
-          type="button"
-        >
-          Copy to clipboard
-        </button>
+        <CopyToClipboardButton contents={props.data.contents} />
       </div>
       <pre class="bg-gray-100 dark:bg-neutral-800 border rounded-md border-gray-300 dark:border-gray-500 overflow-x-scroll text-gray-900 dark:text-white">
           {
@@ -44,7 +39,6 @@ export default function PasteById(props: PageProps<Paste>) {
               .map((line, index) => (<Line key={index} line={line} index={index} />))
           }
       </pre>
-      <script type="text/javascript" src="/copyToClipboard.js" />
     </main>
   );
 }

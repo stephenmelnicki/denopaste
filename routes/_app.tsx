@@ -1,5 +1,4 @@
 import { PageProps } from "$fresh/server.ts";
-
 import Header from "@/components/Header.tsx";
 import Footer from "@/components/Footer.tsx";
 
@@ -12,7 +11,7 @@ export default function App({ Component }: PageProps) {
         <title>Deno Paste</title>
         <meta
           name="description"
-          content="A plain text storage service for Deno 🦕"
+          content="A plain text paste service built with Deno and Fresh. 🦕🍋"
         />
         <link
           rel="icon"

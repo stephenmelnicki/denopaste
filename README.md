@@ -1,29 +1,29 @@
 # Deno Paste
 
-A minimal plain text storage service built with [Deno](https://deno.land) and
-[Fresh](https://fresh.deno.dev).
+[![Deno Paste](https://github.com/stephenmelnicki/deno_paste/actions/workflows/ci.yml/badge.svg)](https://github.com/stephenmelnicki/deno_paste/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+A plain text paste service built with [Deno](https://deno.land) and
+[Fresh](https://fresh.deno.dev). 🦕🍋
 
 ## Features
 
-- Persistent text storage using Deno KV
-- Stored pastes are automatically removed after one hour
-
-This project is hosted on Deno Deploy:
-
-- Served from 35 edge locations around the world
-- Scales automatically
-- Data is a globally distributed Deno KV store with no setup required
-- Code is deployed automatically when pushed to GitHub
-- Automatic HTTPS (even for custom domains)
-- Free for most hobby use cases
+- Runs in a single Docker container
+- Syncs pastes to any S3-compatible cloud object storage
 
 ## Example
 
 You can try it out at https://deno-paste.deno.dev
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="./static/screenshot_dark.png">
-  <img alt="screenshot" src="./static/screenshot.png">
+  <source 
+    media="(prefers-color-scheme: dark)" 
+    srcset="https://raw.githubusercontent.com/stephenmelnicki/deno_paste/main/.readme-assets/screenshot_dark.png"
+  >
+  <img 
+    alt="screenshot" 
+    src="https://raw.githubusercontent.com/stephenmelnicki/deno_paste/main/.readme-assets/screenshot.png"
+  >
 </picture>
 
 ## Development
@@ -32,4 +32,38 @@ You can start the local development server via:
 
 ```
 deno task start
+```
+
+### From Docker
+
+To run Deno Paste within a Docker container, mount a volume from your local
+system to store the sqlite database.
+
+```
+docker run \
+  -p 8000:8000 \
+  --volume "${PWD}/data:/data" \
+  --name denopaste \
+  denopaste
+```
+
+### From Docker with data replication
+
+If you provide settings for an s3 bucket, Deno Paste will use
+[Litestream](https://litestream.io) to replicate your data to s3.
+
+```
+LITESTREAM_ACCESS_KEY_ID=YOUR-ACCESS-KEY-ID
+LITESTREAM_SECRET_ACCESS_KEY=YOUR-SECRET-ACCESS-KEY
+LITESTREAM_REGION=YOUR-REGION 
+DB_REPLICA_URL=s3://your-bucket-name/db
+
+docker run \
+  -e "LITESTREAM_ACCESS_KEY_ID=$LITESTREAM_ACCESS_KEY_ID" \
+  -e "LITESTREAM_SECRET_ACCESS_KEY=$LITESTREAM_SECRET_ACCESS_KEY" \
+  -e "LITESTREAM_REGION=$LITESTREAM_REGION" \
+  -e "DB_REPLICA_URL=$DB_REPLICA_URL" \
+  -p 8000:8000 \
+  --name denopaste \
+  denopaste
 ```

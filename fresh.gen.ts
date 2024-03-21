@@ -8,7 +8,7 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_500 from "./routes/_500.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $index from "./routes/index.tsx";
-
+import * as $copy_to_clipboard_button from "./islands/copy-to-clipboard-button.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -20,7 +20,9 @@ const manifest = {
     "./routes/_app.tsx": $_app,
     "./routes/index.tsx": $index,
   },
-  islands: {},
+  islands: {
+    "./islands/copy-to-clipboard-button.tsx": $copy_to_clipboard_button,
+  },
   baseUrl: import.meta.url,
 } satisfies Manifest;
 

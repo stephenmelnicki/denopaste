@@ -25,7 +25,7 @@ Deno.test("GET /", async () => {
 
 Deno.test("POST /", async () => {
   const formData = new FormData();
-  formData.append("content", "Hello, Deno!");
+  formData.append("contents", "Hello, Deno!");
 
   const response = await handler(
     new Request("http://127.0.0.1/", { method: "POST", body: formData }),
@@ -51,7 +51,7 @@ Deno.test("POST / bad request", async () => {
 
 Deno.test("GET /:id", async () => {
   const formData = new FormData();
-  formData.append("content", "Hello, Deno!");
+  formData.append("contents", "Hello, Deno!");
 
   let response = await handler(
     new Request("http://127.0.0.1/", { method: "POST", body: formData }),
@@ -80,7 +80,7 @@ Deno.test("GET /:id not found", async () => {
 
 Deno.test("GET /:id/raw", async () => {
   const formData = new FormData();
-  formData.append("content", "Hello, Deno!");
+  formData.append("contents", "Hello, Deno!");
 
   let response = await handler(
     new Request("http://127.0.0.1/", { method: "POST", body: formData }),

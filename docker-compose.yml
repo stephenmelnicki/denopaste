@@ -1,0 +1,33 @@
+version: "3.9"
+
+services:
+  denopaste:
+    image: denopaste:latest
+    container_name: denopaste
+    ports:
+      - "8000:8000"
+    restart: always
+    environment:
+      - LITESTREAM_ACCESS_KEY_ID=${LITESTREAM_ACCESS_KEY_ID}
+      - LITESTREAM_SECRET_ACCESS_KEY=${LITESTREAM_SECRET_ACCESS_KEY}
+      - DB_REPLICA_URL=${DB_REPLICA_URL}
+    networks:
+      - denopaste-network
+
+  proxy:
+    image: nginx:stable-alpine
+    container_name: proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - denopaste
+    volumes:
+      # - ./certs:/etc/nginx/certs
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - denopaste-network
+
+networks:
+  denopaste-network:
+    driver: bridge

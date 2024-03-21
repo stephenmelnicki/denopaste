@@ -7,7 +7,7 @@ export default function Header() {
         </h1>
       </a>
       <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-        A plain text storage service for Deno 🦕
+        A plain text paste service built with Deno and Fresh. 🦕🍋
       </p>
     </header>
   );

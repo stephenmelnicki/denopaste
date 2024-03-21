@@ -11,3 +11,5 @@ _fresh/
 node_modules/
 # test coverage directory
 coverage/
+# sqlite database
+data/
