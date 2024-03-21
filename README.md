@@ -14,7 +14,7 @@ A plain text paste service built with [Deno](https://deno.land) and
 
 ## Example
 
-You can try it out at https://deno-paste.deno.dev
+You can try it out at https://denopaste.com
 
 <picture>
   <source
