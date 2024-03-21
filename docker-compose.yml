@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   denopaste:
     image: smelnicki/denopaste:latest
