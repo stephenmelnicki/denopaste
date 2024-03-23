@@ -3,8 +3,7 @@ import { Handlers } from "$fresh/server.ts";
 import PasteForm from "@/islands/PasteForm.tsx";
 import { createNewPaste } from "@/utils/db.ts";
 
-const CHARS_PER_MB = 1024 * 1024;
-const MAX_PASTE_LIMIT = 2 * CHARS_PER_MB;
+const MAX_PASTE_LIMIT = 1024 * 1024; // 1MB
 
 export const handler: Handlers = {
   async POST(req, _ctx) {
@@ -16,7 +15,7 @@ export const handler: Handlers = {
     }
 
     if (contents.length > MAX_PASTE_LIMIT) {
-      return new Response("Paste is too long.", { status: 400 });
+      return new Response("Paste is too long.", { status: 413 });
     }
 
     const id = createNewPaste(contents);

@@ -37,7 +37,20 @@ export default function PasteForm() {
       });
 
       if (!response.ok) {
-        const message = await response.text();
+        let message;
+
+        switch (response.status) {
+          case 400:
+            message = await response.text();
+            break;
+          case 413:
+            message = "Paste is too long.";
+            break;
+          default:
+            message = "An error occurred. Please try again.";
+            break;
+        }
+
         throw new Error(message);
       }
 
