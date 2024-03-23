@@ -12,13 +12,15 @@ export default function ErrorPage({ error }: PageProps) {
         <title>Server error</title>
       </Head>
       <main class="my-24 text-center">
-        <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+        <h2 class="text-3xl sm:text-5xl font-bold text-gray-900 dark:text-white">
           Server error
         </h2>
-        <p class="mb-8 text-gray-600 dark:text-gray-400">{message}</p>
-        <a class="text-gray-900 dark:text-white hover:underline" href="/">
-          Back to home
-        </a>
+        <p class="mt-6 text-gray-600 dark:text-gray-400 leading-7">{message}</p>
+        <div class="mt-8">
+          <a class="text-gray-900 dark:text-white hover:underline" href="/">
+            Back to home
+          </a>
+        </div>
       </main>
     </>
   );

@@ -34,6 +34,12 @@ function db() {
   }();
 }
 
+export type Paste = {
+  id: string;
+  contents: string;
+  createdOn: string;
+};
+
 export function createNewPaste(contents: string) {
   const id = createId();
 
@@ -53,11 +59,11 @@ function isRecent(dateString: string) {
 }
 
 export function getPasteById(id: string) {
-  const result = db()
-    .prepare("select contents, createdOn from pastes where id = :id")
-    .get<{ contents: string; createdOn: string }>({ id });
+  const paste = db()
+    .prepare("select id, contents, createdOn from pastes where id = :id")
+    .get<Paste>({ id });
 
-  return result && isRecent(result.createdOn) ? result.contents : undefined;
+  return paste && isRecent(paste.createdOn) ? paste : undefined;
 }
 
 Deno.addSignalListener("SIGINT", () => {

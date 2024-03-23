@@ -5,7 +5,7 @@ interface Props {
 }
 
 export default function CopyToClipboardButton({ contents }: Props) {
-  const text = useSignal("Copy to clipboard");
+  const text = useSignal<string>("Copy to clipboard");
 
   async function writeToClipboard() {
     try {

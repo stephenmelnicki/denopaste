@@ -1,17 +1,26 @@
 import { Handlers } from "$fresh/server.ts";
+
+import PasteForm from "@/islands/PasteForm.tsx";
 import { createNewPaste } from "@/utils/db.ts";
+
+const CHARS_PER_MB = 1024 * 1024;
+const MAX_PASTE_LIMIT = 2 * CHARS_PER_MB;
 
 export const handler: Handlers = {
   async POST(req, _ctx) {
-    const data = await req.formData();
-    const contents = data.get("contents");
+    const form = await req.formData();
+    const contents = form.get("contents")?.toString();
 
-    if (typeof contents !== "string" || contents.length === 0) {
-      return new Response("bad request", { status: 400 });
+    if (contents === undefined || contents.trim().length === 0) {
+      return new Response("Paste can not be empty.", { status: 400 });
+    }
+
+    if (contents.length > MAX_PASTE_LIMIT) {
+      return new Response("Paste is too long.", { status: 400 });
     }
 
     const id = createNewPaste(contents);
-    return new Response("", {
+    return new Response(undefined, {
       headers: { "location": `/${id}` },
       status: 302,
     });
@@ -20,31 +29,8 @@ export const handler: Handlers = {
 
 export default function Home() {
   return (
-    <main class="my-8">
-      <form id="form" class="flex flex-col" method="post" name="form">
-        <label class="sr-only" for="contents">
-          Content
-        </label>
-        <textarea
-          class="min-w-full h-44 px-4 py-2 border rounded-md border-gray-300 dark:border-gray-500 font-mono text-gray-900 dark:text-white"
-          id="contents"
-          name="contents"
-          type="text"
-          autoFocus
-          required
-        />
-        <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
-          Pastes expire in one hour.
-        </p>
-        <div class="flex justify-end mt-8">
-          <button
-            class="px-4 py-2 font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-500"
-            type="submit"
-          >
-            Submit
-          </button>
-        </div>
-      </form>
+    <main class="my-8 relative">
+      <PasteForm />
     </main>
   );
 }

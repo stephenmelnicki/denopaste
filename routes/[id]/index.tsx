@@ -1,22 +1,13 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import CopyToClipboardButton from "../../islands/copy-to-clipboard-button.tsx";
 
-import { getPasteById } from "@/utils/db.ts";
+import { getPasteById, Paste } from "@/utils/db.ts";
+import CopyToClipboardButton from "@/islands/CopyToClipboardButton.tsx";
 import Line from "@/components/Line.tsx";
-
-interface Paste {
-  id: string;
-  contents: string;
-}
 
 export const handler: Handlers = {
   GET(_req, ctx) {
-    const id = ctx.params.id;
-    const contents = getPasteById(id);
-
-    return contents === undefined
-      ? ctx.renderNotFound()
-      : ctx.render({ id, contents });
+    const paste = getPasteById(ctx.params.id);
+    return paste === undefined ? ctx.renderNotFound() : ctx.render(paste);
   },
 };
 

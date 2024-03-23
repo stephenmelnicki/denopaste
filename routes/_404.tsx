@@ -7,18 +7,17 @@ export default function NotFoundPage() {
         <title>Paste not found</title>
       </Head>
       <main class="my-24 text-center">
-        <h2 class="text-3xl font-bold mb-4 text-gray-900 dark:text-white">
+        <h2 class="text-3xl sm:text-5xl font-bold text-gray-900 dark:text-white">
           Paste not found
         </h2>
-        <p class="text-gray-600 dark:text-gray-400">
+        <p class="mt-6 text-gray-600 dark:text-gray-400 leading-7">
           Sorry, we couldn't find the paste you're looking for.
         </p>
-        <p class="mb-8 text-gray-600 dark:text-gray-400">
-          Pastes are automatically deleted after one hour.
-        </p>
-        <a class="text-gray-900 dark:text-white hover:underline" href="/">
-          Back to home
-        </a>
+        <div class="mt-8">
+          <a class="text-gray-900 dark:text-white hover:underline" href="/">
+            Back to home
+          </a>
+        </div>
       </main>
     </>
   );
