@@ -19,4 +19,5 @@ RUN apk add --no-cache bash
 COPY litestream.yml /etc/litestream.yml
 COPY scripts/run.sh /app/run.sh
 
+EXPOSE 8000
 CMD [ "/app/run.sh" ]
