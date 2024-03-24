@@ -54,19 +54,15 @@ docker run \
 
 ### From Docker with data replication
 
-If you provide settings for an s3 bucket, Deno Paste will use
-[Litestream](https://litestream.io) to replicate your data to s3.
+If you provide settings for an azure blob storage container, Deno Paste will use
+[Litestream](https://litestream.io) to replicate your data.
 
 ```
-LITESTREAM_ACCESS_KEY_ID=YOUR-ACCESS-KEY-ID
-LITESTREAM_SECRET_ACCESS_KEY=YOUR-SECRET-ACCESS-KEY
-LITESTREAM_REGION=YOUR-REGION 
-DB_REPLICA_URL=s3://your-bucket-name/db
+LITESTREAM_AZURE_ACCOUNT_KEY=YOUR-ACCESS-KEY
+DB_REPLICA_URL=abs://STORAGEACCOUNT@CONTAINERNAME/PATH
 
 docker run \
-  -e "LITESTREAM_ACCESS_KEY_ID=$LITESTREAM_ACCESS_KEY_ID" \
-  -e "LITESTREAM_SECRET_ACCESS_KEY=$LITESTREAM_SECRET_ACCESS_KEY" \
-  -e "LITESTREAM_REGION=$LITESTREAM_REGION" \
+  -e "LITESTREAM_AZURE_ACCOUNT_KEY=$LITESTREAM_AZURE_ACCOUNT_KEY" \
   -e "DB_REPLICA_URL=$DB_REPLICA_URL" \
   -p 8000:8000 \
   --name denopaste \

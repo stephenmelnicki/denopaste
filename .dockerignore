@@ -7,12 +7,13 @@
 .readme-assets
 .vscode
 
+*.env
+
+Dockerfile
 README.md
 LICENSE
 tests/
 certs/
-
-*.env
 
 node_modules/
 _fresh/
