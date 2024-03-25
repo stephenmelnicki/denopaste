@@ -10,13 +10,6 @@ export default function PasteForm() {
   const errorMessage = useSignal<string | null>(null);
   const textarea = useRef<HTMLTextAreaElement>(null);
 
-  // Focus the textarea when the component mounts
-  useCallback(() => {
-    if (textarea.current !== null) {
-      textarea.current.focus();
-    }
-  }, []);
-
   function onChange(event: JSX.TargetedEvent<HTMLTextAreaElement>) {
     contents.value = event.currentTarget.value;
   }
@@ -74,6 +67,7 @@ export default function PasteForm() {
         type="text"
         value={contents.value}
         onChange={onChange}
+        autoFocus
         required
       />
       <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">

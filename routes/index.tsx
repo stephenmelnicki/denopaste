@@ -1,12 +1,13 @@
 import { Handlers } from "$fresh/server.ts";
 
-import PasteForm from "@/islands/PasteForm.tsx";
 import { createNewPaste } from "@/utils/db.ts";
+import { event } from "@/analytics/pirsch.ts";
+import PasteForm from "@/islands/PasteForm.tsx";
 
 const MAX_PASTE_LIMIT = 1024 * 1024; // 1MB
 
 export const handler: Handlers = {
-  async POST(req, _ctx) {
+  async POST(req, ctx) {
     const form = await req.formData();
     const contents = form.get("contents")?.toString();
 
@@ -19,6 +20,11 @@ export const handler: Handlers = {
     }
 
     const id = createNewPaste(contents);
+    await event(req, ctx, "Create Paste", {
+      id,
+      "size": `${contents.length} bytes.`,
+    });
+
     return new Response(undefined, {
       headers: { "location": `/${id}` },
       status: 302,
@@ -28,7 +34,7 @@ export const handler: Handlers = {
 
 export default function Home() {
   return (
-    <main class="my-8 relative">
+    <main class="my-8">
       <PasteForm />
     </main>
   );

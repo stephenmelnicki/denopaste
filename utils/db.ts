@@ -1,14 +1,10 @@
 import { Database } from "$sqlite";
 import { createId } from "@/utils/id.ts";
 
-function db() {
-  let database: Database | undefined;
+const db = (function () {
+  let database: Database;
 
-  return function () {
-    if (database) {
-      return database;
-    }
-
+  function initializeDb() {
     const path = Deno.env.get("DB_PATH") ?? "data/pastes.db";
     database = new Database(path);
 
@@ -31,8 +27,16 @@ function db() {
     `);
 
     return database;
-  }();
-}
+  }
+
+  return function () {
+    if (!database) {
+      database = initializeDb();
+    }
+
+    return database;
+  };
+})();
 
 export type Paste = {
   id: string;

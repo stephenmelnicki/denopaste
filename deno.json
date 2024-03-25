@@ -25,9 +25,9 @@
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/": "npm:/tailwindcss@3.4.1/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
+    "pirsch": "npm:pirsch-sdk@2.6.0",
     "$std/": "https://deno.land/std@0.211.0/",
     "$sqlite": "https://deno.land/x/sqlite3@0.11.0/mod.ts",
-    "$pirsch": "https://deno.land/x/fresh_pirsch@1.0.5/mod.ts",
     "@/": "./"
   },
   "compilerOptions": {
