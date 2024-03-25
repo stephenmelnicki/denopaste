@@ -15,7 +15,7 @@ export default function PasteForm() {
     if (textarea.current !== null) {
       textarea.current.focus();
     }
-  }, [textarea]);
+  }, []);
 
   function onChange(event: JSX.TargetedEvent<HTMLTextAreaElement>) {
     contents.value = event.currentTarget.value;

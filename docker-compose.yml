@@ -8,7 +8,8 @@ services:
       - "80:8000"
       - "443:8000"
     environment:
+      - PIRSCH_HOSTNAME=${PIRSCH_HOSTNAME}
+      - PIRSCH_TOKEN=${PIRSCH_TOKEN}
       - LITESTREAM_AZURE_ACCOUNT_KEY=${LITESTREAM_AZURE_ACCOUNT_KEY}
       - DB_REPLICA_URL=${DB_REPLICA_URL}
     restart: always
-    
