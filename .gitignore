@@ -1,12 +1,6 @@
-# dotenv environment variable files
 .env
-# Fresh build directory
 _fresh/
-# npm dependencies
 node_modules/
-# test coverage directory
 coverage/
-# sqlite database
 data/
-# certificates
-certs/
+fly.toml
