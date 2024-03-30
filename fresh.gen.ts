@@ -10,7 +10,6 @@ import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.ts";
 import * as $index from "./routes/index.tsx";
 import * as $CopyToClipboardButton from "./islands/CopyToClipboardButton.tsx";
-import * as $ErrorNotification from "./islands/ErrorNotification.tsx";
 import * as $PasteForm from "./islands/PasteForm.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
@@ -26,7 +25,6 @@ const manifest = {
   },
   islands: {
     "./islands/CopyToClipboardButton.tsx": $CopyToClipboardButton,
-    "./islands/ErrorNotification.tsx": $ErrorNotification,
     "./islands/PasteForm.tsx": $PasteForm,
   },
   baseUrl: import.meta.url,

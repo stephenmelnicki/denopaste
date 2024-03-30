@@ -5,8 +5,9 @@ services:
     image: smelnicki/denopaste:latest
     container_name: denopaste
     ports:
-      - "80:8000"
-      - "443:8000"
+      - "8000:8000"
+    volumes:
+      - ./data:/data
     environment:
       - PIRSCH_HOSTNAME=${PIRSCH_HOSTNAME}
       - PIRSCH_TOKEN=${PIRSCH_TOKEN}

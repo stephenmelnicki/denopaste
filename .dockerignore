@@ -13,7 +13,6 @@ Dockerfile
 README.md
 LICENSE
 tests/
-certs/
 
 node_modules/
 _fresh/

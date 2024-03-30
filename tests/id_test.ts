@@ -11,7 +11,10 @@ Deno.test("returns a string of custom length when specified", () => {
   assertEquals(id.length, 12);
 });
 
-Deno.test("returns a string containing letters and numbers", () => {
+Deno.test("returns a string containing only letters and numbers", () => {
   const id = createId();
   assertMatch(id, /^[a-zA-Z0-9]+$/);
+
+  const longId = createId(12);
+  assertMatch(longId, /^[a-zA-Z0-9]+$/);
 });

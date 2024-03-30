@@ -3,8 +3,11 @@ import { Handlers } from "$fresh/server.ts";
 import { createNewPaste } from "@/utils/db.ts";
 import { event } from "@/analytics/pirsch.ts";
 import PasteForm from "@/islands/PasteForm.tsx";
-
-const MAX_PASTE_LIMIT = 1024 * 1024; // 1MB
+import {
+  ERROR_EMPTY,
+  ERROR_SIZE_LIMIT,
+  MAX_PASTE_LIMIT,
+} from "@/utils/constants.ts";
 
 export const handler: Handlers = {
   async POST(req, ctx) {
@@ -12,11 +15,11 @@ export const handler: Handlers = {
     const contents = form.get("contents")?.toString();
 
     if (contents === undefined || contents.trim().length === 0) {
-      return new Response("Paste can not be empty.", { status: 400 });
+      return new Response(ERROR_EMPTY, { status: 400 });
     }
 
     if (contents.length > MAX_PASTE_LIMIT) {
-      return new Response("Paste is too long.", { status: 413 });
+      return new Response(ERROR_SIZE_LIMIT, { status: 413 });
     }
 
     const id = createNewPaste(contents);

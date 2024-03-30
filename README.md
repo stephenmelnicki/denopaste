@@ -52,16 +52,26 @@ docker run \
   smelnicki/denopaste
 ```
 
+You can also use the provided `docker-compose.yml` file.
+
+```
+docker compose up
+```
+
 ### From Docker with data replication
 
 If you provide settings for an azure blob storage container, Deno Paste will use
 [Litestream](https://litestream.io) to replicate your data.
 
 ```
+PIRSCH_HOSTNAME=YOUR-PIRSCH-HOSTNAME
+PIRSCH_TOKEN=YOUR-PIRSCH-TOKEN
 LITESTREAM_AZURE_ACCOUNT_KEY=YOUR-ACCESS-KEY
 DB_REPLICA_URL=abs://STORAGEACCOUNT@CONTAINERNAME/PATH
 
 docker run \
+  -e "PIRSCH_HOSTNAME=${PIRSCH_HOSTNAME}"
+  -e "PIRSCH_TOKEN=${PIRSCH_TOKEN}"
   -e "LITESTREAM_AZURE_ACCOUNT_KEY=$LITESTREAM_AZURE_ACCOUNT_KEY" \
   -e "DB_REPLICA_URL=$DB_REPLICA_URL" \
   -p 8000:8000 \
