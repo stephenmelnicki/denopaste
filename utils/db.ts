@@ -25,16 +25,17 @@ export class Db {
   }
 
   public getPasteById(id: string): Paste | undefined {
-    const statement = this.readDb.prepare(
-      "SELECT id, contents, createdOn FROM pastes WHERE id = :id",
-    );
+    const statement = this.readDb.prepare(`
+      SELECT id, contents, createdOn FROM pastes 
+      WHERE id = :id 
+      AND createdOn >= datetime('now', '-1 hour')
+    `);
 
     const getPaste = this.readDb.transaction((id: string) => {
       return statement.get<Paste>({ id });
     });
 
-    const paste = getPaste.immediate(id);
-    return paste && this.isRecent(paste) ? paste : undefined;
+    return getPaste.immediate(id);
   }
 
   public createPaste(contents: string): string {
@@ -53,7 +54,10 @@ export class Db {
     return id;
   }
 
-  private createDbConnection(path: string, readonly: boolean = false) {
+  private createDbConnection(
+    path: string,
+    readonly: boolean = false,
+  ): Database {
     const database = new Database(path, { readonly });
 
     // litestream recommended sqlite settings
@@ -75,13 +79,5 @@ export class Db {
     `);
 
     return database;
-  }
-
-  private isRecent({ createdOn }: Paste) {
-    const now = new Date().getTime();
-    const then = Date.parse(createdOn);
-    const ONE_HOUR_IN_MS = 60 * 60 * 1000;
-
-    return (now - then) <= ONE_HOUR_IN_MS;
   }
 }

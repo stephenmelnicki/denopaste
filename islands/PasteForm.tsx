@@ -14,6 +14,11 @@ export default function PasteForm() {
   const loading = useSignal<boolean>(false);
   const contents = useSignal<string>("");
 
+  function onInput(event: JSX.TargetedEvent<HTMLTextAreaElement>) {
+    contents.value = event.currentTarget.value;
+    textarea.current?.setCustomValidity("");
+  }
+
   function validate(contents: string) {
     if (contents.trim().length === 0) {
       textarea.current?.setCustomValidity(ERROR_EMPTY);
@@ -22,11 +27,6 @@ export default function PasteForm() {
     } else {
       textarea.current?.setCustomValidity("");
     }
-  }
-
-  function onInput(event: JSX.TargetedEvent<HTMLTextAreaElement>) {
-    contents.value = event.currentTarget.value;
-    textarea.current?.setCustomValidity("");
   }
 
   function onSubmit(event: Event) {

@@ -6,7 +6,7 @@ export const handler = {
     const paste = ctx.state.db.getPasteById(ctx.params.id);
 
     return paste === undefined
-      ? new Response("Paste not found.", { status: 404 })
+      ? new Response("paste not found", { status: 404 })
       : new Response(paste.contents, { status: 200 });
   },
 };
