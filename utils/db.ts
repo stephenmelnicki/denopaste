@@ -1,42 +1,69 @@
 import { Database } from "$sqlite";
 import { createId } from "@/utils/id.ts";
 
-const db = (function () {
-  let database: Database;
+export function createNewPaste(contents: string): string {
+  const statement = writeDb().prepare(
+    "INSERT INTO pastes (id, contents) VALUES (:id, :contents)",
+  );
 
-  function initializeDb() {
-    const path = Deno.env.get("DB_PATH") ?? "data/pastes.db";
-    database = new Database(path);
+  const createPaste = writeDb().transaction((id: string, contents: string) => {
+    statement.run({ id, contents });
+  });
 
-    // litestream recommended sqlite settings
-    // https://litestream.io/tips/
-    database.exec(`
-      pragma busy_timeout = 5000;
-      pragma synchronous = NORMAL;
-      pragma journal_mode = WAL;
-      pragma wal_autocheckpoint = 0;
-    `);
+  const id = createId();
+  createPaste.immediate(id, contents);
+  return id;
+}
 
-    // ensure pastes table exists
-    database.exec(`
-      create table if not exists pastes (
-        id text primary key not null,
-        contents text not null,
-        createdOn timestamp default current_timestamp not null
-      )
-    `);
-
-    return database;
-  }
+const writeDb = (function () {
+  let db: Database;
 
   return function () {
-    if (!database) {
-      database = initializeDb();
+    if (!db) {
+      db = initializeDb();
     }
 
-    return database;
+    return db;
   };
 })();
+
+function initializeDb(readonly = false) {
+  const path = Deno.env.get("DB_PATH") ?? "data/pastes.db";
+  const database = new Database(path, { readonly });
+
+  // litestream recommended sqlite settings
+  // https://litestream.io/tips/
+  database.exec(`
+    PRAGMA journal_mode = WAL;
+    PRAGMA busy_timeout = 5000;
+    PRAGMA synchronous = NORMAL;
+    PRAGMA wal_autocheckpoint = 0;
+  `);
+
+  // ensure pastes table exists
+  database.exec(`
+    CREATE TABLE IF NOT EXISTS pastes (
+      id TEXT PRIMARY KEY NOT NULL,
+      contents TEXT NOT NULL,
+      createdOn TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
+    ) STRICT;
+  `);
+
+  return database;
+}
+
+export function getPasteById(id: string): Paste | undefined {
+  const statement = readDb().prepare(
+    "SELECT id, contents, createdOn FROM pastes WHERE id = :id",
+  );
+
+  const getPaste = readDb().transaction((id: string) => {
+    return statement.get<Paste>({ id });
+  });
+
+  const paste = getPaste.immediate(id);
+  return paste && isRecent(paste.createdOn) ? paste : undefined;
+}
 
 export type Paste = {
   id: string;
@@ -44,15 +71,17 @@ export type Paste = {
   createdOn: string;
 };
 
-export function createNewPaste(contents: string) {
-  const id = createId();
+const readDb = (function () {
+  let db: Database;
 
-  db()
-    .prepare("insert into pastes (id, contents) values (:id, :contents)")
-    .run({ id, contents });
+  return function () {
+    if (!db) {
+      db = initializeDb(true);
+    }
 
-  return id;
-}
+    return db;
+  };
+})();
 
 function isRecent(dateString: string) {
   const now = new Date().getTime();
@@ -62,17 +91,11 @@ function isRecent(dateString: string) {
   return (now - createdOn) <= ONE_HOUR_IN_MS;
 }
 
-export function getPasteById(id: string) {
-  const paste = db()
-    .prepare("select id, contents, createdOn from pastes where id = :id")
-    .get<Paste>({ id });
-
-  return paste && isRecent(paste.createdOn) ? paste : undefined;
-}
-
+// ensure db connections are closed on exit
 Deno.addSignalListener("SIGINT", () => {
   try {
-    db().close();
+    writeDb().close();
+    readDb().close();
   } catch (err) {
     console.error(err);
   } finally {

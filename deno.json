@@ -10,18 +10,14 @@
     "preview": "deno run -A --unstable-ffi main.ts",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
-  "lint": {
-    "rules": {
-      "tags": ["fresh", "recommended"]
-    }
-  },
+  "lint": { "rules": { "tags": ["fresh", "recommended"] } },
   "exclude": ["**/_fresh/*"],
   "imports": {
-    "$fresh/": "https://deno.land/x/fresh@1.6.5/",
-    "preact": "https://esm.sh/preact@10.19.2",
-    "preact/": "https://esm.sh/preact@10.19.2/",
-    "@preact/signals": "https://esm.sh/*@preact/signals@1.2.1",
-    "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.0",
+    "$fresh/": "https://deno.land/x/fresh@1.6.8/",
+    "preact": "https://esm.sh/preact@10.19.6",
+    "preact/": "https://esm.sh/preact@10.19.6/",
+    "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
+    "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/": "npm:/tailwindcss@3.4.1/",
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
@@ -31,9 +27,6 @@
     "$sqlite": "https://deno.land/x/sqlite3@0.11.0/mod.ts",
     "@/": "./"
   },
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact"
-  },
+  "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
   "nodeModulesDir": true
 }

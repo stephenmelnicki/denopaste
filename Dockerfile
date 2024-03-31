@@ -1,4 +1,6 @@
-FROM denoland/deno:alpine-1.41.3
+FROM denoland/deno:alpine-1.42.0
+
+EXPOSE 8000
 
 ARG GIT_REVISION
 ENV DENO_DEPLOYMENT_ID=${GIT_REVISION}
@@ -13,10 +15,8 @@ ARG litestream_binary_tgz_filename="litestream-${litestream_version}-linux-amd64
 ADD https://github.com/benbjohnson/litestream/releases/download/${litestream_version}/${litestream_binary_tgz_filename} /tmp/litestream.tar.gz
 RUN tar -C /usr/local/bin -xzf /tmp/litestream.tar.gz
 
+COPY litestream.yml /etc/litestream.yml
+
 RUN apk add --no-cache bash
 
-COPY litestream.yml /etc/litestream.yml
-COPY scripts/serve.sh /app/serve.sh
-
-EXPOSE 8000
-CMD [ "/app/serve.sh" ]
+CMD [ "/app/scripts/serve.sh" ]

@@ -9,9 +9,11 @@
 
 *.env
 
+docker-compose.yml
 Dockerfile
-README.md
+fly.toml
 LICENSE
+README.md
 tests/
 
 node_modules/
