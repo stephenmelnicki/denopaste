@@ -1,7 +1,6 @@
-import { Handlers } from "$fresh/server.ts";
+import { FreshContext } from "$fresh/server.ts";
 
-import { createNewPaste } from "@/utils/db.ts";
-import { event } from "@/analytics/pirsch.ts";
+import { State } from "@/utils/types.ts";
 import PasteForm from "@/islands/PasteForm.tsx";
 import {
   ERROR_EMPTY,
@@ -9,8 +8,8 @@ import {
   MAX_PASTE_LIMIT,
 } from "@/utils/constants.ts";
 
-export const handler: Handlers = {
-  async POST(req, ctx) {
+export const handler = {
+  async POST(req: Request, ctx: FreshContext<State>) {
     const form = await req.formData();
     const contents = form.get("contents")?.toString();
 
@@ -22,8 +21,9 @@ export const handler: Handlers = {
       return new Response(ERROR_SIZE_LIMIT, { status: 413 });
     }
 
-    const id = createNewPaste(contents);
-    await event(req, ctx, "Create Paste", {
+    const id = ctx.state.db.createPaste(contents);
+
+    await ctx.state.analytics.event(req, "Create Paste", {
       id,
       "size": `${contents.length} bytes.`,
     });

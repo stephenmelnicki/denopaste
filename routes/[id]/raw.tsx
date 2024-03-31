@@ -1,9 +1,9 @@
-import { Handlers } from "$fresh/server.ts";
-import { getPasteById } from "@/utils/db.ts";
+import { FreshContext } from "$fresh/server.ts";
+import { State } from "@/utils/types.ts";
 
-export const handler: Handlers = {
-  GET(_req, ctx) {
-    const paste = getPasteById(ctx.params.id);
+export const handler = {
+  GET(_req: Request, ctx: FreshContext<State>) {
+    const paste = ctx.state.db.getPasteById(ctx.params.id);
 
     return paste === undefined
       ? new Response("Paste not found.", { status: 404 })

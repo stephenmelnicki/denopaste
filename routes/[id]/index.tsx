@@ -1,12 +1,12 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
+import { FreshContext, PageProps } from "$fresh/server.ts";
 
-import { getPasteById, Paste } from "@/utils/db.ts";
+import { Paste, State } from "@/utils/types.ts";
 import CopyToClipboardButton from "@/islands/CopyToClipboardButton.tsx";
 import Line from "@/components/Line.tsx";
 
-export const handler: Handlers = {
-  GET(_req, ctx) {
-    const paste = getPasteById(ctx.params.id);
+export const handler = {
+  GET(_req: Request, ctx: FreshContext<State>) {
+    const paste = ctx.state.db.getPasteById(ctx.params.id);
     return paste === undefined ? ctx.renderNotFound() : ctx.render(paste);
   },
 };
