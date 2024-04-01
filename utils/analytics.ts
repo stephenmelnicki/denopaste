@@ -47,7 +47,6 @@ export class Analytics {
         remoteAddress: req.headers.get("fly-client-ip"),
       },
       headers: {
-        dnt: req.headers.get("dnt"),
         "user-agent": req.headers.get("user-agent"),
         "accept-language": req.headers.get("accept-language"),
         referer: req.headers.get("referer"),

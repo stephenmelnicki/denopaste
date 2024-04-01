@@ -1,7 +1,8 @@
-import { FreshContext } from "$fresh/server.ts";
+import { FreshContext, Handlers } from "$fresh/server.ts";
 import { State } from "@/utils/types.ts";
 
-export const handler = {
+// deno-lint-ignore no-explicit-any
+export const handler: Handlers<any, State> = {
   GET(_req: Request, ctx: FreshContext<State>) {
     const paste = ctx.state.db.getPasteById(ctx.params.id);
 

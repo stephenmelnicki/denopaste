@@ -1,4 +1,4 @@
-import { FreshContext } from "$fresh/server.ts";
+import { FreshContext, Handlers } from "$fresh/server.ts";
 
 import { State } from "@/utils/types.ts";
 import PasteForm from "@/islands/PasteForm.tsx";
@@ -8,7 +8,8 @@ import {
   MAX_PASTE_LIMIT,
 } from "@/utils/constants.ts";
 
-export const handler = {
+// deno-lint-ignore no-explicit-any
+export const handler: Handlers<any, State> = {
   async POST(req: Request, ctx: FreshContext<State>) {
     const form = await req.formData();
     const contents = form.get("contents")?.toString();
@@ -25,7 +26,7 @@ export const handler = {
 
     await ctx.state.analytics.event(req, "Create Paste", {
       id,
-      "size": `${contents.length} bytes.`,
+      size: `${contents.length} bytes.`,
     });
 
     return new Response(undefined, {

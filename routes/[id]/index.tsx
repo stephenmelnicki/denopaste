@@ -1,10 +1,11 @@
-import { FreshContext, PageProps } from "$fresh/server.ts";
+import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
 
 import { Paste, State } from "@/utils/types.ts";
 import CopyToClipboardButton from "@/islands/CopyToClipboardButton.tsx";
 import Line from "@/components/Line.tsx";
 
-export const handler = {
+// deno-lint-ignore no-explicit-any
+export const handler: Handlers<any, State> = {
   GET(_req: Request, ctx: FreshContext<State>) {
     const paste = ctx.state.db.getPasteById(ctx.params.id);
     return paste === undefined ? ctx.renderNotFound() : ctx.render(paste);
