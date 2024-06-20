@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "Inter Variable";
+  font-family: "Fixel Variable";
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
-  src: local("Inter Variable"), local("Inter-Variable"),
-    url("/fonts/InterVariable.woff2") format("woff2");
+  src: local("Fixel Variable"), local("Fixel-Variable"), local("FixelVariable"),
+    url("/fonts/FixelVariable.woff2") format("woff2");
 }
 
 :root {

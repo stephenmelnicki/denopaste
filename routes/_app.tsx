@@ -22,7 +22,7 @@ export default function App({ Component }: PageProps) {
         <link
           rel="preload"
           as="font"
-          href="/fonts/InterVariable.woff2"
+          href="/fonts/FixelVariable.woff2"
           type="font/woff2"
           crossorigin="anonymous"
         />
