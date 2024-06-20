@@ -1,9 +1,9 @@
 interface LineProps {
   line: string;
-  index: number;
+  number: number;
 }
 
-export default function Line({ line, index }: LineProps) {
+export default function Line({ line, number }: LineProps) {
   const classes = [
     "before:bg-white",
     "before:dark:bg-inherit",
@@ -22,7 +22,7 @@ export default function Line({ line, index }: LineProps) {
 
   return (
     <code
-      data-line-number={index + 1}
+      data-line-number={number + 1}
       class={classes.join(" ")}
     >
       {line}

@@ -28,7 +28,7 @@ export default function PasteById(props: PageProps<Paste>) {
           {
             props.data.contents
               .split('\n')
-              .map((line, index) => (<Line key={index} line={line} index={index} />))
+              .map((line, index) => (<Line key={index} line={line} number={index} />))
           }
       </pre>
     </main>

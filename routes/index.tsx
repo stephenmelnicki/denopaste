@@ -22,9 +22,10 @@ export const handler: Handlers<any, State> = {
       return new Response(ERROR_SIZE_LIMIT, { status: 413 });
     }
 
-    const id = ctx.state.db.createPaste(contents);
+    const { db, analytics } = ctx.state;
 
-    await ctx.state.analytics.event(req, "Create Paste", {
+    const id = db.insertPaste(contents);
+    await analytics.trackEvent(req, "Create Paste", {
       id,
       size: `${contents.length} bytes.`,
     });

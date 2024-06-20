@@ -1,8 +1,20 @@
-import { Db } from "@/utils/db.ts";
-import { Analytics } from "@/utils/analytics.ts";
+export interface PasteDb {
+  getPasteById(id: string): Paste | undefined;
+  insertPaste(contents: string): string;
+}
+
+export interface Analytics {
+  trackPageView(req: Request): Promise<void>;
+  trackEvent(
+    req: Request,
+    name: string,
+    meta?: Record<string, string>,
+    duration?: number,
+  ): Promise<void>;
+}
 
 export interface State {
-  db: Db;
+  db: PasteDb;
   analytics: Analytics;
 }
 

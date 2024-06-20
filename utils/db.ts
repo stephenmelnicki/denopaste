@@ -1,9 +1,22 @@
 import { Database } from "$sqlite";
 
+import { Paste, PasteDb } from "@/utils/types.ts";
 import { createId } from "@/utils/id.ts";
-import { Paste } from "@/utils/types.ts";
 
-export class Db {
+export const getDbInstance: () => PasteDb = (() => {
+  let database: PasteDb;
+
+  return () => {
+    if (!database) {
+      const path = Deno.env.get("DB_PATH") ?? "data/pastes.db";
+      database = new Db(path);
+    }
+
+    return database;
+  };
+})();
+
+class Db implements PasteDb {
   private readonly writeDb;
   private readonly readDb;
 
@@ -24,41 +37,11 @@ export class Db {
     });
   }
 
-  public getPasteById(id: string): Paste | undefined {
-    const statement = this.readDb.prepare(`
-      SELECT id, contents, createdOn FROM pastes 
-      WHERE id = :id 
-      AND createdOn >= datetime('now', '-1 hour')
-    `);
-
-    const getPaste = this.readDb.transaction((id: string) => {
-      return statement.get<Paste>({ id });
-    });
-
-    return getPaste.immediate(id);
-  }
-
-  public createPaste(contents: string): string {
-    const statement = this.writeDb.prepare(
-      "INSERT INTO pastes (id, contents) VALUES (:id, :contents)",
-    );
-
-    const createPaste = this.writeDb.transaction(
-      (id: string, contents: string) => {
-        return statement.run({ id, contents });
-      },
-    );
-
-    const id = createId();
-    createPaste.immediate(id, contents);
-    return id;
-  }
-
   private createDbConnection(
     path: string,
-    readonly: boolean = false,
+    isReadOnly: boolean = false,
   ): Database {
-    const database = new Database(path, { readonly });
+    const database = new Database(path, { readonly: isReadOnly });
 
     // litestream recommended sqlite settings
     // https://litestream.io/tips/
@@ -79,5 +62,32 @@ export class Db {
     `);
 
     return database;
+  }
+
+  getPasteById(id: string): Paste | undefined {
+    const statement = this.readDb.prepare(`
+      SELECT id, contents, createdOn FROM pastes 
+      WHERE id = :id 
+      AND createdOn >= datetime('now', '-1 hour')
+    `);
+
+    return this.readDb
+      .transaction((id: string) => statement.get<Paste>({ id }))
+      .immediate(id);
+  }
+
+  insertPaste(contents: string): string {
+    const statement = this.writeDb.prepare(
+      "INSERT INTO pastes (id, contents) VALUES (:id, :contents)",
+    );
+
+    const id = createId();
+    this.writeDb
+      .transaction((id: string, contents: string) =>
+        statement.run({ id, contents })
+      )
+      .immediate(id, contents);
+
+    return id;
   }
 }
