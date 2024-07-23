@@ -1,31 +1,30 @@
 {
-  "lock": false,
   "tasks": {
+    "build": "deno run -A --unstable-ffi dev.ts build",
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
+    "init": "mkdir -p data && touch data/pastes.db",
     "manifest": "deno task cli manifest $(pwd)",
-    "test": "deno test -A --parallel",
+    "preview": "DENO_ENV=production deno run -A --unstable-ffi main.ts",
     "start": "deno run -A --unstable-ffi --watch=static/,routes/ dev.ts",
-    "build": "deno run -A --unstable-ffi dev.ts build",
-    "preview": "deno run -A --unstable-ffi main.ts",
+    "test": "deno test -A --parallel",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
   "lint": { "rules": { "tags": ["fresh", "recommended"] } },
   "exclude": ["**/_fresh/*"],
   "imports": {
+    "@/": "./",
     "$fresh/": "https://deno.land/x/fresh@1.6.8/",
+    "pirsch": "npm:pirsch-sdk@2.6.0",
     "preact": "https://esm.sh/preact@10.19.6",
     "preact/": "https://esm.sh/preact@10.19.6/",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.2",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.1",
+    "$std/": "https://deno.land/std@0.211.0/",
+    "$sqlite": "https://deno.land/x/sqlite3@0.11.0/mod.ts",
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/": "npm:/tailwindcss@3.4.1/",
-    "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js",
-    "pirsch": "npm:pirsch-sdk@2.6.0",
-    "$std/": "https://deno.land/std@0.211.0/",
-    "$icons/": "https://deno.land/x/tabler_icons_tsx@0.0.5/tsx/",
-    "$sqlite": "https://deno.land/x/sqlite3@0.11.0/mod.ts",
-    "@/": "./"
+    "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js"
   },
   "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
   "nodeModulesDir": true

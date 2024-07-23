@@ -4,12 +4,13 @@ services:
   denopaste:
     image: smelnicki/denopaste:latest
     container_name: denopaste
+    volumes:
+      - ./data:/home/deno/denopaste/data
     ports:
       - "8000:8000"
-    volumes:
-      - ./data:/data
     environment:
+      - DB_PATH=${DB_PATH}
+      - DB_REPLICA_URL=${DB_REPLICA_URL}
+      - LITESTREAM_AZURE_ACCOUNT_KEY=${LITESTREAM_AZURE_ACCOUNT_KEY}
       - PIRSCH_HOSTNAME=${PIRSCH_HOSTNAME}
       - PIRSCH_TOKEN=${PIRSCH_TOKEN}
-      - LITESTREAM_AZURE_ACCOUNT_KEY=${LITESTREAM_AZURE_ACCOUNT_KEY}
-      - DB_REPLICA_URL=${DB_REPLICA_URL}

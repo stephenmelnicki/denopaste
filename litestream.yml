@@ -1,5 +1,5 @@
 dbs:
-  - path: /data/pastes.db
+  - path: ${DB_PATH}
     replicas:
       - url: ${DB_REPLICA_URL}
         account-key: ${LITESTREAM_AZURE_ACCOUNT_KEY}

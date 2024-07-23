@@ -6,9 +6,7 @@ interface LineProps {
 export default function Line({ line, number }: LineProps) {
   const classes = [
     "before:bg-white",
-    "before:dark:bg-inherit",
     "before:text-gray-600",
-    "before:dark:text-gray-400",
     "before:inline-block",
     "before:mr-4",
     "before:pr-4",
@@ -17,7 +15,6 @@ export default function Line({ line, number }: LineProps) {
     "before:content-[attr(data-line-number)]",
     "before:border-r",
     "before:border-gray-300",
-    "before:dark:border-gray-500",
   ];
 
   return (

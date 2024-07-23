@@ -39,7 +39,7 @@ export const handler: Handlers<any, State> = {
 
 export default function Home() {
   return (
-    <main class="my-8">
+    <main class="mt-4 mb-8">
       <PasteForm />
     </main>
   );

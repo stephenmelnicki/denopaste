@@ -4,7 +4,7 @@ export default function NotFoundPage() {
   return (
     <>
       <Head>
-        <title>Paste not found</title>
+        <title>Denopaste | Paste not found</title>
       </Head>
       <main class="my-24 text-center">
         <h2 class="text-3xl sm:text-5xl font-bold text-gray-900 dark:text-white">

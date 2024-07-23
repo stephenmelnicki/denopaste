@@ -11,6 +11,7 @@
     url("/fonts/FixelVariable.woff2") format("woff2");
 }
 
-:root {
-  color-scheme: light dark;
+textarea:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
 }

@@ -1,9 +1,6 @@
 #!/bin/bash
 set -e
 
-readonly DB_PATH="/data/pastes.db"
-export DB_PATH
-
 if [ -f $DB_PATH ]; then
   echo "Database already exists, skipping restore"
 else

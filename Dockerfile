@@ -1,11 +1,9 @@
-FROM denoland/deno:alpine-1.44.2
-
-EXPOSE 8000
+FROM denoland/deno:alpine-1.45.2
 
 ARG GIT_REVISION
 ENV DENO_DEPLOYMENT_ID=${GIT_REVISION}
 
-WORKDIR /app
+WORKDIR /home/deno/denopaste
 
 COPY . .
 RUN deno task build
@@ -19,4 +17,5 @@ COPY litestream.yml /etc/litestream.yml
 
 RUN apk add --no-cache bash
 
-CMD [ "/app/scripts/serve.sh" ]
+EXPOSE 8000/tcp
+CMD [ "./scripts/serve.sh" ]

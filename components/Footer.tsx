@@ -1,8 +1,10 @@
 export default function Footer() {
   return (
-    <footer class="flex justify-between mt-14 text-sm text-gray-600 dark:text-gray-400">
-      <span>&copy; 2024 Stephen Melnicki</span>
-      <ul class="flex justify-end gap-4">
+    <footer class="mt-16 flex flex-col justify-center items-center gap-4 text-gray-600 sm:flex-row sm:justify-between">
+      <span>
+        &copy; 2024 Stephen Melnicki
+      </span>
+      <ul class="flex flex-row justify-center items-center gap-8">
         <li>
           <a
             class="hover:underline"

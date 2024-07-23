@@ -9,10 +9,10 @@ export default function App({ Component }: PageProps) {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Deno Paste</title>
+        <title>Denopaste | A paste service built with Deno & Fresh</title>
         <meta
           name="description"
-          content="A plain text paste service built with Deno and Fresh. 🦕🍋"
+          content="A paste service built with Deno & Fresh 🦕🍋"
         />
         <link
           rel="icon"
@@ -28,7 +28,7 @@ export default function App({ Component }: PageProps) {
         />
         <link rel="stylesheet" type="text/css" href="/styles.css" />
       </head>
-      <body class="px-4 py-8 mx-auto max-w-screen-md">
+      <body class="px-4 sm:px-6 py-8 mx-auto max-w-screen-md text-gray-800">
         <Header />
         <Component />
         <Footer />

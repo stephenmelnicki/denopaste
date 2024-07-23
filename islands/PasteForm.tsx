@@ -1,7 +1,6 @@
 import { useRef } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import { JSX } from "preact/jsx-runtime";
-import IconLoader2 from "$icons/loader-2.tsx";
 
 import {
   ERROR_EMPTY,
@@ -52,7 +51,7 @@ export default function PasteForm() {
       <label class="sr-only" for="contents">Content</label>
       <textarea
         ref={textarea}
-        class="min-w-full h-44 px-4 py-2 border rounded-md border-gray-300 dark:border-gray-500 font-mono text-gray-900 dark:text-white shadow-sm disabled:opacity-75"
+        class="block w-full h-56 px-4 py-2 border-0 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 font-mono focus:ring-2 focus:ring-inset focus:ring-green-600 disabled:opacity-75"
         id="contents"
         name="contents"
         type="text"
@@ -62,19 +61,15 @@ export default function PasteForm() {
         autoFocus
         required
       />
-      <p class="mt-3 text-sm text-gray-600 dark:text-gray-400">
-        Pastes expire in one hour.
-      </p>
-      <div class="flex justify-end mt-8">
+
+      <div class="flex justify-between items-start mt-4">
+        <p>Pastes expire in one hour</p>
         <button
-          class="flex gap-2 items-center px-4 py-2 font-semibold rounded-md bg-blue-600 text-white shadow-sm hover:bg-blue-500 disabled:opacity-75"
+          class="px-4 py-2 font-semibold rounded-md bg-green-600 text-white shadow-sm hover:bg-green-500 disabled:opacity-75"
           type="submit"
           disabled={loading.value}
         >
-          <IconLoader2
-            class={`w-5 h-5 animate-spin ${!loading.value && "hidden"}`}
-          />
-          {loading.value ? "Processing..." : "Submit"}
+          Submit
         </button>
       </div>
     </form>
