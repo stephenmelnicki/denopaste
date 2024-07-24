@@ -8,15 +8,13 @@
 .vscode
 
 *.env
+*.env*
 
 docker-compose.yml
 Dockerfile
-fly.toml
 LICENSE
 README.md
-tests/
 
 node_modules/
 _fresh/
 data/
-e2e/

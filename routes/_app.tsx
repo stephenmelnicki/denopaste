@@ -13,7 +13,7 @@ export default define.page(function App({ Component, state }) {
         {state.title ? <title>{state.title}</title> : null}
         <meta
           name="description"
-          content="A simple paste service built with Deno & Fresh 🦕🍋"
+          content="A simple paste service built with Deno 🦕 and Fresh 🍋"
         />
         <link
           rel="icon"

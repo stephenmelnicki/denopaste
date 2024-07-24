@@ -29,7 +29,7 @@ export default define.page<typeof handler>(function PasteById(props) {
   const { paste } = props.data;
 
   return (
-    <main class="mt-4 mb-16">
+    <main class="mt-6 mb-16">
       <div class="mb-6 flex items-center justify-end gap-x-4">
         <a
           class="px-4 py-2 font-semibold rounded-md"

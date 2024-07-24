@@ -25,7 +25,7 @@ export default function CopyToClipboardButton({ contents }: Props) {
       id="copy-btn"
       type="button"
       class={`py-2 font-semibold rounded-md bg-green-600 text-white hover:bg-green-500 ${
-        text.value === COPY_TO_CLIPBOARD ? "px-4" : "px-14"
+        text.value === COPY_TO_CLIPBOARD ? "px-4" : "px-[3.9rem]"
       }`}
       onClick={writeToClipboard}
     >

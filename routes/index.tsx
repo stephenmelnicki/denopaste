@@ -8,7 +8,7 @@ import { define } from "../utils/state.ts";
 export const handler = define.handlers({
   GET(ctx) {
     ctx.state.title =
-      "Denopaste - A simple paste service built with Deno & Fresh 🦕🍋";
+      "Denopaste - A simple paste service built with Deno 🦕 and Fresh 🍋";
 
     return page();
   },
@@ -40,7 +40,7 @@ export const handler = define.handlers({
 
 export default define.page<typeof handler>(function Home() {
   return (
-    <main class="mt-4 mb-16">
+    <main class="mt-6 mb-16">
       <PasteForm />
     </main>
   );
