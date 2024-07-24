@@ -1,4 +1,4 @@
-import { FreshContext } from "fresh";
+import { FreshContext, HttpError } from "fresh";
 import { Pirsch, PirschHit, PirschNodeApiClient } from "pirsch";
 
 export const getAnalytics: () => Analytics = (() => {
@@ -6,7 +6,7 @@ export const getAnalytics: () => Analytics = (() => {
 
   return function () {
     if (!analytics) {
-      analytics = new Tracker();
+      analytics = new PirschReporter();
     }
 
     return analytics;
@@ -14,21 +14,32 @@ export const getAnalytics: () => Analytics = (() => {
 })();
 
 interface Analytics {
-  trackPageView(req: Request, ctx: FreshContext): Promise<void>;
-  trackEvent(
+  trackPageView(
     req: Request,
     ctx: FreshContext,
-    name: string,
-    meta?: Record<string, string>,
+    duration?: number,
+  ): Promise<void>;
+
+  trackPasteSubmission(
+    req: Request,
+    res: Response,
+    ctx: FreshContext,
+    duration?: number,
+  ): Promise<void>;
+
+  trackError(
+    req: Request,
+    ctx: FreshContext,
+    error: unknown,
     duration?: number,
   ): Promise<void>;
 }
 
-class Tracker implements Analytics {
-  private readonly client: PirschNodeApiClient;
+class PirschReporter implements Analytics {
+  private readonly pirsch: PirschNodeApiClient;
 
   constructor() {
-    this.client = new Pirsch({
+    this.pirsch = new Pirsch({
       hostname: Deno.env.get("PIRSCH_HOSTNAME")!,
       accessToken: Deno.env.get("PIRSCH_TOKEN")!,
       protocol: "https",
@@ -37,38 +48,56 @@ class Tracker implements Analytics {
 
   public async trackPageView(req: Request, ctx: FreshContext) {
     try {
-      await this.client.hit(this.requestToPirschHit(req, ctx));
+      await this.pirsch.hit(this.requestToPirschHit(req, ctx));
     } catch (err) {
       console.error("Error tracking page view", err);
     }
   }
 
-  public async trackEvent(
+  public async trackPasteSubmission(
     req: Request,
+    res: Response,
     ctx: FreshContext,
-    name: string,
-    meta?: Record<string, string>,
-    duration?: number,
   ) {
     try {
-      await this.client.event(
-        name,
+      const id = res.headers.get("location")?.split("/").pop()!;
+      const size = req.headers.get("content-length")!;
+
+      const meta = {
+        id,
+        size: `${size} bytes`,
+      };
+
+      await this.pirsch.event(
+        "Create Paste",
         this.requestToPirschHit(req, ctx),
-        duration,
+        undefined,
         meta,
       );
     } catch (err) {
-      console.error("Error tracking event", err);
+      console.error("Error tracking paste submission", err);
     }
   }
 
-  private getClientIp(req: Request, ctx: FreshContext): string {
-    const forwardedFor = req.headers.get("x-forwarded-for");
-    if (forwardedFor) {
-      return forwardedFor.split(/\s*,\s*/)[0];
-    } else {
-      return (ctx.info.remoteAddr as Deno.NetAddr).hostname;
-    }
+  public async trackError(
+    req: Request,
+    ctx: FreshContext,
+    error: unknown,
+  ) {
+    const code = error instanceof HttpError ? error.status : 500;
+    const name = this.getName(code);
+    const meta = {
+      code,
+      method: req.method,
+      url: req.url,
+    };
+
+    await this.pirsch.event(
+      name,
+      this.requestToPirschHit(req, ctx),
+      undefined,
+      meta,
+    );
   }
 
   private requestToPirschHit(req: Request, ctx: FreshContext): PirschHit {
@@ -87,5 +116,30 @@ class Tracker implements Analytics {
         undefined,
       referrer: req.headers.get("referer") || undefined,
     };
+  }
+
+  private getClientIp(req: Request, ctx: FreshContext): string {
+    const forwardedFor = req.headers.get("x-forwarded-for");
+    if (forwardedFor) {
+      return forwardedFor.split(/\s*,\s*/)[0];
+    } else {
+      return (ctx.info.remoteAddr as Deno.NetAddr).hostname;
+    }
+  }
+
+  private getName(code: number) {
+    if (code === 400) {
+      return "400 Bad request";
+    }
+
+    if (code === 404) {
+      return "404 Paste not found";
+    }
+
+    if (code === 413) {
+      return "413 Paste too large";
+    }
+
+    return "500 Server error";
   }
 }

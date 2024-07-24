@@ -20,8 +20,8 @@ export const handler = define.handlers({
       throw new HttpError(400);
     }
 
-    const db = await getDatabase();
     try {
+      const db = await getDatabase();
       const id = await db.insertPaste(contents);
 
       return new Response(undefined, {

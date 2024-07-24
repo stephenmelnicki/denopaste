@@ -1,6 +1,8 @@
 import { FreshContext } from "fresh";
 import { getAnalytics } from "../utils/analytics.ts";
 
+const analytics = getAnalytics();
+
 function isPage(req: Request) {
   return !req.url.includes(".ico") &&
     !req.url.includes(".woff2") &&
@@ -12,23 +14,29 @@ function pirsch(
   request: Request,
   conn: FreshContext,
   response: Response,
-  _start: number,
-  _error?: unknown,
+  start: number,
+  error?: unknown,
 ) {
-  const analytics = getAnalytics();
-
-  if (request.url === "/" && request.method === "POST") {
-    const id = response.headers.get("location")?.split("/").pop()!;
-    const size = request.headers.get("content-length");
-
-    analytics.trackEvent(request, conn, "Create Paste", {
-      id,
-      size: `${size} bytes`,
-    });
+  // track page views and paste submissions
+  if (!["GET", "POST"].includes(request.method)) {
+    return;
   }
 
-  if (isPage(request)) {
-    analytics.trackPageView(request, conn);
+  // no need to track asset requests like css, fonts, images, etc.
+  if (!isPage(request)) {
+    return;
+  }
+
+  if (request.method === "GET" && error == null) {
+    analytics.trackPageView(request, conn, start);
+  }
+
+  if (request.method === "POST" && error == null) {
+    analytics.trackPasteSubmission(request, response, conn, start);
+  }
+
+  if (error != null) {
+    analytics.trackError(request, conn, error, start);
   }
 }
 

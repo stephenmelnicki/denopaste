@@ -4,7 +4,7 @@ export function ServerCodePage(
   props: { serverCode: number; codeDescription: string },
 ) {
   return (
-    <main class="my-24 text-center">
+    <main class="mt-24 mb-16 text-center">
       <h2 class="text-7xl text-gray-900 font-bold">
         {props.serverCode}
       </h2>
