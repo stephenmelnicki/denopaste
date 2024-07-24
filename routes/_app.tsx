@@ -28,7 +28,7 @@ export default define.page(function App({ Component, state }) {
         />
         <link rel="stylesheet" type="text/css" href={asset("/styles.css")} />
       </head>
-      <body class="flex flex-col px-4 sm:px-6 py-8 mx-auto max-w-screen-md text-gray-800">
+      <body class="flex flex-col px-4 sm:px-6 py-8 mx-auto min-h-screen max-w-screen-md text-gray-800">
         <Header />
         <Component />
         <Footer />
