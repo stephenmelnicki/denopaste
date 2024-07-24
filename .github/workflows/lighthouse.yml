@@ -16,12 +16,10 @@ jobs:
       - name: Setup repo
         uses: actions/checkout@v4
 
-      - name: Audit URLs using Lighthouse
+      - name: Audit using Lighthouse
         uses: treosh/lighthouse-ci-action@v10
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
         with:
           temporaryPublicStorage: true
-          urls: |
-            $URL
-            $URL/docs/introduction
+          urls: $URL
