@@ -1,8 +1,6 @@
 import { FreshContext } from "fresh";
 import { getAnalytics } from "../utils/analytics.ts";
 
-const analytics = getAnalytics();
-
 function isPage(req: Request) {
   return !req.url.includes(".ico") &&
     !req.url.includes(".woff2") &&
@@ -26,6 +24,8 @@ function pirsch(
   if (!isPage(request)) {
     return;
   }
+
+  const analytics = getAnalytics();
 
   if (request.method === "GET" && error == null) {
     analytics.trackPageView(request, conn, start);
