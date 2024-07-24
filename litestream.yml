@@ -1,6 +1,0 @@
-dbs:
-  - path: ${DB_PATH}
-    replicas:
-      - url: ${DB_REPLICA_URL}
-        account-key: ${LITESTREAM_AZURE_ACCOUNT_KEY}
-        sync-interval: 10s

@@ -1,6 +1,7 @@
 .env
+*.db*
+
 _fresh/
 node_modules/
 coverage/
-data/
 fly.toml

@@ -1,13 +1,17 @@
-import { FreshContext, Handlers } from "$fresh/server.ts";
-import { State } from "@/utils/types.ts";
+import { HttpError } from "fresh";
 
-// deno-lint-ignore no-explicit-any
-export const handler: Handlers<any, State> = {
-  GET(_req: Request, ctx: FreshContext<State>) {
-    const paste = ctx.state.db.getPasteById(ctx.params.id);
+import { define } from "../../utils/state.ts";
+import { getDatabase } from "../../utils/db.ts";
 
-    return paste === undefined
-      ? new Response("paste not found", { status: 404 })
-      : new Response(paste.contents, { status: 200 });
+export const handler = define.handlers({
+  async GET(ctx) {
+    const db = await getDatabase();
+    const paste = await db.getPasteById(ctx.params.id);
+
+    if (!paste) {
+      throw new HttpError(404);
+    }
+
+    return new Response(paste.contents, { status: 200 });
   },
-};
+});

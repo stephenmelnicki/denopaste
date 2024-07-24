@@ -1,37 +1,38 @@
 import { useRef } from "preact/hooks";
 import { useSignal } from "@preact/signals";
-import { JSX } from "preact/jsx-runtime";
-
-import {
-  ERROR_EMPTY,
-  ERROR_SIZE_LIMIT,
-  MAX_PASTE_LIMIT,
-} from "@/utils/constants.ts";
+import type { JSX } from "preact";
 
 export default function PasteForm() {
   const textarea = useRef<HTMLTextAreaElement>(null);
-  const loading = useSignal<boolean>(false);
   const contents = useSignal<string>("");
 
-  function onInput(event: JSX.TargetedEvent<HTMLTextAreaElement>) {
+  function onInput(event: JSX.TargetedEvent<HTMLTextAreaElement>): void {
     contents.value = event.currentTarget.value;
     textarea.current?.setCustomValidity("");
   }
 
-  function validate(contents: string) {
+  function validate(contents: string): boolean {
     if (contents.trim().length === 0) {
-      textarea.current?.setCustomValidity(ERROR_EMPTY);
-    } else if (contents.length > MAX_PASTE_LIMIT) {
-      textarea.current?.setCustomValidity(ERROR_SIZE_LIMIT);
+      textarea.current?.setCustomValidity("Paste can not be empty.");
+    } else if (contents.length > 1024 * 64) {
+      textarea.current?.setCustomValidity(
+        "Paste is too long. Size limit is 64 KiB.",
+      );
     } else {
       textarea.current?.setCustomValidity("");
     }
+
+    return textarea.current?.checkValidity() ?? false;
   }
 
-  function onSubmit(event: Event) {
-    validate(contents.value);
+  function onKeyDown(event: KeyboardEvent): void {
+    if (event.ctrlKey && event.key === "Enter") {
+      textarea.current?.form?.requestSubmit();
+    }
+  }
 
-    if (textarea.current && textarea.current.checkValidity() === false) {
+  function onSubmit(event: SubmitEvent): boolean {
+    if (!validate(contents.value)) {
       textarea.current?.reportValidity();
       event.preventDefault();
       return false;
@@ -42,8 +43,6 @@ export default function PasteForm() {
 
   return (
     <form
-      id="form"
-      class="flex flex-col"
       name="form"
       method="post"
       onSubmit={onSubmit}
@@ -51,23 +50,21 @@ export default function PasteForm() {
       <label class="sr-only" for="contents">Content</label>
       <textarea
         ref={textarea}
-        class="block w-full h-56 px-4 py-2 border-0 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 font-mono focus:ring-2 focus:ring-inset focus:ring-green-600 disabled:opacity-75"
         id="contents"
         name="contents"
         type="text"
+        class="block w-full h-56 px-4 py-2 border-0 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 font-mono focus:ring-2 focus:ring-inset focus:ring-green-600 disabled:opacity-75"
         value={contents.value}
-        disabled={loading.value}
         onInput={onInput}
+        onKeyDown={onKeyDown}
         autoFocus
         required
       />
-
-      <div class="flex justify-between items-start mt-4">
+      <div class="flex justify-between mt-4">
         <p>Pastes expire in one hour</p>
         <button
-          class="px-4 py-2 font-semibold rounded-md bg-green-600 text-white shadow-sm hover:bg-green-500 disabled:opacity-75"
           type="submit"
-          disabled={loading.value}
+          class="px-4 py-2 font-semibold rounded-md bg-green-600 text-white shadow-sm hover:bg-green-500 disabled:opacity-75"
         >
           Submit
         </button>

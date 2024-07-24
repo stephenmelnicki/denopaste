@@ -7,7 +7,7 @@ export default function Header() {
         </h1>
       </a>
       <p class="mt-1">
-        A paste service built with Deno & Fresh 🦕🍋
+        A simple paste service built with Deno and Fresh 🦕🍋
       </p>
     </header>
   );

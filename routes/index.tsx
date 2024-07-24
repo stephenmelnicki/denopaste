@@ -1,46 +1,47 @@
-import { FreshContext, Handlers } from "$fresh/server.ts";
+import { HttpError, page } from "fresh";
 
-import { State } from "@/utils/types.ts";
-import PasteForm from "@/islands/PasteForm.tsx";
-import {
-  ERROR_EMPTY,
-  ERROR_SIZE_LIMIT,
-  MAX_PASTE_LIMIT,
-} from "@/utils/constants.ts";
+import PasteForm from "../islands/PasteForm.tsx";
 
-// deno-lint-ignore no-explicit-any
-export const handler: Handlers<any, State> = {
-  async POST(req: Request, ctx: FreshContext<State>) {
-    const form = await req.formData();
+import { getDatabase } from "../utils/db.ts";
+import { define } from "../utils/state.ts";
+
+export const handler = define.handlers({
+  GET(ctx) {
+    ctx.state.title =
+      "Denopaste - A simple paste service built with Deno & Fresh 🦕🍋";
+
+    return page();
+  },
+  async POST(ctx) {
+    const form = await ctx.req.formData();
     const contents = form.get("contents")?.toString();
 
     if (contents === undefined || contents.trim().length === 0) {
-      return new Response(ERROR_EMPTY, { status: 400 });
+      throw new HttpError(400);
     }
 
-    if (contents.length > MAX_PASTE_LIMIT) {
-      return new Response(ERROR_SIZE_LIMIT, { status: 413 });
+    const db = await getDatabase();
+    try {
+      const id = await db.insertPaste(contents);
+
+      return new Response(undefined, {
+        headers: { "location": `/${id}` },
+        status: 302,
+      });
+    } catch (err) {
+      if (err instanceof TypeError && err.message.includes("value too large")) {
+        throw new HttpError(413);
+      }
+
+      throw err;
     }
-
-    const { db, analytics } = ctx.state;
-
-    const id = db.insertPaste(contents);
-    await analytics.trackEvent(req, "Create Paste", {
-      id,
-      size: `${contents.length} bytes.`,
-    });
-
-    return new Response(undefined, {
-      headers: { "location": `/${id}` },
-      status: 302,
-    });
   },
-};
+});
 
-export default function Home() {
+export default define.page<typeof handler>(function Home() {
   return (
-    <main class="mt-4 mb-8">
+    <main class="mt-4 mb-16">
       <PasteForm />
     </main>
   );
-}
+});

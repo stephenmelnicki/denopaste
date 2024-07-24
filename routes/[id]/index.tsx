@@ -1,45 +1,51 @@
-import { FreshContext, Handlers, PageProps } from "$fresh/server.ts";
-import { Head } from "$fresh/runtime.ts";
+import { HttpError, page } from "fresh";
 
-import { Paste, State } from "@/utils/types.ts";
-import CopyToClipboardButton from "@/islands/CopyToClipboardButton.tsx";
-import Line from "@/components/Line.tsx";
+import CopyToClipboardButton from "../../islands/CopyToClipboardButton.tsx";
+import Line from "../../components/Line.tsx";
 
-// deno-lint-ignore no-explicit-any
-export const handler: Handlers<any, State> = {
-  GET(_req: Request, ctx: FreshContext<State>) {
-    const paste = ctx.state.db.getPasteById(ctx.params.id);
-    return paste === undefined ? ctx.renderNotFound() : ctx.render(paste);
+import { define } from "../../utils/state.ts";
+import { getDatabase, Paste } from "../../utils/db.ts";
+import { createTitle } from "../../utils/title.ts";
+
+interface Data {
+  paste: Paste;
+}
+
+export const handler = define.handlers<Data>({
+  async GET(ctx) {
+    const db = await getDatabase();
+    const paste = await db.getPasteById(ctx.params.id);
+
+    if (!paste) {
+      throw new HttpError(404);
+    }
+
+    ctx.state.title = createTitle(paste.contents);
+    return page({ paste });
   },
-};
+});
 
-export default function PasteById(props: PageProps<Paste>) {
-  const truncate = (str: string, n: number = 128) =>
-    str.length > n ? `${str.substring(0, n - 1)}…` : str;
+export default define.page<typeof handler>(function PasteById(props) {
+  const { paste } = props.data;
 
   return (
-    <>
-      <Head>
-        <title>{truncate(props.data.contents)} | Denopaste</title>
-      </Head>
-      <main class="my-8">
-        <div class="mb-6 flex items-center justify-end gap-x-4">
-          <a
-            class="px-4 py-2 font-semibold rounded-md text-gray-900"
-            href={`/${props.data.id}/raw`}
-          >
-            View Raw
-          </a>
-          <CopyToClipboardButton contents={props.data.contents} />
-        </div>
-        <pre class="bg-gray-100 border rounded-md border-gray-300 overflow-x-scroll text-gray-900">
-          {
-            props.data.contents
-              .split('\n')
-              .map((line, index) => (<Line key={index} line={line} number={index} />))
-          }
-        </pre>
-      </main>
-    </>
+    <main class="mt-4 mb-16">
+      <div class="mb-6 flex items-center justify-end gap-x-4">
+        <a
+          class="px-4 py-2 font-semibold rounded-md"
+          href={`/${paste.id}/raw`}
+        >
+          View Raw
+        </a>
+        <CopyToClipboardButton contents={paste.contents} />
+      </div>
+      <pre class="bg-gray-100 border rounded-md border-gray-300 overflow-auto">
+        {
+          paste.contents
+            .split('\n')
+            .map((line, index) => (<Line line={line} number={index} />))
+        }
+      </pre>
+    </main>
   );
-}
+});

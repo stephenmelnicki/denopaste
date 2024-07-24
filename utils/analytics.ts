@@ -1,7 +1,7 @@
+import { FreshContext } from "fresh";
 import { Pirsch, PirschHit, PirschNodeApiClient } from "pirsch";
-import { Analytics } from "@/utils/types.ts";
 
-export const getAnalyticsInstance: () => Analytics = (() => {
+export const getAnalytics: () => Analytics = (() => {
   let analytics: Analytics;
 
   return function () {
@@ -12,6 +12,17 @@ export const getAnalyticsInstance: () => Analytics = (() => {
     return analytics;
   };
 })();
+
+interface Analytics {
+  trackPageView(req: Request, ctx: FreshContext): Promise<void>;
+  trackEvent(
+    req: Request,
+    ctx: FreshContext,
+    name: string,
+    meta?: Record<string, string>,
+    duration?: number,
+  ): Promise<void>;
+}
 
 class Tracker implements Analytics {
   private readonly client: PirschNodeApiClient;
@@ -24,9 +35,9 @@ class Tracker implements Analytics {
     });
   }
 
-  public async trackPageView(req: Request) {
+  public async trackPageView(req: Request, ctx: FreshContext) {
     try {
-      await this.client.hit(this.requestToPirschHit(req));
+      await this.client.hit(this.requestToPirschHit(req, ctx));
     } catch (err) {
       console.error("Error tracking page view", err);
     }
@@ -34,6 +45,7 @@ class Tracker implements Analytics {
 
   public async trackEvent(
     req: Request,
+    ctx: FreshContext,
     name: string,
     meta?: Record<string, string>,
     duration?: number,
@@ -41,7 +53,7 @@ class Tracker implements Analytics {
     try {
       await this.client.event(
         name,
-        this.requestToPirschHit(req),
+        this.requestToPirschHit(req, ctx),
         duration,
         meta,
       );
@@ -50,11 +62,19 @@ class Tracker implements Analytics {
     }
   }
 
-  private requestToPirschHit(req: Request): PirschHit {
+  private getClientIp(req: Request, ctx: FreshContext): string {
+    const forwardedFor = req.headers.get("x-forwarded-for");
+    if (forwardedFor) {
+      return forwardedFor.split(/\s*,\s*/)[0];
+    } else {
+      return (ctx.info.remoteAddr as Deno.NetAddr).hostname;
+    }
+  }
+
+  private requestToPirschHit(req: Request, ctx: FreshContext): PirschHit {
     return {
       url: req.url,
-      // NOTE: header is specific to fly.io - change as needed for your hosting provider.
-      ip: req.headers.get("fly-client-ip") || "",
+      ip: this.getClientIp(req, ctx),
       user_agent: req.headers.get("user-agent") || "",
       accept_language: req.headers.get("accept-language") || undefined,
       sec_ch_ua: req.headers.get("sec-ch-ua") || undefined,

@@ -19,3 +19,4 @@ tests/
 node_modules/
 _fresh/
 data/
+e2e/

@@ -3,7 +3,7 @@ interface LineProps {
   number: number;
 }
 
-export default function Line({ line, number }: LineProps) {
+export default function Line(props: LineProps) {
   const classes = [
     "before:bg-white",
     "before:text-gray-600",
@@ -19,10 +19,10 @@ export default function Line({ line, number }: LineProps) {
 
   return (
     <code
-      data-line-number={number + 1}
+      data-line-number={props.number + 1}
       class={classes.join(" ")}
     >
-      {line}
+      {props.line}
     </code>
   );
 }
