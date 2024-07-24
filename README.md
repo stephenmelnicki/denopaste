@@ -4,8 +4,8 @@
 [![Docker Pulls](https://img.shields.io/docker/pulls/smelnicki/denopaste.svg?maxAge=604800)](https://hub.docker.com/r/smelnicki/denopaste)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-A simple paste service built with [Deno](https://deno.land) &
-[Fresh](https://fresh.deno.dev) 🦕🍋
+A simple paste service built with [Deno](https://deno.land) 🦕 and
+[Fresh](https://fresh.deno.dev) 🍋
 
 <picture>
   <img
@@ -45,6 +45,8 @@ docker compose down
 If you want to run the docker image directly:
 
 ```
+DB_PATH=DB-PATH
+
 docker run \
   -e "DB_PATH=$DB_PATH" \
   -p 8000:8000 \
@@ -67,6 +69,7 @@ docker run \
   -e "PIRSCH_HOSTNAME=$PIRSCH_HOSTNAME" \
   -e "PIRSCH_TOKEN=$PIRSCH_TOKEN" \
   -p 8000:8000 \
+  --volume "${PWD}/data:/home/deno/denopaste/data" \
   --name denopaste \
   smelnicki/denopaste
 ```
