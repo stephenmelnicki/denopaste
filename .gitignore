@@ -4,5 +4,3 @@
 
 _fresh/
 node_modules/
-coverage/
-fly.toml

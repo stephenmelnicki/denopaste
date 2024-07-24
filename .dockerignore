@@ -1,14 +1,15 @@
 .dockerignore
 .gitignore
 .gitattributes
+.DS_Store
 
 .git
 .github
 .readme-assets
 .vscode
 
-*.env
-*.env*
+.env
+.env*
 
 docker-compose.yml
 Dockerfile
