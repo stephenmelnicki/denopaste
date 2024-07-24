@@ -1,8 +1,7 @@
 name: Deploy
-
-on: 
+on:
   push:
-    branches: [main]
+    branches: main
   pull_request:
     branches: main
 
@@ -14,7 +13,7 @@ jobs:
     permissions:
       id-token: write # Needed for auth with Deno Deploy
       contents: read # Needed to clone the repository
-    
+
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
@@ -25,11 +24,11 @@ jobs:
           deno-version: v1.x
 
       - name: Build step
-        run: "deno task build" # 📝 Update the build command(s) if necessary
+        run: "deno task build"
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
         with:
-          project: "fresh" # 📝 Update the deploy project name if necessary
-          entrypoint: "./main.ts" # 📝 Update the entrypoint if necessary
+          project: "denopaste"
+          entrypoint: "./main.ts"
           root: "."
