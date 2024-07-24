@@ -11,8 +11,10 @@ export const getDatabase: () => Promise<Database> = (() => {
 
   return async () => {
     if (!database) {
-      const path = Deno.env.get("DB_PATH") ?? "./data/pastes.db";
-      const kv = await Deno.openKv(path);
+      const kv = Deno.env.get("DB_PATH")
+        ? await Deno.openKv(Deno.env.get("DB_PATH"))
+        : await Deno.openKv();
+
       database = new Db(kv);
     }
 
