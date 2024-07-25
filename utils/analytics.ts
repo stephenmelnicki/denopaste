@@ -1,18 +1,6 @@
 import { FreshContext, HttpError } from "fresh";
 import { Pirsch, PirschHit, PirschNodeApiClient } from "pirsch";
 
-export const getAnalytics: () => Analytics = (() => {
-  let analytics: Analytics;
-
-  return function () {
-    if (!analytics) {
-      analytics = new PirschReporter();
-    }
-
-    return analytics;
-  };
-})();
-
 interface Analytics {
   trackPageView(
     req: Request,
@@ -38,10 +26,10 @@ interface Analytics {
 class PirschReporter implements Analytics {
   private readonly pirsch: PirschNodeApiClient;
 
-  constructor() {
+  constructor(hostname: string, accessToken: string) {
     this.pirsch = new Pirsch({
-      hostname: Deno.env.get("PIRSCH_HOSTNAME")!,
-      accessToken: Deno.env.get("PIRSCH_TOKEN")!,
+      hostname,
+      accessToken,
       protocol: "https",
     });
   }
@@ -143,3 +131,20 @@ class PirschReporter implements Analytics {
     return "500 Server error";
   }
 }
+
+export const getAnalytics: () => Analytics | undefined = (() => {
+  let analytics: Analytics | undefined;
+
+  return function () {
+    if (!analytics) {
+      const hostname = Deno.env.get("PIRSCH_HOSTNAME");
+      const accessToken = Deno.env.get("PIRSCH_ACCESS_TOKEN");
+
+      if (hostname && accessToken) {
+        analytics = new PirschReporter(hostname, accessToken);
+      }
+    }
+
+    return analytics;
+  };
+})();

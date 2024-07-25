@@ -15,6 +15,12 @@ function pirsch(
   start: number,
   error?: unknown,
 ) {
+  const analytics = getAnalytics();
+
+  if (!analytics) {
+    return;
+  }
+
   // track page views and paste submissions
   if (!["GET", "POST"].includes(request.method)) {
     return;
@@ -24,8 +30,6 @@ function pirsch(
   if (!isPage(request)) {
     return;
   }
-
-  const analytics = getAnalytics();
 
   if (request.method === "GET" && error == null) {
     analytics.trackPageView(request, conn, start);
