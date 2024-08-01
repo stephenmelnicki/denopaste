@@ -1,7 +1,9 @@
 import { App, fsRoutes, staticFiles, trailingSlashes } from "fresh";
+import { load } from "@std/dotenv";
+
 import logger from "./middlewares/logger.ts";
 
-import "@std/dotenv/load";
+await load();
 
 export const app = new App({ root: import.meta.url })
   .use(staticFiles())
