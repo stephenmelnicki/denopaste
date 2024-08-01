@@ -11,29 +11,26 @@ export default function PasteForm() {
     textarea.current?.setCustomValidity("");
   }
 
-  function validate(contents: string): boolean {
-    if (contents.trim().length === 0) {
-      textarea.current?.setCustomValidity("Paste can not be empty.");
-    } else if (contents.length > 1024 * 64) {
-      textarea.current?.setCustomValidity(
-        "Paste is too long. Size limit is 64 KiB.",
-      );
-    } else {
-      textarea.current?.setCustomValidity("");
-    }
-
-    return textarea.current?.checkValidity() ?? false;
-  }
-
   function onKeyDown(event: KeyboardEvent): void {
     if (event.ctrlKey && event.key === "Enter") {
       textarea.current?.form?.requestSubmit();
     }
   }
 
+  function validate(textarea: HTMLTextAreaElement): boolean {
+    if (textarea.validity.valueMissing || textarea.value.trim() === "") {
+      textarea.setCustomValidity("Paste can not be empty.");
+    } else if (textarea.value.length > 1024 * 64) {
+      textarea.setCustomValidity("Paste is too long. Size limit is 64 KiB.");
+    } else {
+      textarea.setCustomValidity("");
+    }
+
+    return textarea.reportValidity();
+  }
+
   function onSubmit(event: SubmitEvent): boolean {
-    if (!validate(contents.value)) {
-      textarea.current?.reportValidity();
+    if (!validate(textarea.current!)) {
       event.preventDefault();
       return false;
     }
@@ -47,7 +44,7 @@ export default function PasteForm() {
       method="post"
       onSubmit={onSubmit}
     >
-      <label class="sr-only" for="contents">Content</label>
+      <label class="sr-only" for="contents">Contents</label>
       <textarea
         ref={textarea}
         id="contents"

@@ -16,7 +16,7 @@ export default function CopyToClipboardButton({ contents }: Props) {
       text.value = COPIED;
       setTimeout(() => text.value = COPY_TO_CLIPBOARD, 750);
     } catch (err) {
-      console.error(err);
+      console.error("error copying to clipboard", err);
     }
   }
 

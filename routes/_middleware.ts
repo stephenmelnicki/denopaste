@@ -1,5 +1,8 @@
 import { FreshContext } from "fresh";
-import { getAnalytics } from "../utils/analytics.ts";
+import { type State } from "../utils/define.ts";
+import { analytics } from "../utils/analytics.ts";
+import { database } from "../utils/db.ts";
+import { errorTitle } from "../utils/title.ts";
 
 function isPage(req: Request) {
   return !req.url.includes(".ico") &&
@@ -15,9 +18,9 @@ function pirsch(
   start: number,
   error?: unknown,
 ) {
-  const analytics = getAnalytics();
+  const pirsch = analytics();
 
-  if (!analytics) {
+  if (!pirsch) {
     return;
   }
 
@@ -32,29 +35,31 @@ function pirsch(
   }
 
   if (request.method === "GET" && error == null) {
-    analytics.trackPageView(request, conn, start);
+    pirsch.pageView(request, conn, start);
   }
 
   if (request.method === "POST" && error == null) {
-    analytics.trackPasteSubmission(request, response, conn, start);
+    pirsch.pasteEvent(request, response, conn, start);
   }
 
   if (error != null) {
-    analytics.trackError(request, conn, error, start);
+    pirsch.errorEvent(request, conn, error, start);
   }
 }
 
-export async function handler(ctx: FreshContext): Promise<Response> {
+export async function handler(ctx: FreshContext<State>): Promise<Response> {
   let err;
   let res: Response;
   const start = performance.now();
 
   try {
+    ctx.state.db = await database();
     const response = await ctx.next();
     const headers = new Headers(response.headers);
     res = new Response(response.body, { status: response.status, headers });
     return res;
-  } catch (e) {
+  } catch (e: unknown) {
+    ctx.state.title = errorTitle(e as Error);
     res = new Response("Server error", { status: 500 });
     err = e;
     throw e;

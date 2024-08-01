@@ -1,27 +1,51 @@
 import { FreshContext, HttpError } from "fresh";
 import { Pirsch, PirschHit, PirschNodeApiClient } from "pirsch";
 
-interface Analytics {
-  trackPageView(
+export interface Analytics {
+  pageView(
     req: Request,
     ctx: FreshContext,
     duration?: number,
   ): Promise<void>;
 
-  trackPasteSubmission(
+  pasteEvent(
     req: Request,
     res: Response,
     ctx: FreshContext,
     duration?: number,
   ): Promise<void>;
 
-  trackError(
+  errorEvent(
     req: Request,
     ctx: FreshContext,
     error: unknown,
     duration?: number,
   ): Promise<void>;
 }
+
+export const analytics: () => Analytics | undefined = (() => {
+  const hostname = Deno.env.get("PIRSCH_HOSTNAME");
+  const accessToken = Deno.env.get("PIRSCH_ACCESS_TOKEN");
+
+  if (!hostname || !accessToken) {
+    console.log(
+      'Pirsch analytics is disabled. Set "PIRSCH_HOSTNAME" and "PIRSCH_ACCESS_TOKEN" to enable.',
+    );
+    return () => undefined;
+  }
+
+  let analytics: Analytics | undefined;
+
+  return function () {
+    if (!analytics) {
+      console.log("connecting to pirsch analytics...");
+      analytics = new PirschReporter(hostname, accessToken);
+      console.log("connected.");
+    }
+
+    return analytics;
+  };
+})();
 
 class PirschReporter implements Analytics {
   private readonly pirsch: PirschNodeApiClient;
@@ -34,19 +58,19 @@ class PirschReporter implements Analytics {
     });
   }
 
-  public async trackPageView(req: Request, ctx: FreshContext) {
+  public async pageView(req: Request, ctx: FreshContext): Promise<void> {
     try {
-      await this.pirsch.hit(this.requestToPirschHit(req, ctx));
+      await this.pirsch.hit(this.hit(req, ctx));
     } catch (err) {
       console.error("Error tracking page view", err);
     }
   }
 
-  public async trackPasteSubmission(
+  public async pasteEvent(
     req: Request,
     res: Response,
     ctx: FreshContext,
-  ) {
+  ): Promise<void> {
     try {
       const id = res.headers.get("location")?.split("/").pop()!;
       const size = req.headers.get("content-length")!;
@@ -58,40 +82,44 @@ class PirschReporter implements Analytics {
 
       await this.pirsch.event(
         "Create Paste",
-        this.requestToPirschHit(req, ctx),
+        this.hit(req, ctx),
         undefined,
         meta,
       );
     } catch (err) {
-      console.error("Error tracking paste submission", err);
+      console.error("Error tracking paste event", err);
     }
   }
 
-  public async trackError(
+  public async errorEvent(
     req: Request,
     ctx: FreshContext,
     error: unknown,
-  ) {
+  ): Promise<void> {
     const code = error instanceof HttpError ? error.status : 500;
-    const name = this.getName(code);
+    const name = this.name(code);
     const meta = {
       code,
       method: req.method,
       url: req.url,
     };
 
-    await this.pirsch.event(
-      name,
-      this.requestToPirschHit(req, ctx),
-      undefined,
-      meta,
-    );
+    try {
+      await this.pirsch.event(
+        name,
+        this.hit(req, ctx),
+        undefined,
+        meta,
+      );
+    } catch (err) {
+      console.error("Error tracking error event", err);
+    }
   }
 
-  private requestToPirschHit(req: Request, ctx: FreshContext): PirschHit {
+  private hit(req: Request, ctx: FreshContext): PirschHit {
     return {
       url: req.url,
-      ip: this.getClientIp(req, ctx),
+      ip: this.ip(req, ctx),
       user_agent: req.headers.get("user-agent") || "",
       accept_language: req.headers.get("accept-language") || undefined,
       sec_ch_ua: req.headers.get("sec-ch-ua") || undefined,
@@ -106,8 +134,11 @@ class PirschReporter implements Analytics {
     };
   }
 
-  private getClientIp(req: Request, ctx: FreshContext): string {
+  private ip(req: Request, ctx: FreshContext): string {
     const forwardedFor = req.headers.get("x-forwarded-for");
+
+    console.log("ip: ", forwardedFor, ctx.info.remoteAddr);
+
     if (forwardedFor) {
       return forwardedFor.split(/\s*,\s*/)[0];
     } else {
@@ -115,36 +146,16 @@ class PirschReporter implements Analytics {
     }
   }
 
-  private getName(code: number) {
-    if (code === 400) {
-      return "400 Bad request";
+  private name(code: number): string {
+    switch (code) {
+      case 400:
+        return "400 Bad request";
+      case 404:
+        return "404 Paste not found";
+      case 413:
+        return "413 Paste too large";
+      default:
+        return "500 Server error";
     }
-
-    if (code === 404) {
-      return "404 Paste not found";
-    }
-
-    if (code === 413) {
-      return "413 Paste too large";
-    }
-
-    return "500 Server error";
   }
 }
-
-export const getAnalytics: () => Analytics | undefined = (() => {
-  let analytics: Analytics | undefined;
-
-  return function () {
-    if (!analytics) {
-      const hostname = Deno.env.get("PIRSCH_HOSTNAME");
-      const accessToken = Deno.env.get("PIRSCH_ACCESS_TOKEN");
-
-      if (hostname && accessToken) {
-        analytics = new PirschReporter(hostname, accessToken);
-      }
-    }
-
-    return analytics;
-  };
-})();
