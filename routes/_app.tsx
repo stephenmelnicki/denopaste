@@ -1,10 +1,11 @@
+import { type PageProps } from "fresh";
 import { asset } from "fresh/runtime";
-import { define } from "../utils/state.ts";
+import { define, type State } from "../utils/define.ts";
 
 import Header from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";
 
-export default define.page(function App({ Component, state }) {
+function App({ Component, state }: PageProps<never, State>) {
   return (
     <html lang="en">
       <head>
@@ -35,4 +36,6 @@ export default define.page(function App({ Component, state }) {
       </body>
     </html>
   );
-});
+}
+
+export default define.page(App);

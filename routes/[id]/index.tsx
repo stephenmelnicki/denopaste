@@ -1,31 +1,32 @@
+import type { FreshContext, PageProps } from "fresh";
 import { HttpError, page } from "fresh";
 
 import CopyToClipboardButton from "../../islands/CopyToClipboardButton.tsx";
 import Line from "../../components/Line.tsx";
 
-import { define } from "../../utils/state.ts";
-import { getDatabase, Paste } from "../../utils/db.ts";
-import { createTitle } from "../../utils/title.ts";
+import { define, type State } from "../../utils/define.ts";
+import { type Paste } from "../../utils/db.ts";
+import { pageTitle } from "../../utils/title.ts";
 
 interface Data {
   paste: Paste;
 }
 
 export const handler = define.handlers<Data>({
-  async GET(ctx) {
-    const db = await getDatabase();
+  async GET(ctx: FreshContext<State>) {
+    const { db } = ctx.state;
     const paste = await db.getPasteById(ctx.params.id);
 
     if (!paste) {
       throw new HttpError(404);
     }
 
-    ctx.state.title = createTitle(paste.contents);
+    ctx.state.title = pageTitle(paste.contents);
     return page({ paste });
   },
 });
 
-export default define.page<typeof handler>(function PasteById(props) {
+function PasteById(props: PageProps<Data>) {
   const { paste } = props.data;
 
   return (
@@ -48,4 +49,6 @@ export default define.page<typeof handler>(function PasteById(props) {
       </pre>
     </main>
   );
-});
+}
+
+export default define.page(PasteById);

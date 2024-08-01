@@ -1,4 +1,5 @@
 import { App, fsRoutes, staticFiles, trailingSlashes } from "fresh";
+import logger from "./middlewares/logger.ts";
 
 import "@std/dotenv/load";
 
@@ -10,6 +11,8 @@ await fsRoutes(app, {
   loadIsland: (path) => import(`./islands/${path}`),
   loadRoute: (path) => import(`./routes/${path}`),
 });
+
+app.use(logger);
 
 if (import.meta.main) {
   await app.listen();
