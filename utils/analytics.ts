@@ -119,7 +119,7 @@ class PirschReporter implements Analytics {
   private hit(req: Request, ctx: FreshContext): PirschHit {
     return {
       url: req.url,
-      ip: this.ip(req, ctx),
+      ip: (ctx.info.remoteAddr as Deno.NetAddr).hostname,
       user_agent: req.headers.get("user-agent") || "",
       accept_language: req.headers.get("accept-language") || undefined,
       sec_ch_ua: req.headers.get("sec-ch-ua") || undefined,
@@ -132,18 +132,6 @@ class PirschReporter implements Analytics {
         undefined,
       referrer: req.headers.get("referer") || undefined,
     };
-  }
-
-  private ip(req: Request, ctx: FreshContext): string {
-    const forwardedFor = req.headers.get("x-forwarded-for");
-
-    console.log("ip: ", forwardedFor, ctx.info.remoteAddr);
-
-    if (forwardedFor) {
-      return forwardedFor.split(/\s*,\s*/)[0];
-    } else {
-      return (ctx.info.remoteAddr as Deno.NetAddr).hostname;
-    }
   }
 
   private name(code: number): string {
