@@ -3,6 +3,7 @@ import { type State } from "../utils/define.ts";
 import { analytics } from "../utils/analytics.ts";
 import { database } from "../utils/db.ts";
 import { errorTitle } from "../utils/title.ts";
+import { duration, log, path, Prefix } from "../utils/logger.ts";
 
 function isPage(req: Request) {
   return !req.url.includes(".ico") &&
@@ -34,16 +35,22 @@ function pirsch(
     return;
   }
 
-  if (request.method === "GET" && error == null) {
+  if (error != null) {
+    pirsch.errorEvent(request, conn, error, start);
+    return;
+  }
+
+  if (conn.error != null) {
+    pirsch.errorEvent(request, conn, conn.error, start);
+    return;
+  }
+
+  if (request.method === "GET") {
     pirsch.pageView(request, conn, start);
   }
 
-  if (request.method === "POST" && error == null) {
+  if (request.method === "POST") {
     pirsch.pasteEvent(request, response, conn, start);
-  }
-
-  if (error != null) {
-    pirsch.errorEvent(request, conn, error, start);
   }
 }
 
@@ -52,6 +59,8 @@ export async function handler(ctx: FreshContext<State>): Promise<Response> {
   let res: Response;
   const start = performance.now();
 
+  log(Prefix.Incoming, ctx.req.method, path(ctx.req.url));
+
   try {
     ctx.state.db = await database();
     const response = await ctx.next();
@@ -59,11 +68,18 @@ export async function handler(ctx: FreshContext<State>): Promise<Response> {
     res = new Response(response.body, { status: response.status, headers });
     return res;
   } catch (e: unknown) {
-    ctx.state.title = errorTitle(e as Error);
+    ctx.state.title = errorTitle(e);
     res = new Response("Server error", { status: 500 });
     err = e;
     throw e;
   } finally {
+    log(
+      Prefix.Outgoing,
+      ctx.req.method,
+      path(ctx.req.url),
+      res!.status,
+      duration(start),
+    );
     pirsch(ctx.req, ctx, res!, start, err);
   }
 }

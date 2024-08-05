@@ -28,8 +28,8 @@ export const analytics: () => Analytics | undefined = (() => {
   const accessToken = Deno.env.get("PIRSCH_ACCESS_TOKEN");
 
   if (!hostname || !accessToken) {
-    console.log(
-      'Pirsch analytics is disabled. Set "PIRSCH_HOSTNAME" and "PIRSCH_ACCESS_TOKEN" to enable.',
+    console.warn(
+      '"PIRSCH_HOSTNAME" and "PIRSCH_ACCESS_TOKEN" environment variables not set. Pirsch analytics reporting disabled.',
     );
     return () => undefined;
   }
@@ -62,7 +62,7 @@ class PirschReporter implements Analytics {
     try {
       await this.pirsch.hit(this.hit(req, ctx));
     } catch (err) {
-      console.error("Error tracking page view", err);
+      console.error("error tracking page view", err);
     }
   }
 
@@ -87,7 +87,7 @@ class PirschReporter implements Analytics {
         meta,
       );
     } catch (err) {
-      console.error("Error tracking paste event", err);
+      console.error("error tracking paste event", err);
     }
   }
 
@@ -105,6 +105,7 @@ class PirschReporter implements Analytics {
     };
 
     try {
+      console.log("logging error event...");
       await this.pirsch.event(
         name,
         this.hit(req, ctx),
@@ -112,7 +113,7 @@ class PirschReporter implements Analytics {
         meta,
       );
     } catch (err) {
-      console.error("Error tracking error event", err);
+      console.error("error tracking error event", err);
     }
   }
 

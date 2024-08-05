@@ -18,7 +18,7 @@ function message(status: number): string {
   }
 }
 
-export function errorTitle(error: Error): string {
+export function errorTitle(error: unknown): string {
   return error instanceof HttpError
     ? `${message(error.status)} | Denopaste`
     : `${message(500)} | Denopaste`;
