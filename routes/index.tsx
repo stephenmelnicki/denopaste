@@ -1,5 +1,6 @@
 import { type FreshContext, HttpError, page } from "fresh";
 import PasteForm from "../islands/PasteForm.tsx";
+import Paste, { PasteEmptyError, PasteTooLargeError } from "../data/paste.ts";
 import { define, type State } from "../utils/define.ts";
 
 export const handler = define.handlers({
@@ -10,24 +11,27 @@ export const handler = define.handlers({
     return page();
   },
   async POST(ctx: FreshContext<State>) {
-    const form = await ctx.req.formData();
-    const contents = form.get("contents")?.toString();
-
-    if (contents === undefined || contents.trim().length === 0) {
-      throw new HttpError(400);
-    }
+    const formData = await ctx.req.formData();
+    console.log("form", formData);
+    const contents = formData.get("contents")?.toString() ?? "";
+    console.log("contents", contents);
 
     try {
       const { db } = ctx.state;
-      const id = await db.insertPaste(contents);
+      const paste = new Paste(contents);
+      await db.insertPaste(paste);
 
       return new Response(undefined, {
-        headers: { "location": `/${id}` },
+        headers: { "location": `/${paste.id}` },
         status: 302,
       });
     } catch (err: unknown) {
-      if (err instanceof TypeError && err.message.includes("value too large")) {
-        throw new HttpError(413);
+      if (err instanceof PasteEmptyError) {
+        throw new HttpError(400, err.message);
+      }
+
+      if (err instanceof PasteTooLargeError) {
+        throw new HttpError(413, err.message);
       }
 
       throw err;

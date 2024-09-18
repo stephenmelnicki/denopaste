@@ -2,10 +2,10 @@ import { HttpError, type PageProps } from "fresh";
 
 function processError(error: unknown): { code: number; description: string } {
   if (error instanceof HttpError) {
-    if (error.status === 400) {
+    if (error.status === 400 || error.status === 413) {
       return {
-        code: 400,
-        description: "Paste can't be empty. Please try again.",
+        code: error.status,
+        description: error.message,
       };
     }
 
@@ -20,13 +20,6 @@ function processError(error: unknown): { code: number; description: string } {
       return {
         code: 405,
         description: "Method not allowed.",
-      };
-    }
-
-    if (error.status === 413) {
-      return {
-        code: 413,
-        description: "Paste is too long. Size limit is 64 KiB.",
       };
     }
   }

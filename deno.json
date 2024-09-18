@@ -1,23 +1,18 @@
 {
-  "version": "2.0.4",
+  "nodeModulesDir": true,
   "tasks": {
-    "build": "deno run -A --unstable-kv dev.ts build",
-    "preview": "deno run -A --unstable-kv main.ts",
     "start": "deno run -A --unstable-kv --watch=static/,routes/ dev.ts",
-    "test": "deno test -A --unstable-kv --parallel"
+    "build": "deno run -A --unstable-kv dev.ts build",
+    "preview": "deno run -A --unstable-kv .ts",
+    "test": "deno test -A --unstable-kv analytics/ data/ utils/",
+    "e2e": "deno test -A --unstable-kv e2e/"
   },
-  "lint": {
-    "rules": {
-      "tags": ["fresh", "recommended"]
-    }
-  },
-  "exclude": ["**/_fresh/*"],
   "imports": {
     "@fresh/plugin-tailwind": "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.7",
     "@preact/signals": "npm:@preact/signals@^1.2.3",
-    "@sqlite": "jsr:@db/sqlite@^0.11.1",
-    "@std/expect": "jsr:@std/expect@^0.224.5",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.0",
+    "@std/expect": "jsr:@std/expect@^1.0.3",
+    "@std/testing": "jsr:@std/testing@^1.0.2",
     "@std/ulid": "jsr:@std/ulid@^1.0.0",
     "fresh": "jsr:@fresh/core@^2.0.0-alpha.19",
     "pirsch": "npm:pirsch-sdk@^2.7.0",
@@ -31,5 +26,5 @@
     "jsxImportSource": "preact",
     "jsxPrecompileSkipElements": ["a", "img", "source", "body", "html", "head"]
   },
-  "nodeModulesDir": true
+  "exclude": ["coverage/", "_fresh"]
 }

@@ -1,7 +1,9 @@
 import { HttpError } from "fresh";
 
 export function pageTitle(str: string, length: number = 64): string {
-  const truncated = str.length > length ? `${str.substring(0, length)}…` : str;
+  const truncated = str.length > length
+    ? `${str.substring(0, length)}...`
+    : str;
   return `${truncated} | Denopaste`;
 }
 

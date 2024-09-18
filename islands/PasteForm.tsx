@@ -2,6 +2,8 @@ import { useRef } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import type { JSX } from "preact";
 
+import Paste from "../data/paste.ts";
+
 export default function PasteForm() {
   const textarea = useRef<HTMLTextAreaElement>(null);
   const contents = useSignal<string>("");
@@ -17,20 +19,23 @@ export default function PasteForm() {
     }
   }
 
-  function validate(textarea: HTMLTextAreaElement): boolean {
-    if (textarea.validity.valueMissing || textarea.value.trim() === "") {
-      textarea.setCustomValidity("Paste can not be empty.");
-    } else if (textarea.value.length > 1024 * 64) {
-      textarea.setCustomValidity("Paste is too long. Size limit is 64 KiB.");
-    } else {
+  function validate(textarea: HTMLTextAreaElement | null): boolean {
+    if (!textarea) {
+      return false;
+    }
+
+    const result = Paste.validate(textarea.value);
+    if (result.ok) {
       textarea.setCustomValidity("");
+    } else {
+      textarea.setCustomValidity(result.message);
     }
 
     return textarea.reportValidity();
   }
 
   function onSubmit(event: SubmitEvent): boolean {
-    if (!validate(textarea.current!)) {
+    if (!validate(textarea.current)) {
       event.preventDefault();
       return false;
     }

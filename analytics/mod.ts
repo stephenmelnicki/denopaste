@@ -1,53 +1,9 @@
 import { FreshContext, HttpError } from "fresh";
 import { Pirsch, PirschHit, PirschNodeApiClient } from "pirsch";
 
-export interface Analytics {
-  pageView(
-    req: Request,
-    ctx: FreshContext,
-    duration?: number,
-  ): Promise<void>;
+let reporterInstance: PirschReporter | undefined;
 
-  pasteEvent(
-    req: Request,
-    res: Response,
-    ctx: FreshContext,
-    duration?: number,
-  ): Promise<void>;
-
-  errorEvent(
-    req: Request,
-    ctx: FreshContext,
-    error: unknown,
-    duration?: number,
-  ): Promise<void>;
-}
-
-export const analytics: () => Analytics | undefined = (() => {
-  const hostname = Deno.env.get("PIRSCH_HOSTNAME");
-  const accessToken = Deno.env.get("PIRSCH_ACCESS_TOKEN");
-
-  if (!hostname || !accessToken) {
-    console.warn(
-      '"PIRSCH_HOSTNAME" and "PIRSCH_ACCESS_TOKEN" environment variables not set. Pirsch analytics reporting disabled.',
-    );
-    return () => undefined;
-  }
-
-  let analytics: Analytics | undefined;
-
-  return function () {
-    if (!analytics) {
-      console.log("connecting to pirsch analytics...");
-      analytics = new PirschReporter(hostname, accessToken);
-      console.log("connected.");
-    }
-
-    return analytics;
-  };
-})();
-
-class PirschReporter implements Analytics {
+export default class PirschReporter {
   private readonly pirsch: PirschNodeApiClient;
 
   constructor(hostname: string, accessToken: string) {
@@ -60,7 +16,7 @@ class PirschReporter implements Analytics {
 
   public async pageView(req: Request, ctx: FreshContext): Promise<void> {
     try {
-      await this.pirsch.hit(this.hit(req, ctx));
+      await this.pirsch.hit(this.createHit(req, ctx));
     } catch (err) {
       console.error("error tracking page view", err);
     }
@@ -72,20 +28,13 @@ class PirschReporter implements Analytics {
     ctx: FreshContext,
   ): Promise<void> {
     try {
-      const id = res.headers.get("location")?.split("/").pop()!;
-      const size = req.headers.get("content-length")!;
-
+      const hit = this.createHit(req, ctx);
       const meta = {
-        id,
-        size: `${size} bytes`,
+        id: `${res.headers.get("location")?.split("/").pop()!}`,
+        size: `${req.headers.get("content-length") ?? 0} bytes`,
       };
 
-      await this.pirsch.event(
-        "Create Paste",
-        this.hit(req, ctx),
-        undefined,
-        meta,
-      );
+      await this.pirsch.event("Create Paste", hit, undefined, meta);
     } catch (err) {
       console.error("error tracking paste event", err);
     }
@@ -97,7 +46,7 @@ class PirschReporter implements Analytics {
     error: unknown,
   ): Promise<void> {
     const code = error instanceof HttpError ? error.status : 500;
-    const name = this.name(code);
+    const name = this.getNameFromCode(code);
     const meta = {
       code,
       method: req.method,
@@ -108,7 +57,7 @@ class PirschReporter implements Analytics {
       console.log("logging error event...");
       await this.pirsch.event(
         name,
-        this.hit(req, ctx),
+        this.createHit(req, ctx),
         undefined,
         meta,
       );
@@ -117,7 +66,27 @@ class PirschReporter implements Analytics {
     }
   }
 
-  private hit(req: Request, ctx: FreshContext): PirschHit {
+  static getInstance(): PirschReporter | undefined {
+    const hostname = Deno.env.get("PIRSCH_HOSTNAME");
+    const accessToken = Deno.env.get("PIRSCH_ACCESS_TOKEN");
+
+    if (!hostname || !accessToken) {
+      console.warn(
+        '"PIRSCH_HOSTNAME" and "PIRSCH_ACCESS_TOKEN" environment variables not set. Pirsch analytics reporting disabled.',
+      );
+      return undefined;
+    }
+
+    if (!reporterInstance) {
+      console.log("connecting to pirsch analytics...");
+      reporterInstance = new PirschReporter(hostname, accessToken);
+      console.log("connected.");
+    }
+
+    return reporterInstance;
+  }
+
+  private createHit(req: Request, ctx: FreshContext): PirschHit {
     return {
       url: req.url,
       ip: (ctx.info.remoteAddr as Deno.NetAddr).hostname,
@@ -135,7 +104,7 @@ class PirschReporter implements Analytics {
     };
   }
 
-  private name(code: number): string {
+  private getNameFromCode(code: number): string {
     switch (code) {
       case 400:
         return "400 Bad request";

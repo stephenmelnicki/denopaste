@@ -1,9 +1,9 @@
 import { createDefine } from "fresh";
-import { type Database } from "./db.ts";
+import PasteDatabase from "../data/mod.ts";
 
 export interface State {
   title?: string;
-  db: Database;
+  db: PasteDatabase;
 }
 
 export const define = createDefine<State>();

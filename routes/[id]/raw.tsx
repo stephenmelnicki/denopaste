@@ -1,4 +1,4 @@
-import { type FreshContext, HttpError } from "fresh";
+import { type FreshContext } from "fresh";
 import { define, type State } from "../../utils/define.ts";
 
 export const handler = define.handlers({
@@ -7,7 +7,7 @@ export const handler = define.handlers({
     const paste = await db.getPasteById(ctx.params.id);
 
     if (!paste) {
-      throw new HttpError(404);
+      return new Response("Not found", { status: 404 });
     }
 
     return new Response(paste.contents, { status: 200 });

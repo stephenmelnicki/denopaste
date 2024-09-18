@@ -1,15 +1,25 @@
 import { expect } from "@std/expect";
-import { pageTitle } from "./title.ts";
+import { errorTitle, pageTitle } from "./title.ts";
+import { HttpError } from "fresh";
 
-Deno.test("string is untouched when under 64 characters long", () => {
-  const result = pageTitle("Hello, world!");
-  expect(result).toEqual("Hello, world! | Denopaste");
+Deno.test("pageTitle(str) leaves input untouched when under 64 chars long", () => {
+  const title = "Hello, world!";
+  expect(pageTitle(title)).toEqual(`${title} | Denopaste`);
 });
 
-Deno.test("string is truncated when over 64 characters long", () => {
-  const input = Array.from({ length: 70 }).map((_) => "a").join("");
-  const result = pageTitle(input);
-  const expected = Array.from({ length: 64 }).map((_) => "a").join("") +
-    "… | Denopaste";
-  expect(result).toEqual(expected);
+Deno.test("pageTitle(str) truncates when input is over 64 chars long", () => {
+  const input = "a".repeat(70);
+  expect(pageTitle(input)).toEqual(`${input.substring(0, 64)}... | Denopaste`);
+});
+
+Deno.test("errorTitle(error) returns status title for HttpError", () => {
+  expect(errorTitle(new HttpError(400))).toEqual("Bad request | Denopaste");
+  expect(errorTitle(new HttpError(404))).toEqual("Not found | Denopaste");
+  expect(errorTitle(new HttpError(413))).toEqual(
+    "Payload too large | Denopaste",
+  );
+});
+
+Deno.test("errorTitle(error) returns generic title for non-HttpError", () => {
+  expect(errorTitle(new Error())).toEqual(`Server error | Denopaste`);
 });
