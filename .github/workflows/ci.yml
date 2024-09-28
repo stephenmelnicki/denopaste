@@ -7,16 +7,27 @@ on:
     branches: [main]
 
 jobs:
-  deno:
-    runs-on: ubuntu-latest
+  test:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+
+    strategy:
+      fail-fast: false
+      matrix:
+        deno: ["canary", "v1.x"]
+        os: [ubuntu-latest]
+        include:
+          - os: ubuntu-latest
+            cache_path: ~/.cache/deno
+
     steps:
-      - name: Clone repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Install deno
+      - name: Setup deno
         uses: denoland/setup-deno@v1
         with:
-          deno-version: 1.x
+          deno-version: ${{ matrix.deno }}
 
       - name: Verify formatting
         run: deno fmt --check
@@ -25,8 +36,6 @@ jobs:
         run: deno lint
 
       - name: Check types
-        env:
-          DENO_FUTURE: 1
         run: deno task check:types
 
       - name: Run tests

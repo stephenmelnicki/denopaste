@@ -35,13 +35,11 @@ export default function report(
   if (err != null) {
     error(err);
     reporter.errorEvent(request, conn, err);
-    return;
   }
 
   if (conn.error != null) {
     error(conn.error);
     reporter.errorEvent(request, conn, conn.error);
-    return;
   }
 
   if (request.method === "GET") {
