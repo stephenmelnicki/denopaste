@@ -12,9 +12,7 @@ export const handler = define.handlers({
   },
   async POST(ctx: FreshContext<State>) {
     const formData = await ctx.req.formData();
-    console.log("form", formData);
     const contents = formData.get("contents")?.toString() ?? "";
-    console.log("contents", contents);
 
     try {
       const { db } = ctx.state;

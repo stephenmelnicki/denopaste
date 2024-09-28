@@ -1,89 +1,77 @@
 import { FreshContext, HttpError } from "fresh";
 import { Pirsch, PirschHit, PirschNodeApiClient } from "pirsch";
-
-let reporterInstance: PirschReporter | undefined;
+import { warn } from "@std/log/warn";
 
 export default class PirschReporter {
-  private readonly pirsch: PirschNodeApiClient;
+  static #instance: PirschReporter;
+  readonly #pirsch: PirschNodeApiClient;
 
-  constructor(hostname: string, accessToken: string) {
-    this.pirsch = new Pirsch({
-      hostname,
-      accessToken,
-      protocol: "https",
-    });
+  constructor(client: PirschNodeApiClient) {
+    this.#pirsch = client;
   }
 
-  public async pageView(req: Request, ctx: FreshContext): Promise<void> {
-    try {
-      await this.pirsch.hit(this.createHit(req, ctx));
-    } catch (err) {
-      console.error("error tracking page view", err);
+  static getInstance(): PirschReporter | undefined {
+    if (!PirschReporter.#instance) {
+      const hostname = Deno.env.get("PIRSCH_HOSTNAME");
+      const accessToken = Deno.env.get("PIRSCH_ACCESS_TOKEN");
+
+      if (!hostname || !accessToken) {
+        warn(
+          '"PIRSCH_HOSTNAME" and "PIRSCH_ACCESS_TOKEN" environment variables not set. Analytics reporting disabled.',
+        );
+
+        return undefined;
+      }
+
+      const client = new Pirsch({
+        hostname,
+        accessToken,
+        protocol: "https",
+      });
+
+      PirschReporter.#instance = new PirschReporter(client);
     }
+
+    return PirschReporter.#instance;
   }
 
-  public async pasteEvent(
+  async pageView(req: Request, ctx: FreshContext): Promise<void> {
+    await this.#pirsch.hit(this.createHit(req, ctx));
+  }
+
+  async pasteEvent(
     req: Request,
     res: Response,
     ctx: FreshContext,
   ): Promise<void> {
-    try {
-      const hit = this.createHit(req, ctx);
-      const meta = {
+    await this.#pirsch.event(
+      "Create Paste",
+      this.createHit(req, ctx),
+      undefined,
+      {
         id: `${res.headers.get("location")?.split("/").pop()!}`,
         size: `${req.headers.get("content-length") ?? 0} bytes`,
-      };
-
-      await this.pirsch.event("Create Paste", hit, undefined, meta);
-    } catch (err) {
-      console.error("error tracking paste event", err);
-    }
+      },
+    );
   }
 
-  public async errorEvent(
+  async errorEvent(
     req: Request,
     ctx: FreshContext,
     error: unknown,
   ): Promise<void> {
     const code = error instanceof HttpError ? error.status : 500;
-    const name = this.getNameFromCode(code);
-    const meta = {
-      code,
-      method: req.method,
-      url: req.url,
-    };
 
-    try {
-      console.log("logging error event...");
-      await this.pirsch.event(
-        name,
-        this.createHit(req, ctx),
-        undefined,
-        meta,
-      );
-    } catch (err) {
-      console.error("error tracking error event", err);
-    }
-  }
-
-  static getInstance(): PirschReporter | undefined {
-    const hostname = Deno.env.get("PIRSCH_HOSTNAME");
-    const accessToken = Deno.env.get("PIRSCH_ACCESS_TOKEN");
-
-    if (!hostname || !accessToken) {
-      console.warn(
-        '"PIRSCH_HOSTNAME" and "PIRSCH_ACCESS_TOKEN" environment variables not set. Pirsch analytics reporting disabled.',
-      );
-      return undefined;
-    }
-
-    if (!reporterInstance) {
-      console.log("connecting to pirsch analytics...");
-      reporterInstance = new PirschReporter(hostname, accessToken);
-      console.log("connected.");
-    }
-
-    return reporterInstance;
+    await this.#pirsch.event(
+      this.getNameFromErrorCode(code),
+      this.createHit(req, ctx),
+      undefined,
+      {
+        code,
+        method: req.method,
+        url: req.url,
+      },
+    );
   }
 
   private createHit(req: Request, ctx: FreshContext): PirschHit {
@@ -104,7 +92,7 @@ export default class PirschReporter {
     };
   }
 
-  private getNameFromCode(code: number): string {
+  private getNameFromErrorCode(code: number): string {
     switch (code) {
       case 400:
         return "400 Bad request";

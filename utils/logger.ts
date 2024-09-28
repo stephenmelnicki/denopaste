@@ -1,3 +1,5 @@
+import { info } from "@std/log";
+
 export enum Prefix {
   Incoming = "<--",
   Outgoing = "-->",
@@ -11,10 +13,10 @@ export function log(
   duration?: string,
 ) {
   const message = prefix === Prefix.Incoming
-    ? `  ${prefix} ${method} ${path}`
-    : `  ${prefix} ${method} ${path} ${status} ${duration}`;
+    ? `${prefix} ${method} ${path}`
+    : `${prefix} ${method} ${path} ${status} ${duration}`;
 
-  console.log(message);
+  info(message);
 }
 
 export function path(url: string): string {

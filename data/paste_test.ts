@@ -14,8 +14,8 @@ Deno.test("new Paste(contents) throws 'PasteEmptyError' when contents are empty"
   expect(() => new Paste("")).toThrow(PasteEmptyError);
 });
 
-Deno.test("new Paste(contents) throws 'PasteTooLargeError' error when contents are too long", () => {
-  const longContents = "a".repeat(1024 * 64 + 1);
+Deno.test("new Paste(contents) throws 'PasteTooLargeError' error when contents exceed size limit of 64 KiB", () => {
+  const longContents = "paste".repeat(1024 * 64);
   expect(() => new Paste(longContents)).toThrow(PasteTooLargeError);
 });
 

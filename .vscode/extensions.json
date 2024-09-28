@@ -1,7 +1,8 @@
 {
   "recommendations": [
-    "denoland.vscode-deno",
     "bradlc.vscode-tailwindcss",
-    "esbenp.prettier-vscode"
+    "denoland.vscode-deno",
+    "esbenp.prettier-vscode",
+    "github.vscode-github-actions"
   ]
 }

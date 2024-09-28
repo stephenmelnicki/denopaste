@@ -1,4 +1,4 @@
-name: ci
+name: ci future
 
 on:
   push:
@@ -19,13 +19,21 @@ jobs:
           deno-version: 1.x
 
       - name: Check types
+        env:
+          DENO_FUTURE: 1
         run: deno task check:types
 
       - name: Verify formatting
+        env:
+          DENO_FUTURE: 1
         run: deno fmt --check
 
       - name: Run linter
+        env:
+          DENO_FUTURE: 1
         run: deno lint
 
       - name: Run tests
+        env:
+          DENO_FUTURE: 1
         run: deno task test

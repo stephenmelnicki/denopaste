@@ -1,20 +1,36 @@
 import Paste, { PasteTooLargeError } from "./paste.ts";
 
-let dbInstance: PasteDatabase | undefined;
-
 /**
  * A paste database that can be used to store and retrieve paste data.
  */
 export default class PasteDatabase {
-  private readonly client: Deno.Kv;
+  static #instance: PasteDatabase;
+  readonly #kv: Deno.Kv;
+
+  constructor(kv: Deno.Kv) {
+    this.#kv = kv;
+  }
 
   /**
-   * Construct a PasteDatabase object
+   * Retrieves the singleton instance of PasteDatabase.
    *
-   * @param client The client to use for database operations
+   * @example Usage
+   * ```ts
+   * import PasteDatabase from "./mod.ts";
+   *
+   * const db = await PasteDatabase.getInstance();
+   * db; // PasteDatabase {}
+   * ```
+   *
+   * @returns The singleton PasteDatabase instance
    */
-  protected constructor(client: Deno.Kv) {
-    this.client = client;
+  public static async getInstance(): Promise<PasteDatabase> {
+    if (!PasteDatabase.#instance) {
+      const kv = await Deno.openKv(Deno.env.get("DB_PATH"));
+      PasteDatabase.#instance = new PasteDatabase(kv);
+    }
+
+    return PasteDatabase.#instance;
   }
 
   /**
@@ -26,24 +42,15 @@ export default class PasteDatabase {
    * import PasteDatabase from "./mod.ts";
    *
    * const db = await PasteDatabase.getDbInstance();
-   * const paste = await db.getPasteById("abc123");
-   * paste; // { id: "abc123", contents: ..., createdAt: ... }
-   * ```
-   *
-   * @example Not Found
-   * ```ts
-   * import PasteDatabase from "./mod.ts";
-   *
-   * const db = await PasteDatabase.getDbInstance();
-   * const notFound = await db.getPasteById("notfound");
-   * notFound; // null
+   * await db.getPasteById("abc123"); // { id: "abc123", contents: ..., createdAt: ... }
+   * await db.getPasteById("notfound"); // null
    * ```
    *
    * @param id The id of the paste to retrieve
    * @returns Paste object if found, null otherwise
    */
   async getPasteById(id: string): Promise<Paste | null> {
-    const result = await this.client.get<Paste>(["pastes", id]);
+    const result = await this.#kv.get<Paste>(["pastes", id]);
     return result.value;
   }
 
@@ -69,36 +76,16 @@ export default class PasteDatabase {
     expireIn: number = 60 * 60 * 1000,
   ): Promise<void> {
     try {
-      await this.client.set(["pastes", paste.id], paste, { expireIn });
+      await this.#kv.set(["pastes", paste.id], paste, { expireIn });
     } catch (err: unknown) {
+      // NOTE: The validation checks on Paste object creation are only an
+      // approximation of the KV value insertion limits. This is a fallback to
+      // catch such an error and still give a helpful error message.
       if (err instanceof TypeError && err.message.includes("value too large")) {
         throw new PasteTooLargeError();
       }
 
       throw err;
     }
-  }
-
-  /**
-   * Retrieves the singleton instance of PasteDatabase.
-   *
-   * @example Usage
-   * ```ts
-   * import PasteDatabase from "./mod.ts";
-   *
-   * const db = await PasteDatabase.getInstance();
-   * ```
-   *
-   * @returns The singleton PasteDatabase instance
-   */
-  static async getInstance(): Promise<PasteDatabase> {
-    if (!dbInstance) {
-      console.log("connecting to database...");
-      const kv = await Deno.openKv(Deno.env.get("DB_PATH"));
-      dbInstance = new PasteDatabase(kv);
-      console.log("connected.");
-    }
-
-    return dbInstance;
   }
 }

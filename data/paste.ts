@@ -5,7 +5,7 @@ import { ulid } from "@std/ulid";
  */
 export class PasteEmptyError extends Error {
   /** message indicating pastes can't be empty */
-  readonly message = "Paste can not be empty.";
+  override readonly message = "Paste can not be empty.";
 }
 
 /**
@@ -13,13 +13,13 @@ export class PasteEmptyError extends Error {
  * 64KiB in size.
  */
 export class PasteTooLargeError extends Error {
-  readonly message = "Paste is too large. Size limit is 64 KiB.";
+  override readonly message = "Paste is too large. Size limit is 64 KiB.";
 }
 
 /**
  * An object representing the result of validating a paste's content.
  */
-type ValidationResult = {
+export type ValidationResult = {
   /** A boolean indicating whether validation was successful. */
   ok: boolean;
   /** A message describing why validation failed. */
@@ -82,13 +82,13 @@ export default class Paste {
    * const invalid = Paste.validate("");
    * invalid; // { ok: false, message: "Paste can not be empty." }
    *
-   * const tooLarge = Paste.validate("A".repeat(1024 * 64 + 1));
+   * const tooLarge = Paste.validate("paste".repeat(1024 * 64));
    * tooLarge; // { ok: false, message: "Paste is too large. Size limit is 64 KiB." }
    * ```
    *
    * @param contents The text contents of the paste.
-   * @returns An object with a boolean indicating whether the contents are valid
-   * and a message if they are not.
+   * @returns Result object indicating whether the contents are valid and a non-empty
+   * message when they are not.
    */
   static validate(contents: string): ValidationResult {
     try {

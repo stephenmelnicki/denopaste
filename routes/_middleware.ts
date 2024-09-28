@@ -31,6 +31,6 @@ export async function handler(ctx: FreshContext<State>): Promise<Response> {
       res!.status,
       duration(start),
     );
-    report(ctx.req, ctx, res!, start, err);
+    report(ctx.req, ctx, res!, err);
   }
 }

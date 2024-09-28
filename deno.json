@@ -1,18 +1,21 @@
 {
-  "nodeModulesDir": true,
+  "nodeModulesDir": "auto",
   "tasks": {
     "start": "deno run -A --unstable-kv --watch=static/,routes/ dev.ts",
     "build": "deno run -A --unstable-kv dev.ts build",
-    "preview": "deno run -A --unstable-kv .ts",
+    "preview": "deno run -A --unstable-kv main.ts",
+    "check:types": "deno check analytics/ components/ data/ e2e/ islands/ routes/ utils/",
     "test": "deno test -A --unstable-kv analytics/ data/ utils/",
-    "e2e": "deno test -A --unstable-kv e2e/"
+    "coverage": "deno task test --coverage && deno coverage --html",
+    "e2e": "deno test -A e2e/"
   },
   "imports": {
     "@fresh/plugin-tailwind": "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.7",
     "@preact/signals": "npm:@preact/signals@^1.2.3",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.0",
     "@std/expect": "jsr:@std/expect@^1.0.3",
-    "@std/testing": "jsr:@std/testing@^1.0.2",
+    "@std/log": "jsr:@std/log@^0.224.8",
+    "@std/testing": "jsr:@std/testing@^1.0.3",
     "@std/ulid": "jsr:@std/ulid@^1.0.0",
     "fresh": "jsr:@fresh/core@^2.0.0-alpha.19",
     "pirsch": "npm:pirsch-sdk@^2.7.0",
