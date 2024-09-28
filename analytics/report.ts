@@ -1,4 +1,6 @@
 import { FreshContext } from "fresh";
+import { error } from "@std/log/error";
+
 import PirschReporter from "./mod.ts";
 
 function isPage(req: Request) {
@@ -12,7 +14,7 @@ export default function report(
   request: Request,
   conn: FreshContext,
   response: Response,
-  error?: unknown,
+  err?: unknown,
 ) {
   const reporter = PirschReporter.getInstance();
 
@@ -30,12 +32,14 @@ export default function report(
     return;
   }
 
-  if (error != null) {
-    reporter.errorEvent(request, conn, error);
+  if (err != null) {
+    error(err);
+    reporter.errorEvent(request, conn, err);
     return;
   }
 
   if (conn.error != null) {
+    error(conn.error);
     reporter.errorEvent(request, conn, conn.error);
     return;
   }
