@@ -47,7 +47,7 @@ Deno.test("PirschReporter", async (t) => {
       assertSpyCalls(hitSpy, 1);
       assertSpyCallArgs(hitSpy, 0, [{
         url: request.url,
-        ip: ctx.info.remoteAddr.hostname,
+        ip: (ctx.info.remoteAddr as Deno.NetAddr).hostname,
         user_agent: "",
         accept_language: undefined,
         sec_ch_ua: undefined,
@@ -85,7 +85,7 @@ Deno.test("PirschReporter", async (t) => {
         "Create Paste",
         {
           url: request.url,
-          ip: ctx.info.remoteAddr.hostname,
+          ip: (ctx.info.remoteAddr as Deno.NetAddr).hostname,
           user_agent: "",
           accept_language: undefined,
           sec_ch_ua: undefined,
@@ -127,7 +127,7 @@ Deno.test("PirschReporter", async (t) => {
         "500 Server error",
         {
           url: request.url,
-          ip: ctx.info.remoteAddr.hostname,
+          ip: (ctx.info.remoteAddr as Deno.NetAddr).hostname,
           user_agent: "",
           accept_language: undefined,
           sec_ch_ua: undefined,

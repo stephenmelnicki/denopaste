@@ -1,5 +1,5 @@
 {
-  "nodeModulesDir": "auto",
+  "nodeModulesDir": true,
   "tasks": {
     "start": "deno run -A --unstable-kv --watch=static/,routes/ dev.ts",
     "build": "deno run -A --unstable-kv dev.ts build",
