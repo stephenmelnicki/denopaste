@@ -18,16 +18,16 @@ jobs:
         with:
           deno-version: 1.x
 
-      - name: Check types
-        env:
-          DENO_FUTURE: 1
-        run: deno task check:types
-
       - name: Verify formatting
         run: deno fmt --check
 
       - name: Run linter
         run: deno lint
+
+      - name: Check types
+        env:
+          DENO_FUTURE: 1
+        run: deno task check:types
 
       - name: Run tests
         run: deno task test
