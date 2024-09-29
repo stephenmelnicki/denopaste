@@ -1,7 +1,6 @@
 import { useRef } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import type { JSX } from "preact";
-
 import Paste from "../data/paste.ts";
 
 export default function PasteForm() {

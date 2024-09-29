@@ -1,6 +1,6 @@
 import { FreshContext, HttpError } from "fresh";
 import { Pirsch, PirschHit, PirschNodeApiClient } from "pirsch";
-import { warn } from "@std/log/warn";
+import { error, path, warn } from "../utils/logger.ts";
 
 export default class PirschReporter {
   static #instance: PirschReporter;
@@ -36,7 +36,17 @@ export default class PirschReporter {
   }
 
   async pageView(req: Request, ctx: FreshContext): Promise<void> {
-    await this.#pirsch.hit(this.createHit(req, ctx));
+    const apiError = await this.#pirsch.hit(this.createHit(req, ctx));
+
+    if (apiError) {
+      error(
+        req.method,
+        path(req.url),
+        apiError.code,
+        apiError.message,
+        apiError.stack,
+      );
+    }
   }
 
   async pasteEvent(
@@ -44,7 +54,7 @@ export default class PirschReporter {
     res: Response,
     ctx: FreshContext,
   ): Promise<void> {
-    await this.#pirsch.event(
+    const apiError = await this.#pirsch.event(
       "Create Paste",
       this.createHit(req, ctx),
       undefined,
@@ -53,16 +63,26 @@ export default class PirschReporter {
         size: `${req.headers.get("content-length") ?? 0} bytes`,
       },
     );
+
+    if (apiError) {
+      error(
+        req.method,
+        path(req.url),
+        apiError.code,
+        apiError.message,
+        apiError.stack,
+      );
+    }
   }
 
   async errorEvent(
     req: Request,
     ctx: FreshContext,
-    error: unknown,
+    err: unknown,
   ): Promise<void> {
-    const code = error instanceof HttpError ? error.status : 500;
+    const code = err instanceof HttpError ? err.status : 500;
 
-    await this.#pirsch.event(
+    const apiError = await this.#pirsch.event(
       this.getNameFromErrorCode(code),
       this.createHit(req, ctx),
       undefined,
@@ -72,6 +92,16 @@ export default class PirschReporter {
         url: req.url,
       },
     );
+
+    if (apiError) {
+      error(
+        req.method,
+        path(req.url),
+        apiError.code,
+        apiError.message,
+        apiError.stack,
+      );
+    }
   }
 
   private createHit(req: Request, ctx: FreshContext): PirschHit {

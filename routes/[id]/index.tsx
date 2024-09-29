@@ -1,9 +1,7 @@
 import type { FreshContext, PageProps } from "fresh";
 import { HttpError, page } from "fresh";
-
 import CopyToClipboardButton from "../../islands/CopyToClipboardButton.tsx";
 import Line from "../../components/Line.tsx";
-
 import Paste from "../../data/paste.ts";
 import { define, type State } from "../../utils/define.ts";
 import { pageTitle } from "../../utils/title.ts";

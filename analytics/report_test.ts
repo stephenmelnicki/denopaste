@@ -1,6 +1,5 @@
 import { assertSpyCallArg, assertSpyCalls, stub } from "@std/testing/mock";
 import { FreshContext, HttpError } from "fresh";
-
 import PirschReporter from "./mod.ts";
 import report from "./report.ts";
 

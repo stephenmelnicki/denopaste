@@ -6,7 +6,6 @@ import {
   stub,
 } from "@std/testing/mock";
 import { expect } from "@std/expect";
-
 import Paste, { PasteTooLargeError } from "./paste.ts";
 import PasteDatabase from "./mod.ts";
 

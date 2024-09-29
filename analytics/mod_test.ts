@@ -7,7 +7,6 @@ import {
 } from "@std/testing/mock";
 import { FreshContext, HttpError } from "fresh";
 import { PirschNodeApiClient } from "pirsch";
-
 import PirschReporter from "./mod.ts";
 import { PasteEmptyError } from "../data/paste.ts";
 

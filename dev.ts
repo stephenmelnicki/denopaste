@@ -2,7 +2,6 @@
 
 import { Builder } from "fresh/dev";
 import { tailwind } from "@fresh/plugin-tailwind";
-
 import { app } from "./main.ts";
 
 const builder = new Builder({ target: "safari12" });

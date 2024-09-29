@@ -1,6 +1,5 @@
 import { type PageProps } from "fresh";
 import { asset } from "fresh/runtime";
-
 import { define, type State } from "../utils/define.ts";
 import Header from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";

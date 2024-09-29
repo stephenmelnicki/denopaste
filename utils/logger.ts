@@ -1,4 +1,4 @@
-import { info } from "@std/log";
+import { error as logError, info, warn as logWarning } from "@std/log";
 
 export enum Prefix {
   Incoming = "<--",
@@ -17,6 +17,24 @@ export function log(
     : `${prefix} ${method} ${path} ${status} ${duration}`;
 
   info(message);
+}
+
+export function warn(message: string) {
+  logWarning(message);
+}
+
+export function error(
+  method: string,
+  path: string,
+  status: number,
+  message: string,
+  stack?: string,
+) {
+  if (stack) {
+    logError(`${method} ${path} ${status} ${message}`, stack);
+  } else {
+    logError(`${method} ${path} ${status} ${message}`);
+  }
 }
 
 export function path(url: string): string {
