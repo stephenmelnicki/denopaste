@@ -1,9 +1,8 @@
 import "@std/dotenv/load";
 
 import { App, fsRoutes, staticFiles, trailingSlashes } from "fresh";
-import { type State } from "./utils/define.ts";
 
-export const app = new App<State>({ root: import.meta.url })
+export const app = new App({ root: import.meta.url })
   .use(staticFiles())
   .use(trailingSlashes("never"));
 

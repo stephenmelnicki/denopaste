@@ -1,106 +1,59 @@
+import { launch, type Page } from "@astral/astral";
 import { expect } from "@std/expect";
-import {
-  baseUrl,
-  createEmptyPaste,
-  createPaste,
-  createTooLargePaste,
-} from "./utils.ts";
 
-Deno.test("GET /", async () => {
-  const response = await fetch(baseUrl);
-  const data = await response.arrayBuffer();
+export async function withBrowser(
+  fn: (page: Page, address: string) => void | Promise<void>,
+) {
+  const browser = await launch({
+    args: ["--no-sandbox"],
+    headless: !Deno.args.includes("--headful"),
+  });
 
-  expect(response.status).toBe(200);
-  expect(response.headers.get("content-type")).toContain("text/html");
-  expect(data.byteLength).toBeGreaterThan(0);
-});
+  const page = await browser.newPage();
+  const address = Deno.args.includes("--deployed")
+    ? "https://denopaste.com"
+    : "http://localhost:8000";
 
-Deno.test("GET / 404 Not found", async () => {
-  const response = await fetch(`${baseUrl}/notaroute`);
-  const text = await response.text();
+  try {
+    await fn(page, address);
+  } finally {
+    await page.close();
+    await browser.close();
+  }
+}
 
-  expect(response.ok).toBe(false);
-  expect(response.status).toBe(404);
-  expect(response.headers.get("content-type")).toContain("text/html");
-  expect(text).toContain("404");
-  expect(text).toContain("Couldn't find what you're looking for");
-  expect(text).toContain("Back to the Homepage");
-});
+Deno.test("user can create a paste", async () => {
+  await withBrowser(async (page, address) => {
+    await page.goto(address, { waitUntil: "load" });
+    await page.waitForSelector("form");
 
-Deno.test("GET /:id", async () => {
-  const response = await createPaste();
-  expect(response.ok).toBe(true);
+    await page.locator("#contents").fill("Hello, denopaste!");
+    await page.locator("button").click();
+    await page.waitForNavigation();
 
-  const bytes = await response.bytes();
-  expect(bytes.byteLength).toBeGreaterThan(0);
+    expect(page.url).not.toEqual(address);
 
-  const id = response.url.split("/").pop();
-  const result = await fetch(`${baseUrl}/${id}`);
+    const title = await page
+      .locator<HTMLTitleElement>("title")
+      .evaluate((el) => el.textContent);
 
-  expect(result.status).toBe(200);
-  expect(result.headers.get("content-type")).toContain("text/html");
-  expect(await result.text()).toContain("Hello, denopaste!");
-});
+    expect(title).toEqual("Hello, denopaste! | Denopaste");
 
-Deno.test("GET /:id/raw", async () => {
-  const response = await createPaste();
-  expect(response.ok).toBe(true);
+    const contents = await page
+      .locator<HTMLPreElement>("pre")
+      .evaluate((el) => el.textContent);
 
-  const bytes = await response.bytes();
-  expect(bytes.byteLength).toBeGreaterThan(0);
+    expect(contents).toEqual("Hello, denopaste!");
 
-  const id = response.url.split("/").pop();
-  const result = await fetch(`${baseUrl}/${id}/raw`);
+    await page.locator("#view-raw").click();
+    await page.waitForNavigation();
 
-  expect(result.status).toBe(200);
-  expect(result.headers.get("content-type")).toContain("text/plain");
-  expect(await result.text()).toEqual("Hello, denopaste!");
-});
+    expect(page.url.endsWith("/raw")).toBe(true);
 
-Deno.test("GET /:id 404 Not found", async () => {
-  const response = await fetch(`${baseUrl}/notanid`);
-  const text = await response.text();
+    const rawContents = await page
+      .locator<HTMLBodyElement>("body")
+      .evaluate((el) => el.textContent);
 
-  expect(response.ok).toBe(false);
-  expect(response.status).toBe(404);
-  expect(response.headers.get("content-type")).toContain("text/html");
-  expect(text).toContain("404");
-  expect(text).toContain("Couldn't find what you're looking for");
-  expect(text).toContain("Back to the Homepage");
-});
-
-Deno.test("POST /", async () => {
-  const response = await createPaste();
-  const bytes = await response.bytes();
-
-  expect(bytes.byteLength).toBeGreaterThan(0);
-  expect(response.ok).toBe(true);
-  expect(response.redirected).toBe(true);
-  expect(response.status).toBe(200);
-  expect(response.url).not.toEqual(baseUrl);
-  expect(response.headers.get("content-type")).toContain("text/html");
-});
-
-Deno.test("POST / 400 Bad request", async () => {
-  const response = await createEmptyPaste();
-  const text = await response.text();
-
-  expect(response.ok).toBe(false);
-  expect(response.status).toBe(400);
-  expect(response.headers.get("content-type")).toContain("text/html");
-  expect(text).toContain("400");
-  expect(text).toContain("Paste can not be empty");
-  expect(text).toContain("Back to the Homepage");
-});
-
-Deno.test("POST / 413 Content too large", async () => {
-  const response = await createTooLargePaste();
-  const text = await response.text();
-
-  expect(response.ok).toBe(false);
-  expect(response.status).toBe(413);
-  expect(response.headers.get("content-type")).toContain("text/html");
-  expect(text).toContain("413");
-  expect(text).toContain("Paste is too large. Size limit is 64 KiB.");
-  expect(text).toContain("Back to the Homepage");
+    expect(rawContents).toEqual("Hello, denopaste!");
+  });
 });

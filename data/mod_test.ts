@@ -7,7 +7,7 @@ import {
 } from "@std/testing/mock";
 import { expect } from "@std/expect";
 import Paste, { PasteTooLargeError } from "./paste.ts";
-import PasteDatabase from "./mod.ts";
+import { PasteDatabase } from "./mod.ts";
 
 Deno.test("PasteDatabase", async (t) => {
   const testPaste = new Paste("test");

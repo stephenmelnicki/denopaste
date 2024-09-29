@@ -1,16 +1,8 @@
 import Paste, { PasteTooLargeError } from "./paste.ts";
 
-/**
- * A paste database that can be used to store and retrieve paste data.
- */
-export default class PasteDatabase {
-  static #instance: PasteDatabase;
-  readonly #kv: Deno.Kv;
+export let getDb: () => Promise<PasteDatabase>;
 
-  constructor(kv: Deno.Kv) {
-    this.#kv = kv;
-  }
-
+export class PasteDatabase {
   /**
    * Retrieves the singleton instance of PasteDatabase.
    *
@@ -24,13 +16,21 @@ export default class PasteDatabase {
    *
    * @returns The singleton PasteDatabase instance
    */
-  public static async getInstance(): Promise<PasteDatabase> {
+
+  static async getInstance(): Promise<PasteDatabase> {
     if (!PasteDatabase.#instance) {
       const kv = await Deno.openKv(Deno.env.get("DB_PATH"));
       PasteDatabase.#instance = new PasteDatabase(kv);
     }
 
     return PasteDatabase.#instance;
+  }
+
+  static #instance: PasteDatabase;
+  #kv: Deno.Kv;
+
+  constructor(kv: Deno.Kv) {
+    this.#kv = kv;
   }
 
   /**

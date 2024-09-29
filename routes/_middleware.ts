@@ -1,6 +1,6 @@
 import { FreshContext, HttpError } from "fresh";
 import { type State } from "../utils/define.ts";
-import PasteDatabase from "../data/mod.ts";
+import { PasteDatabase } from "../data/mod.ts";
 import report from "../analytics/report.ts";
 import { errorTitle } from "../utils/title.ts";
 import { duration, error, log, path, Prefix } from "../utils/logger.ts";

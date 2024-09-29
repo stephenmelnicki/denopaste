@@ -31,6 +31,7 @@ function PasteById(props: PageProps<Data>) {
     <main class="mt-6 mb-16">
       <div class="mb-6 flex items-center justify-end gap-x-4">
         <a
+          id="view-raw"
           class="px-4 py-2 font-semibold rounded-md"
           href={`/${paste.id}/raw`}
         >
