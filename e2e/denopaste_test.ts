@@ -45,7 +45,7 @@ Deno.test("create paste", async () => {
 
     expect(contents).toEqual("Hello, deno paste!");
 
-    await page.locator("#view-raw").click();
+    await page.locator("a[data-testid='view-raw']").click();
     await page.waitForNavigation();
 
     expect(page.url.endsWith("/raw")).toBe(true);

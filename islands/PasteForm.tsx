@@ -55,7 +55,8 @@ export default function PasteForm() {
         id="contents"
         name="contents"
         type="text"
-        class="block w-full h-56 px-4 py-2 border-0 rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-green-600"
+        class="font-mono block w-full h-56 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:border-green-600 focus:border-2"
+        placeholder="Paste your content here..."
         value={contents.value}
         onInput={onInput}
         onKeyDown={onKeyDown}

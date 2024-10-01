@@ -12,6 +12,7 @@
   "imports": {
     "@astral/astral": "jsr:@astral/astral@^0.4.7",
     "@fresh/plugin-tailwind": "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.7",
+    "@preact-icons/go": "jsr:@preact-icons/go@^1.0.12",
     "@preact/signals": "npm:@preact/signals@^1.2.3",
     "@std/dotenv": "jsr:@std/dotenv@^0.225.0",
     "@std/expect": "jsr:@std/expect@^1.0.3",
@@ -21,6 +22,7 @@
     "fresh": "jsr:@fresh/core@^2.0.0-alpha.19",
     "pirsch": "npm:pirsch-sdk@^2.7.0",
     "preact": "npm:preact@^10.22.1",
+    "preact-hint": "npm:preact-hint@^0.3.0",
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js"
   },

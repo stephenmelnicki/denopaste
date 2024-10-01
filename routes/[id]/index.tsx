@@ -4,7 +4,7 @@ import { HttpError, page } from "fresh";
 import { define, type State } from "../../utils/define.ts";
 import Paste from "../../data/paste.ts";
 import { pageTitle } from "../../utils/title.ts";
-import CopyToClipboardButton from "../../islands/CopyToClipboardButton.tsx";
+import PasteActions from "../../islands/PasteActions.tsx";
 import Line from "../../components/Line.tsx";
 
 interface Data {
@@ -29,18 +29,9 @@ function PasteById(props: PageProps<Data>) {
   const { paste } = props.data;
 
   return (
-    <main class="mt-6 mb-16">
-      <div class="mb-6 flex items-center justify-between gap-x-4 sm:justify-end">
-        <a
-          id="view-raw"
-          class="px-4 py-2 font-semibold rounded-md"
-          href={`/${paste.id}/raw`}
-        >
-          View Raw
-        </a>
-        <CopyToClipboardButton contents={paste.contents} />
-      </div>
-      <pre class="bg-gray-100 border rounded-md border-gray-300 overflow-auto">
+    <main class="mt-6 mb-8" data-testid="paste-contents">
+      <PasteActions paste={paste} />
+      <pre class="py-2 border-l border-r border-b rounded-b-md border-gray-300 overflow-auto shadow-sm">
         {
           paste.contents
             .split('\n')

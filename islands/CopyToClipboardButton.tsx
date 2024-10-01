@@ -1,35 +1,43 @@
+import { useCallback } from "preact/hooks";
 import { useSignal } from "@preact/signals";
-
-const COPY_TO_CLIPBOARD = "Copy to Clipboard";
-const COPIED = "Copied!";
+import { GoCopy } from "@preact-icons/go";
 
 interface Props {
   contents: string;
 }
 
 export default function CopyToClipboardButton({ contents }: Props) {
-  const text = useSignal<string>(COPY_TO_CLIPBOARD);
+  const title = useSignal<string>("Copy to Clipboard");
+  const wiggle = useSignal<boolean>(false);
 
-  async function writeToClipboard() {
+  const writeToClipboard = useCallback(async () => {
+    wiggle.value = true;
+
     try {
       await navigator.clipboard.writeText(contents);
-      text.value = COPIED;
-      setTimeout(() => text.value = COPY_TO_CLIPBOARD, 750);
+      title.value = "Copied!";
+      setTimeout(() => title.value = "Copy to Clipboard", 2000);
+      console.log("copied");
     } catch (err) {
       console.error("error copying to clipboard", err);
     }
-  }
+  }, [wiggle]);
+
+  const onAnimationEnd = useCallback(() => wiggle.value = false, [wiggle]);
 
   return (
     <button
-      id="copy-btn"
+      data-testid="copy"
       type="button"
-      class={`py-2 font-semibold rounded-md bg-green-600 text-white hover:bg-green-500 ${
-        text.value === COPY_TO_CLIPBOARD ? "px-4" : "px-[3.37rem]"
-      }`}
+      title={title.value}
+      class={`${
+        wiggle.value && "animate-wiggle"
+      } px-2 py-2 rounded-md hover:bg-gray-50 focus:z-20 focus:outline-offset-0`}
       onClick={writeToClipboard}
+      onAnimationEnd={onAnimationEnd}
     >
-      {text}
+      <span class="sr-only">Copy to Clipboard</span>
+      <GoCopy class="w-5 h-5 " />
     </button>
   );
 }

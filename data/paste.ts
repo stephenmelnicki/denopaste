@@ -60,7 +60,7 @@ export default class Paste {
       throw new PasteEmptyError();
     }
 
-    if (new Blob([contents]).size > 1024 * 64) {
+    if (new TextEncoder().encode(contents).length > 1024 * 64) {
       throw new PasteTooLargeError();
     }
 

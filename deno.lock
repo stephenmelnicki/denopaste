@@ -8,6 +8,8 @@
       "jsr:@fresh/core@^2.0.0-alpha.19": "jsr:@fresh/core@2.0.0-alpha.21",
       "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.7": "jsr:@fresh/plugin-tailwind@0.0.1-alpha.7",
       "jsr:@luca/esbuild-deno-loader@^0.10.3": "jsr:@luca/esbuild-deno-loader@0.10.3",
+      "jsr:@preact-icons/common@^1.0.12": "jsr:@preact-icons/common@1.0.12",
+      "jsr:@preact-icons/go@^1.0.12": "jsr:@preact-icons/go@1.0.12",
       "jsr:@std/assert@^0.213.1": "jsr:@std/assert@0.213.1",
       "jsr:@std/assert@^0.221.0": "jsr:@std/assert@0.221.0",
       "jsr:@std/assert@^0.223.0": "jsr:@std/assert@0.223.0",
@@ -42,6 +44,7 @@
       "jsr:@std/path@1.0.0-rc.1": "jsr:@std/path@1.0.0-rc.1",
       "jsr:@std/path@^0.221.0": "jsr:@std/path@0.221.0",
       "jsr:@std/path@^0.225.2": "jsr:@std/path@0.225.2",
+      "jsr:@std/path@^1.0.6": "jsr:@std/path@1.0.6",
       "jsr:@std/semver@^0.224.3": "jsr:@std/semver@0.224.3",
       "jsr:@std/testing@^1.0.3": "jsr:@std/testing@1.0.3",
       "jsr:@std/ulid@^1.0.0": "jsr:@std/ulid@1.0.0",
@@ -55,7 +58,10 @@
       "npm:esbuild@0.23.1": "npm:esbuild@0.23.1",
       "npm:pirsch-sdk@^2.7.0": "npm:pirsch-sdk@2.7.0",
       "npm:postcss@8.4.35": "npm:postcss@8.4.35",
+      "npm:preact-hint@0.3.0": "npm:preact-hint@0.3.0_preact@10.22.1",
+      "npm:preact-hint@^0.3.0": "npm:preact-hint@0.3.0_preact@10.22.1",
       "npm:preact-render-to-string@^6.5.11": "npm:preact-render-to-string@6.5.11_preact@10.24.1",
+      "npm:preact@10.22.1": "npm:preact@10.22.1",
       "npm:preact@10.24.1": "npm:preact@10.24.1",
       "npm:preact@^10.22.1": "npm:preact@10.24.1",
       "npm:preact@^10.24.0": "npm:preact@10.24.1",
@@ -118,6 +124,19 @@
           "jsr:@std/encoding@0.213",
           "jsr:@std/jsonc@0.213",
           "jsr:@std/path@0.213"
+        ]
+      },
+      "@preact-icons/common@1.0.12": {
+        "integrity": "f7d7329d55c2753b0162438b120b638e5058fa406f49fe6b422e3b0694f6e0c1",
+        "dependencies": [
+          "npm:preact@^10.22.1"
+        ]
+      },
+      "@preact-icons/go@1.0.12": {
+        "integrity": "4914c9558cef968bf18574b642ce0b5975f70dd5fa1dd448832e21885d236354",
+        "dependencies": [
+          "jsr:@preact-icons/common@^1.0.12",
+          "npm:preact@10.22.1"
         ]
       },
       "@std/assert@0.213.1": {
@@ -191,7 +210,10 @@
         ]
       },
       "@std/fs@1.0.4": {
-        "integrity": "2907d32d8d1d9e540588fd5fe0ec21ee638134bd51df327ad4e443aaef07123c"
+        "integrity": "2907d32d8d1d9e540588fd5fe0ec21ee638134bd51df327ad4e443aaef07123c",
+        "dependencies": [
+          "jsr:@std/path@^1.0.6"
+        ]
       },
       "@std/html@0.224.2": {
         "integrity": "2f7bfd71081fad988af9ce991750ed1574917dc8e6fae0e151987ea020d1e21a"
@@ -259,6 +281,9 @@
       "@std/path@1.0.0-rc.1": {
         "integrity": "b8c00ae2f19106a6bb7cbf1ab9be52aa70de1605daeb2dbdc4f87a7cbaf10ff6"
       },
+      "@std/path@1.0.6": {
+        "integrity": "ab2c55f902b380cf28e0eec501b4906e4c1960d13f00e11cfbcd21de15f18fed"
+      },
       "@std/semver@0.224.3": {
         "integrity": "7bb34b5ad46de2c0c73de0ca3e30081ef64b4361f66abd57c84ff1011c6a1233"
       },
@@ -267,7 +292,10 @@
         "dependencies": [
           "jsr:@std/assert@^1.0.6",
           "jsr:@std/async@^1.0.5",
-          "jsr:@std/data-structures@^1.0.4"
+          "jsr:@std/data-structures@^1.0.4",
+          "jsr:@std/fs@^1.0.4",
+          "jsr:@std/internal@^1.0.4",
+          "jsr:@std/path@^1.0.6"
         ]
       },
       "@std/ulid@1.0.0": {
@@ -1337,11 +1365,21 @@
           "source-map-js": "source-map-js@1.2.1"
         }
       },
+      "preact-hint@0.3.0_preact@10.22.1": {
+        "integrity": "sha512-Izl8cJUbNg+YNBI+OT51ccgX7bkMCnv9UvX0+xU9EOY3H/m2/Fz52nsbbSrTzE5K+xnaSWhSAOKphVAqwsRcDg==",
+        "dependencies": {
+          "preact": "preact@10.22.1"
+        }
+      },
       "preact-render-to-string@6.5.11_preact@10.24.1": {
         "integrity": "sha512-ubnauqoGczeGISiOh6RjX0/cdaF8v/oDXIjO85XALCQjwQP+SB4RDXXtvZ6yTYSjG+PC1QRP2AhPgCEsM2EvUw==",
         "dependencies": {
           "preact": "preact@10.24.1"
         }
+      },
+      "preact@10.22.1": {
+        "integrity": "sha512-jRYbDDgMpIb5LHq3hkI0bbl+l/TQ9UnkdQ0ww+lp+4MMOdqaUYdFc5qeyP+IV8FAd/2Em7drVPeKdQxsiWCf/A==",
+        "dependencies": {}
       },
       "preact@10.24.1": {
         "integrity": "sha512-PnBAwFI3Yjxxcxw75n6VId/5TFxNW/81zexzWD9jn1+eSrOP84NdsS38H5IkF/UH3frqRPT+MvuCoVHjTDTnDw==",
@@ -1566,6 +1604,7 @@
       "jsr:@astral/astral@^0.4.7",
       "jsr:@fresh/core@^2.0.0-alpha.19",
       "jsr:@fresh/plugin-tailwind@^0.0.1-alpha.7",
+      "jsr:@preact-icons/go@^1.0.12",
       "jsr:@std/dotenv@^0.225.0",
       "jsr:@std/expect@^1.0.3",
       "jsr:@std/log@^0.224.8",
@@ -1573,6 +1612,7 @@
       "jsr:@std/ulid@^1.0.0",
       "npm:@preact/signals@^1.2.3",
       "npm:pirsch-sdk@^2.7.0",
+      "npm:preact-hint@^0.3.0",
       "npm:preact@^10.22.1",
       "npm:tailwindcss@3.4.1"
     ]
