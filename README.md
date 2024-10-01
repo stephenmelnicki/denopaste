@@ -31,7 +31,8 @@ your own version:
 
 1. Fork this repository
 2. [Create a Deno Deploy project](https://dash.deno.com/new)
-3. [Link] the Deno Deploy project to the `main.ts` file
+3. [Link](https://deno.com/deploy/docs/projects#enabling) the Deno Deploy
+   project to the `main.ts` file
 4. The project will be deployed to a public $project.deno.dev subdomain.
 
 For a more in-depth getting started guide, visit the
