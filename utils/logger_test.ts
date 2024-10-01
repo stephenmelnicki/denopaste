@@ -1,6 +1,7 @@
 import { expect } from "@std/expect";
 import { stub } from "@std/testing/mock";
 import { FakeTime } from "@std/testing/time";
+
 import { duration, path } from "./logger.ts";
 
 Deno.test("path(url) returns expected url pathname", () => {

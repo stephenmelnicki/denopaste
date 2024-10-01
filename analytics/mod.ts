@@ -2,16 +2,17 @@ import { FreshContext, HttpError } from "fresh";
 import { Pirsch, PirschHit, PirschNodeApiClient } from "pirsch";
 import { error, path, warn } from "../utils/logger.ts";
 
-export default class PirschReporter {
-  static #instance: PirschReporter;
-  readonly #pirsch: PirschNodeApiClient;
+export interface PirschReporter {
+  pageView(req: Request, ctx: FreshContext): Promise<void>;
+  pasteEvent(req: Request, res: Response, ctx: FreshContext): Promise<void>;
+  errorEvent(req: Request, ctx: FreshContext, err: unknown): Promise<void>;
+}
 
-  constructor(client: PirschNodeApiClient) {
-    this.#pirsch = client;
-  }
+export const getReporter: () => PirschReporter | undefined = (() => {
+  let reporter: PirschReporter | undefined;
 
-  static getInstance(): PirschReporter | undefined {
-    if (!PirschReporter.#instance) {
+  return () => {
+    if (!reporter) {
       const hostname = Deno.env.get("PIRSCH_HOSTNAME");
       const accessToken = Deno.env.get("PIRSCH_ACCESS_TOKEN");
 
@@ -29,10 +30,18 @@ export default class PirschReporter {
         protocol: "https",
       });
 
-      PirschReporter.#instance = new PirschReporter(client);
+      reporter = new Reporter(client);
     }
 
-    return PirschReporter.#instance;
+    return reporter;
+  };
+})();
+
+export class Reporter implements PirschReporter {
+  readonly #pirsch: PirschNodeApiClient;
+
+  constructor(client: PirschNodeApiClient) {
+    this.#pirsch = client;
   }
 
   async pageView(req: Request, ctx: FreshContext): Promise<void> {

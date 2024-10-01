@@ -1,5 +1,6 @@
 import { type PageProps } from "fresh";
 import { asset } from "fresh/runtime";
+
 import { define, type State } from "../utils/define.ts";
 import Header from "../components/Header.tsx";
 import Footer from "../components/Footer.tsx";
@@ -21,14 +22,22 @@ function App({ Component, state }: PageProps<never, State>) {
         />
         <link
           rel="preload"
-          href={asset("/fonts/FixelVariable.woff2")}
+          href="/fonts/Inter-Regular.woff2"
           as="font"
           type="font/woff2"
           crossorigin="true"
         />
+        <link
+          rel="preload"
+          href="/fonts/Inter-SemiBold.woff2"
+          as="font"
+          type="font/woff2"
+          crossorigin="true"
+        >
+        </link>
         <link rel="stylesheet" type="text/css" href={asset("/styles.css")} />
       </head>
-      <body class="flex flex-col px-4 sm:px-6 py-8 mx-auto min-h-screen max-w-screen-md text-gray-800">
+      <body class="flex flex-col px-4 sm:px-6 py-8 mx-auto min-h-screen max-w-screen-md">
         <Header />
         <Component />
         <Footer />

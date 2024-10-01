@@ -1,7 +1,7 @@
 import { launch, type Page } from "@astral/astral";
 import { expect } from "@std/expect";
 
-export async function withBrowser(
+async function withBrowser(
   fn: (page: Page, address: string) => void | Promise<void>,
 ) {
   const browser = await launch({
@@ -22,12 +22,12 @@ export async function withBrowser(
   }
 }
 
-Deno.test("user can create a paste", async () => {
+Deno.test("create paste", async () => {
   await withBrowser(async (page, address) => {
     await page.goto(address, { waitUntil: "load" });
     await page.waitForSelector("form");
 
-    await page.locator("#contents").fill("Hello, denopaste!");
+    await page.locator("textarea").fill("Hello, deno paste!");
     await page.locator("button").click();
     await page.waitForNavigation();
 
@@ -37,13 +37,13 @@ Deno.test("user can create a paste", async () => {
       .locator<HTMLTitleElement>("title")
       .evaluate((el) => el.textContent);
 
-    expect(title).toEqual("Hello, denopaste! | Denopaste");
+    expect(title).toEqual("Hello, deno paste! | Deno Paste");
 
     const contents = await page
       .locator<HTMLPreElement>("pre")
       .evaluate((el) => el.textContent);
 
-    expect(contents).toEqual("Hello, denopaste!");
+    expect(contents).toEqual("Hello, deno paste!");
 
     await page.locator("#view-raw").click();
     await page.waitForNavigation();
@@ -54,6 +54,6 @@ Deno.test("user can create a paste", async () => {
       .locator<HTMLBodyElement>("body")
       .evaluate((el) => el.textContent);
 
-    expect(rawContents).toEqual("Hello, denopaste!");
+    expect(rawContents).toEqual("Hello, deno paste!");
   });
 });

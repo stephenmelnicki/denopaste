@@ -1,10 +1,11 @@
 import type { FreshContext, PageProps } from "fresh";
 import { HttpError, page } from "fresh";
+
+import { define, type State } from "../../utils/define.ts";
+import Paste from "../../data/paste.ts";
+import { pageTitle } from "../../utils/title.ts";
 import CopyToClipboardButton from "../../islands/CopyToClipboardButton.tsx";
 import Line from "../../components/Line.tsx";
-import Paste from "../../data/paste.ts";
-import { define, type State } from "../../utils/define.ts";
-import { pageTitle } from "../../utils/title.ts";
 
 interface Data {
   paste: Paste;
@@ -29,7 +30,7 @@ function PasteById(props: PageProps<Data>) {
 
   return (
     <main class="mt-6 mb-16">
-      <div class="mb-6 flex items-center justify-end gap-x-4">
+      <div class="mb-6 flex items-center justify-between gap-x-4 sm:justify-end">
         <a
           id="view-raw"
           class="px-4 py-2 font-semibold rounded-md"

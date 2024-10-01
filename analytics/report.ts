@@ -1,5 +1,5 @@
 import { FreshContext } from "fresh";
-import PirschReporter from "./mod.ts";
+import { getReporter } from "./mod.ts";
 
 function isPage(req: Request) {
   return !req.url.includes(".ico") &&
@@ -14,7 +14,7 @@ export default function report(
   response: Response,
   err?: unknown,
 ) {
-  const reporter = PirschReporter.getInstance();
+  const reporter = getReporter();
 
   if (!reporter) {
     return;

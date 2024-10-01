@@ -7,7 +7,7 @@ import {
 } from "@std/testing/mock";
 import { expect } from "@std/expect";
 import Paste, { PasteTooLargeError } from "./paste.ts";
-import { PasteDatabase } from "./mod.ts";
+import { Database, getPasteDb } from "./mod.ts";
 
 Deno.test("PasteDatabase", async (t) => {
   const testPaste = new Paste("test");
@@ -29,7 +29,7 @@ Deno.test("PasteDatabase", async (t) => {
     },
   } as unknown as Deno.Kv;
 
-  const db = new PasteDatabase(mockKv);
+  const db = new Database(mockKv);
 
   await t.step(
     "getInstance() should open a kv connection and return the same instance on subsequent calls",
@@ -37,9 +37,9 @@ Deno.test("PasteDatabase", async (t) => {
       using openKv = stub(Deno, "openKv", () => Promise.resolve(mockKv));
 
       [
-        await PasteDatabase.getInstance(),
-        await PasteDatabase.getInstance(),
-        await PasteDatabase.getInstance(),
+        await getPasteDb(),
+        await getPasteDb(),
+        await getPasteDb(),
       ].forEach((instance, _index, instances) => {
         assertSpyCalls(openKv, 1);
         expect(instance).toBeDefined();

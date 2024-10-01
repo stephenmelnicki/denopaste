@@ -1,4 +1,5 @@
 import { createDefine } from "fresh";
+
 import { PasteDatabase } from "../data/mod.ts";
 
 export interface State {

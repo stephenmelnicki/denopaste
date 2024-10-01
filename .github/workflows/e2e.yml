@@ -3,8 +3,8 @@ name: e2e
 on: [deployment_status]
 
 jobs:
-  e2e:
-    name: e2e
+  test:
+    name: test
     runs-on: ubuntu-latest
     timeout-minutes: 5
     if: github.event.deployment_status.state == 'success' && github.event.deployment_status.creator.login == 'deno-deploy[bot]'

@@ -1,4 +1,3 @@
-import { expect } from "@std/expect";
 import {
   assertSpyCallArg,
   assertSpyCallArgs,
@@ -7,7 +6,7 @@ import {
 } from "@std/testing/mock";
 import { FreshContext, HttpError } from "fresh";
 import { PirschNodeApiClient } from "pirsch";
-import PirschReporter from "./mod.ts";
+import { Reporter } from "./mod.ts";
 import { PasteEmptyError } from "../data/paste.ts";
 
 Deno.test("PirschReporter", async (t) => {
@@ -16,16 +15,15 @@ Deno.test("PirschReporter", async (t) => {
     event: () => Promise.resolve(),
   } as unknown as PirschNodeApiClient;
 
-  const reporter = new PirschReporter(mockPirsch);
+  const reporter = new Reporter(mockPirsch);
 
-  await t.step(
-    "getInstance() should return undefined when environment variables are not set",
-    () => {
-      const result = PirschReporter.getInstance();
-
-      expect(result).toBeUndefined();
+  const ctx = {
+    info: {
+      remoteAddr: {
+        hostname: "0.0.0.0",
+      },
     },
-  );
+  } as FreshContext;
 
   await t.step(
     "pageView() should send a 'hit' to the pirsch client",
@@ -33,14 +31,6 @@ Deno.test("PirschReporter", async (t) => {
       using hitSpy = spy(mockPirsch, "hit");
 
       const request = new Request("https://denopaste.com");
-      const ctx = {
-        info: {
-          remoteAddr: {
-            hostname: "0.0.0.0",
-          },
-        },
-      } as FreshContext;
-
       reporter.pageView(request, ctx);
 
       assertSpyCalls(hitSpy, 1);
@@ -69,13 +59,6 @@ Deno.test("PirschReporter", async (t) => {
       request.headers.set("content-length", "42");
       const response = new Response();
       response.headers.set("location", "/abc123");
-      const ctx = {
-        info: {
-          remoteAddr: {
-            hostname: "0.0.0.0",
-          },
-        },
-      } as FreshContext;
 
       reporter.pasteEvent(request, response, ctx);
 
@@ -110,13 +93,6 @@ Deno.test("PirschReporter", async (t) => {
       using eventSpy = spy(mockPirsch, "event");
 
       const request = new Request("https://denopaste.com");
-      const ctx = {
-        info: {
-          remoteAddr: {
-            hostname: "0.0.0.0",
-          },
-        },
-      } as FreshContext;
       const error = new PasteEmptyError();
 
       reporter.errorEvent(request, ctx, error);
@@ -153,14 +129,6 @@ Deno.test("PirschReporter", async (t) => {
       using eventSpy = spy(mockPirsch, "event");
 
       const request = new Request("https://denopaste.com");
-      const ctx = {
-        info: {
-          remoteAddr: {
-            hostname: "0.0.0.0",
-          },
-        },
-      } as FreshContext;
-
       const errors = [
         new HttpError(400),
         new HttpError(404),

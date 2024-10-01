@@ -4,7 +4,7 @@ export function pageTitle(str: string, length: number = 64): string {
   const truncated = str.length > length
     ? `${str.substring(0, length)}...`
     : str;
-  return `${truncated} | Denopaste`;
+  return `${truncated} | Deno Paste`;
 }
 
 function message(status: number): string {
@@ -22,6 +22,6 @@ function message(status: number): string {
 
 export function errorTitle(error: unknown): string {
   return error instanceof HttpError
-    ? `${message(error.status)} | Denopaste`
-    : `${message(500)} | Denopaste`;
+    ? `${message(error.status)} | Deno Paste`
+    : `${message(500)} | Deno Paste`;
 }
