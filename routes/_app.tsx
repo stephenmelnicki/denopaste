@@ -1,5 +1,4 @@
 import { type PageProps } from "fresh";
-import { asset } from "fresh/runtime";
 
 import { define, type State } from "../utils/define.ts";
 import Header from "../components/Header.tsx";
@@ -35,7 +34,7 @@ function App({ Component, state }: PageProps<never, State>) {
           crossorigin="true"
         >
         </link>
-        <link rel="stylesheet" type="text/css" href={asset("/styles.css")} />
+        <link rel="stylesheet" type="text/css" href="/styles.css" />
       </head>
       <body class="flex flex-col px-4 sm:px-6 py-8 mx-auto min-h-screen max-w-screen-md">
         <Header />
