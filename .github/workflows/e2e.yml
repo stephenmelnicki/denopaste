@@ -16,7 +16,7 @@ jobs:
       - name: Setup deno
         uses: denoland/setup-deno@v1
         with:
-          deno-version: 1.x
+          deno-version: canary
 
       - name: Run e2e tests
         run: deno task e2e -- --deployed
