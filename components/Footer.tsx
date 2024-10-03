@@ -1,6 +1,6 @@
 export default function Footer() {
   return (
-    <footer class="mt-8 flex flex-col justify-center items-center gap-4 text-gray-600 sm:flex-row sm:justify-between">
+    <footer class="mt-8 flex flex-col justify-center items-center gap-4 text-sm text-gray-600 sm:flex-row sm:justify-between">
       <span>
         &copy; 2024 Stephen Melnicki
       </span>
