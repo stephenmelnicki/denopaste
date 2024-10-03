@@ -5,13 +5,13 @@
   >
 </picture>
 
+[![Denopaste](https://github.com/stephenmelnicki/denopaste/actions/workflows/ci.yml/badge.svg)](https://github.com/stephenmelnicki/denopaste/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 # Deno Paste
 
 A simple paste service built with [Deno](https://deno.land) 🦕 and
 [Fresh](https://fresh.deno.dev) 🍋
-
-[![Denopaste](https://github.com/stephenmelnicki/denopaste/actions/workflows/ci.yml/badge.svg)](https://github.com/stephenmelnicki/denopaste/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ## Getting Started
 
@@ -41,37 +41,35 @@ docs.
 
 ## Testing
 
-Two varieties of tests are present, unit and integration tests.
-
 To run the unit tests:
 
 ```sh
 deno task test
 ```
 
-To generate a test coverage report:
+To view a test coverage report:
 
 ```sh
-deno task coverage
-open ./coverage/html/index.html
+deno task test -- --coverage
+deno coverage
 ```
 
-In order to run the integration tests, you'll first need to start the Deno Paste
-server if it isn't already running:
+To run the integration tests, start the Deno Paste server if you haven't
+already:
+
+```sh
+deno task dev
+```
+
+Or
 
 ```sh
 deno task build
 deno task preview
 ```
 
-Then run the integration tests headlessly:
+Then, in another tab, run the integration tests:
 
 ```sh
 deno task e2e
-```
-
-You can also run the integration tests with the browser open:
-
-```sh
-deno task e2e -- --headful
 ```

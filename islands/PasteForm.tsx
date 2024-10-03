@@ -5,17 +5,17 @@ import type { JSX } from "preact";
 import Paste from "../data/paste.ts";
 
 export default function PasteForm() {
-  const textarea = useRef<HTMLTextAreaElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const contents = useSignal<string>("");
 
   function onInput(event: JSX.TargetedEvent<HTMLTextAreaElement>): void {
     contents.value = event.currentTarget.value;
-    textarea.current?.setCustomValidity("");
+    textareaRef.current?.setCustomValidity("");
   }
 
   function onKeyDown(event: KeyboardEvent): void {
     if (event.ctrlKey && event.key === "Enter") {
-      textarea.current?.form?.requestSubmit();
+      textareaRef.current?.form?.requestSubmit();
     }
   }
 
@@ -35,7 +35,7 @@ export default function PasteForm() {
   }
 
   function onSubmit(event: SubmitEvent): boolean {
-    if (!validate(textarea.current)) {
+    if (!validate(textareaRef.current)) {
       event.preventDefault();
       return false;
     }
@@ -51,7 +51,7 @@ export default function PasteForm() {
     >
       <label class="sr-only" for="contents">Contents</label>
       <textarea
-        ref={textarea}
+        ref={textareaRef}
         id="contents"
         name="contents"
         type="text"

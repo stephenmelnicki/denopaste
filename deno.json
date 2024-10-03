@@ -6,7 +6,6 @@
     "preview": "deno run -A --unstable-kv main.ts",
     "check:types": "deno check analytics/ components/ data/ e2e/ islands/ routes/ utils/ dev.ts main.ts",
     "test": "deno test -A --unstable-kv analytics/ data/ utils/",
-    "coverage": "deno task test --coverage && deno coverage --html",
     "e2e": "deno test -A e2e/"
   },
   "imports": {
