@@ -55,7 +55,7 @@ export default function PasteForm() {
         id="contents"
         name="contents"
         type="text"
-        class="font-mono block w-full h-56 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:border-green-600 focus:border-2"
+        class="font-mono block w-full h-56 px-4 py-2 border rounded-md shadow-sm border-gray-300 hover:border-gray-500 focus:border-gray-500 transition-colors"
         placeholder="Paste your content here..."
         value={contents.value}
         onInput={onInput}
@@ -67,9 +67,9 @@ export default function PasteForm() {
       <div class="flex justify-end mt-2">
         <button
           type="submit"
-          class="px-4 py-2 font-semibold rounded-md bg-green-600 text-white shadow-sm hover:bg-green-500"
+          class="px-4 py-2 rounded-md transition-colors duration-150 ease-in-out border-blue-700 bg-blue-600 text-white hover:bg-blue-700 hover:border-blue-800 shadow-sm"
         >
-          Submit
+          Paste
         </button>
       </div>
     </form>
