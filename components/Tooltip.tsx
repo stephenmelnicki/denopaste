@@ -18,6 +18,3 @@ export default function Tooltip({ message, children }: Props) {
     </div>
   );
 }
-
-// opacity-0 group-hover:opacity-100 transition
-// -translate-y-12 -translate-x-12 transition duration-75 ease-in-out text-nowrap
