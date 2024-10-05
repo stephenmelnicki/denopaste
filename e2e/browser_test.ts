@@ -28,13 +28,40 @@ Deno.test("browser", async () => {
     await page.goto(address, { waitUntil: "load" });
     await page.waitForSelector("form");
 
+    let title = await page
+      .locator<HTMLTitleElement>("title")
+      .evaluate((el) => el.textContent);
+
+    expect(title).toEqual(
+      "Deno Paste - A simple paste service built with Deno 🦕 and Fresh 🍋",
+    );
+
+    await page.locator("button").click();
+
+    let errorMessage = await page
+      .locator<HTMLSpanElement>("span[data-testid='error-message'")
+      .evaluate((el) => el.textContent);
+
+    expect(errorMessage).toEqual("Paste must not be empty.");
+
+    await page.locator("textarea").fill("     ");
+    await page.locator("button").click();
+
+    errorMessage = await page
+      .locator<HTMLSpanElement>("span[data-testid='error-message'")
+      .evaluate((el) => el.textContent);
+
+    expect(errorMessage).toEqual("Paste must not be empty.");
+
+    await page.reload();
+    await page.waitForSelector("form");
     await page.locator("textarea").fill("Hello, deno paste!");
     await page.locator("button").click();
     await page.waitForNavigation();
 
     expect(page.url).not.toEqual(address);
 
-    const title = await page
+    title = await page
       .locator<HTMLTitleElement>("title")
       .evaluate((el) => el.textContent);
 
@@ -51,10 +78,10 @@ Deno.test("browser", async () => {
 
     expect(page.url.endsWith("/raw")).toBe(true);
 
-    const rawContents = await page
+    const raw = await page
       .locator<HTMLBodyElement>("body")
       .evaluate((el) => el.textContent);
 
-    expect(rawContents).toEqual("Hello, deno paste!");
+    expect(raw).toEqual("Hello, deno paste!");
   });
 });

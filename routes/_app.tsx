@@ -19,21 +19,6 @@ function App({ Component, state }: PageProps<never, State>) {
           rel="icon"
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%221em%22 font-size=%2280%22>🦕</text></svg>"
         />
-        <link
-          rel="preload"
-          href="/fonts/Inter-Regular.woff2"
-          as="font"
-          type="font/woff2"
-          crossorigin="true"
-        />
-        <link
-          rel="preload"
-          href="/fonts/Inter-SemiBold.woff2"
-          as="font"
-          type="font/woff2"
-          crossorigin="true"
-        >
-        </link>
         <link rel="stylesheet" type="text/css" href="/styles.css" />
       </head>
       <body class="flex flex-col px-4 sm:px-6 py-8 mx-auto min-h-screen max-w-screen-md">

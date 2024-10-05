@@ -40,7 +40,7 @@ export const handler = define.handlers({
 
 function Home() {
   return (
-    <main class="mt-6 mb-16">
+    <main class="mt-4 mb-12">
       <PasteForm />
     </main>
   );

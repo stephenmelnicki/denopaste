@@ -22,14 +22,14 @@ export default function ErrorPage({ error }: PageProps) {
 
   return (
     <main class="mt-24 mb-16 text-center">
-      <h2 class="text-7xl text-gray-900 font-bold">
+      <h2 class="text-7xl font-bold">
         {code}
       </h2>
       <p class="mt-6 leading-7">
         {description}
       </p>
       <div class="mt-16">
-        <a class="text-gray-600 hover:underline" href="/">
+        <a class="text-gray-500 hover:underline" href="/">
           Back to the Homepage
         </a>
       </div>

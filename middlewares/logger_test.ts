@@ -12,7 +12,7 @@ Deno.test("duration(start) returns amount of time elapsed", () => {
   const start = performance.now();
   time.tick(500);
 
-  expect(duration(start)).toEqual("500.00ms");
+  expect(duration(start)).toEqual("500ms");
 
   time.tick(500);
   expect(duration(start)).toEqual("1s");
@@ -38,5 +38,5 @@ Deno.test("logger() returns expected log message", async () => {
 
   assertSpyCalls(info, 2);
   assertSpyCallArgs(info, 0, ["<-- GET /"]);
-  assertSpyCallArgs(info, 1, ["--> GET / 200 50.00ms"]);
+  assertSpyCallArgs(info, 1, ["--> GET / 200 50ms"]);
 });

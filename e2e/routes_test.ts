@@ -16,7 +16,7 @@ function createPaste(
   });
 }
 
-Deno.test("GET / 200", async () => {
+Deno.test("GET / 200 OK", async () => {
   const response = await fetch(address);
   const text = await response.text();
 
@@ -39,7 +39,7 @@ Deno.test("GET / 404 Not found", async () => {
   expect(text).toContain("Back to the Homepage");
 });
 
-Deno.test("POST / 302", async () => {
+Deno.test("POST / 302 Found", async () => {
   const response = await createPaste();
   const text = await response.text();
 
@@ -72,7 +72,7 @@ Deno.test("POST / 413 Content too large", async () => {
   expect(text).toContain("Back to the Homepage");
 });
 
-Deno.test("GET /:id 200", async () => {
+Deno.test("GET /:id 200 OK", async () => {
   const response = await createPaste();
   await response.body?.cancel();
   const id = response.url.split("/").pop();
@@ -95,7 +95,7 @@ Deno.test("GET /:id 404 Not found", async () => {
   expect(text).toContain("Back to the Homepage");
 });
 
-Deno.test("GET /:id/raw 200", async () => {
+Deno.test("GET /:id/raw 200 OK", async () => {
   const response = await createPaste();
   await response.body?.cancel();
   const id = response.url.split("/").pop();

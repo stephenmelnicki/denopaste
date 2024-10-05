@@ -29,7 +29,7 @@ function PasteById(props: PageProps<Data>) {
   const { paste } = props.data;
 
   return (
-    <main class="mt-6 mb-8" data-testid="paste-contents">
+    <main class="my-6" data-testid="paste-contents">
       <PasteActions paste={paste} />
       <pre class="py-2 border-l border-r border-b rounded-b-md border-gray-300 overflow-auto shadow-sm">
         {

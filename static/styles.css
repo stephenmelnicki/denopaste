@@ -20,7 +20,6 @@
 
 body {
   font-family:
-    Inter,
     ui-sans-serif,
     system-ui,
     -apple-system,
@@ -31,10 +30,6 @@ body {
     Arial,
     "Noto Sans",
     sans-serif;
-}
-
-h1 {
-  letter-spacing: -0.025em;
 }
 
 textarea:focus {

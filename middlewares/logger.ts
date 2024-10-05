@@ -9,7 +9,7 @@ export function duration(start: number): string {
   const delta = performance.now() - start;
 
   return delta < 1000
-    ? `${delta.toFixed(2)}ms`
+    ? `${Math.round(delta)}ms`
     : `${Math.round(delta / 1000)}s`;
 }
 
