@@ -1,6 +1,7 @@
 import { type FreshContext, HttpError, page } from "fresh";
 
 import { define, type State } from "../utils/define.ts";
+import { insert } from "../data/mod.ts";
 import Paste, { PasteEmptyError, PasteTooLargeError } from "../data/paste.ts";
 import PasteForm from "../islands/PasteForm.tsx";
 
@@ -16,9 +17,8 @@ export const handler = define.handlers({
     const contents = formData.get("contents")?.toString() ?? "";
 
     try {
-      const { db } = ctx.state;
       const paste = new Paste(contents);
-      await db.insertPaste(paste);
+      await insert(ctx.state.kv, paste);
 
       return new Response(undefined, {
         headers: { "location": `/${paste.id}` },

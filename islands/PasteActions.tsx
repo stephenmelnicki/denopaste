@@ -1,30 +1,31 @@
 import { useMemo } from "preact/hooks";
 
 import Paste from "../data/paste.ts";
-import CopyToClipboardButton from "./CopyToClipboardButton.tsx";
-import DownloadButton from "./DownloadButton.tsx";
-import { bytesSize } from "../utils/size.ts";
+import CopyToClipboardButton from "../islands/CopyToClipboardButton.tsx";
+import DownloadButton from "../islands/DownloadButton.tsx";
+import { byteSize } from "../utils/bytes.ts";
 
 interface Props {
   paste: Paste;
 }
 
 export default function PasteActions({ paste }: Props) {
-  const lineCount = useMemo(() => paste.contents.trim().split("\n").length, [
-    paste,
-  ]);
+  const lines = useMemo(
+    () => paste.contents.trim().split("\n").length,
+    [paste],
+  );
 
-  const byteCount = useMemo(
-    () => bytesSize(paste.contents),
+  const bytes = useMemo(
+    () => byteSize(paste.contents),
     [paste],
   );
 
   return (
     <div class="flex items-center justify-between border rounded-t-md bg-gray-100 border-gray-300">
       <div class="pl-3 py-3 flex items-center gap-2">
-        <p>{`${lineCount} lines`}</p>
+        <p>{`${lines} lines`}</p>
         <span>&bull;</span>
-        <p>{byteCount}</p>
+        <p>{bytes}</p>
       </div>
       <nav class="px-2 flex items-center justify-end">
         <a
@@ -35,7 +36,7 @@ export default function PasteActions({ paste }: Props) {
           View Raw
         </a>
         <CopyToClipboardButton contents={paste.contents} />
-        <DownloadButton id={paste.id} contents={paste.contents} />
+        <DownloadButton {...paste} />
       </nav>
     </div>
   );

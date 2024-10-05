@@ -4,8 +4,8 @@
     "dev": "deno run -A --unstable-kv --watch=static/,routes/ dev.ts",
     "build": "deno run -A --unstable-kv dev.ts build",
     "preview": "deno run -A --unstable-kv main.ts",
-    "check:types": "deno check analytics/ components/ data/ e2e/ islands/ routes/ utils/ dev.ts main.ts",
-    "test": "deno test -A --unstable-kv analytics/ data/ utils/",
+    "check:types": "deno check .",
+    "test": "deno test -A --unstable-kv --ignore=e2e/",
     "e2e": "deno test -A e2e/"
   },
   "imports": {

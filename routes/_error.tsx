@@ -1,37 +1,24 @@
+import { useMemo } from "preact/hooks";
 import { HttpError, type PageProps } from "fresh";
 
-function processError(error: unknown): { code: number; description: string } {
-  if (error instanceof HttpError) {
-    if (error.status === 400 || error.status === 413) {
-      return {
-        code: error.status,
-        description: error.message,
-      };
-    }
-
-    if (error.status === 404) {
-      return {
-        code: 404,
-        description: "Couldn't find what you're looking for.",
-      };
-    }
-
-    if (error.status === 405) {
-      return {
-        code: 405,
-        description: "Method not allowed.",
-      };
-    }
-  }
-
-  return {
-    code: 500,
-    description: "Oops! Something went wrong.",
-  };
-}
-
 export default function ErrorPage({ error }: PageProps) {
-  const { code, description } = processError(error);
+  const [code, description] = useMemo(() => {
+    if (error instanceof HttpError) {
+      if (error.status === 400 || error.status === 413) {
+        return [error.status, error.message];
+      }
+
+      if (error.status === 404) {
+        return [404, "Couldn't find what you're looking for."];
+      }
+
+      if (error.status === 405) {
+        return [405, "Method not allowed."];
+      }
+    }
+
+    return [500, "Oops! Something went wrong."];
+  }, [error]);
 
   return (
     <main class="mt-24 mb-16 text-center">

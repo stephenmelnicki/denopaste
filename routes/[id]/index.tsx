@@ -2,6 +2,7 @@ import type { FreshContext, PageProps } from "fresh";
 import { HttpError, page } from "fresh";
 
 import { define, type State } from "../../utils/define.ts";
+import { getById } from "../../data/mod.ts";
 import Paste from "../../data/paste.ts";
 import { pageTitle } from "../../utils/title.ts";
 import PasteActions from "../../islands/PasteActions.tsx";
@@ -13,8 +14,7 @@ interface Data {
 
 export const handler = define.handlers<Data>({
   async GET(ctx: FreshContext<State>) {
-    const { db } = ctx.state;
-    const paste = await db.getPasteById(ctx.params.id);
+    const paste = await getById(ctx.state.kv, ctx.params.id);
 
     if (!paste) {
       throw new HttpError(404);

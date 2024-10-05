@@ -1,7 +1,7 @@
 import { expect } from "@std/expect";
 import Paste, { PasteEmptyError, PasteTooLargeError } from "./paste.ts";
 
-Deno.test("new Paste(contents) creates a new paste with provided contents", () => {
+Deno.test("Paste constructor creates a new paste with provided contents", () => {
   const contents = "Hello, world!";
   const paste = new Paste(contents);
 
@@ -10,32 +10,32 @@ Deno.test("new Paste(contents) creates a new paste with provided contents", () =
   expect(paste.createdAt).toBeDefined();
 });
 
-Deno.test("new Paste(contents) throws 'PasteEmptyError' when contents are empty", () => {
+Deno.test("Paste constructor throws 'PasteEmptyError' when contents are empty", () => {
   expect(() => new Paste("")).toThrow(PasteEmptyError);
 });
 
-Deno.test("new Paste(contents) throws 'PasteTooLargeError' error when contents exceed size limit of 64 KiB", () => {
+Deno.test("Paste constructor throws 'PasteTooLargeError' error when contents exceed size limit of 64 KiB", () => {
   const longContents = "paste".repeat(1024 * 64);
   expect(() => new Paste(longContents)).toThrow(PasteTooLargeError);
 });
 
-Deno.test("Paste.validate(contents) returns an ok result when contents are valid", () => {
+Deno.test("Paste.validate returns an ok result when contents are valid", () => {
   const result = Paste.validate("Hello, world!");
 
   expect(result.ok).toBe(true);
   expect(result.message).toBe("");
 });
 
-Deno.test("Paste.validate(contents) correctly indicates when contents are empty", () => {
+Deno.test("Paste.validate indicates when paste contents are empty", () => {
   const result = Paste.validate("");
 
   expect(result.ok).toBe(false);
   expect(result.message).toBe("Paste can not be empty.");
 });
 
-Deno.test("Paste.validate(contents) correctly indicates when contents are too large", () => {
-  const result = Paste.validate("A".repeat(1024 * 64 + 1));
+Deno.test("Paste.validate indicates when paste contents are too large", () => {
+  const result = Paste.validate("paste".repeat(1024 * 64));
 
   expect(result.ok).toBe(false);
-  expect(result.message).toBe("Paste is too large. Size limit is 64 KiB.");
+  expect(result.message).toEqual("Paste is too large. Size limit is 64 KiB.");
 });

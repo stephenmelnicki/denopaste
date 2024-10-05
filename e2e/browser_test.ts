@@ -1,6 +1,10 @@
 import { launch, type Page } from "@astral/astral";
 import { expect } from "@std/expect";
 
+const address = Deno.args.includes("--deployed")
+  ? "https://denopaste.com"
+  : "http://localhost:8000";
+
 async function withBrowser(
   fn: (page: Page, address: string) => void | Promise<void>,
 ) {
@@ -10,9 +14,6 @@ async function withBrowser(
   });
 
   const page = await browser.newPage();
-  const address = Deno.args.includes("--deployed")
-    ? "https://denopaste.com"
-    : "http://localhost:8000";
 
   try {
     await fn(page, address);
@@ -22,7 +23,7 @@ async function withBrowser(
   }
 }
 
-Deno.test("create paste", async () => {
+Deno.test("browser", async () => {
   await withBrowser(async (page, address) => {
     await page.goto(address, { waitUntil: "load" });
     await page.waitForSelector("form");

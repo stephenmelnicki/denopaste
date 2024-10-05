@@ -41,14 +41,34 @@ export default class Paste {
   /**
    * Creates a new paste with the given contents.
    *
-   * @example
+   * @example Create a paste
    * ```ts
-   * import Paste from "./paste.ts";
+   * import { expect } from "jsr:@std/expect";
    *
    * const paste = new Paste("Hello, world!");
-   * paste; // { id: "01J7S8N4X7TMC8KP8XVJW08NJM", contents: "Hello, world!", createdAt: 2021-09-01T00:00:00.000Z }
-   * const empty = new Paste(""); // throws PasteEmptyError
-   * const tooLong = new Paste("A".repeat(1024 * 64 + 1)); // throws PasteTooLongError
+   * expect(paste.contents).toEqual("Hello, world!");
+   * ```
+   *
+   * @example Throw paste empty error
+   * ```ts
+   * import { expect } from "jsr:@std/expect";
+   *
+   * try {
+   *  new Paste("");
+   * } catch (err) {
+   *  expect(err).toBeInstanceOf(PasteEmptyError);
+   * }
+   * ```
+   *
+   * @example Throw paste too large error
+   * ```ts
+   * import { expect } from "jsr:@std/expect";
+   *
+   * try {
+   *  new Paste("paste".repeat(1024 * 64));
+   * } catch (err) {
+   *  expect(err).toBeInstanceOf(PasteTooLargeError);
+   * }
    * ```
    *
    * @param contents The text contents of the paste.
@@ -72,18 +92,31 @@ export default class Paste {
   /**
    * Validate the contents to be saved to a paste.
    *
-   * @example Usage
+   * @example Valid paste
    * ```ts
-   * import Paste from "./paste.ts";
+   * import { expect } from "jsr:@std/expect";
    *
    * const result = Paste.validate("Hello, world!");
-   * result; // { ok: true, message: "" }
+   * expect(result.ok).toBe(true);
+   * expect(result.message).toEqual("");
+   * ```
    *
-   * const invalid = Paste.validate("");
-   * invalid; // { ok: false, message: "Paste can not be empty." }
+   * @example Empty paste
+   * ```ts
+   * import { expect } from "jsr:@std/expect";
+   *
+   * const result = Paste.validate("");
+   * expect(result.ok).toBe(false);
+   * expect(result.message).toEqual("Paste can not be empty.");
+   * ```
+   *
+   * @example Paste too large
+   * ```ts
+   * import { expect } from "jsr:@std/expect";
    *
    * const tooLarge = Paste.validate("paste".repeat(1024 * 64));
-   * tooLarge; // { ok: false, message: "Paste is too large. Size limit is 64 KiB." }
+   * expect(tooLarge.ok).toBe(false);
+   * expect(tooLarge.message).toEqual("Paste is too large. Size limit is 64 KiB.");
    * ```
    *
    * @param contents The text contents of the paste.
@@ -91,15 +124,14 @@ export default class Paste {
    * message when they are not.
    */
   static validate(contents: string): ValidationResult {
-    try {
-      new Paste(contents);
-      return { ok: true, message: "" };
-    } catch (err: unknown) {
-      if (err instanceof PasteEmptyError || err instanceof PasteTooLargeError) {
-        return { ok: false, message: err.message };
-      }
-
-      throw err;
+    if (contents.trim().length === 0) {
+      return { ok: false, message: new PasteEmptyError().message };
     }
+
+    if (new TextEncoder().encode(contents).length > 1024 * 64) {
+      return { ok: false, message: new PasteTooLargeError().message };
+    }
+
+    return { ok: true, message: "" };
   }
 }

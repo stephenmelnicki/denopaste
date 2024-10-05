@@ -1,4 +1,4 @@
-import { useRef } from "preact/hooks";
+import { useCallback, useRef } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import type { JSX } from "preact";
 
@@ -8,40 +8,52 @@ export default function PasteForm() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const contents = useSignal<string>("");
 
-  function onInput(event: JSX.TargetedEvent<HTMLTextAreaElement>): void {
-    contents.value = event.currentTarget.value;
-    textareaRef.current?.setCustomValidity("");
-  }
+  const onInput = useCallback(
+    (event: JSX.TargetedEvent<HTMLTextAreaElement>): void => {
+      contents.value = event.currentTarget.value;
+      textareaRef.current?.setCustomValidity("");
+    },
+    [contents, textareaRef],
+  );
 
-  function onKeyDown(event: KeyboardEvent): void {
-    if (event.ctrlKey && event.key === "Enter") {
-      textareaRef.current?.form?.requestSubmit();
-    }
-  }
+  const onKeyDown = useCallback(
+    (event: KeyboardEvent): void => {
+      if (event.ctrlKey && event.key === "Enter") {
+        textareaRef.current?.form?.requestSubmit();
+      }
+    },
+    [textareaRef],
+  );
 
-  function validate(textarea: HTMLTextAreaElement | null): boolean {
-    if (!textarea) {
-      return false;
-    }
+  const validate = useCallback(
+    (): boolean => {
+      if (!textareaRef.current) {
+        return false;
+      }
 
-    const result = Paste.validate(textarea.value);
-    if (result.ok) {
-      textarea.setCustomValidity("");
-    } else {
-      textarea.setCustomValidity(result.message);
-    }
+      const result = Paste.validate(textareaRef.current.value);
+      if (result.ok) {
+        textareaRef.current.setCustomValidity("");
+      } else {
+        textareaRef.current.setCustomValidity(result.message);
+      }
 
-    return textarea.reportValidity();
-  }
+      return textareaRef.current.reportValidity();
+    },
+    [textareaRef],
+  );
 
-  function onSubmit(event: SubmitEvent): boolean {
-    if (!validate(textareaRef.current)) {
-      event.preventDefault();
-      return false;
-    }
+  const onSubmit = useCallback(
+    (event: SubmitEvent): boolean => {
+      if (!validate()) {
+        event.preventDefault();
+        return false;
+      }
 
-    return true;
-  }
+      return true;
+    },
+    [validate],
+  );
 
   return (
     <form

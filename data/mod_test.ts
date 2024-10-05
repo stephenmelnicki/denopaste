@@ -6,122 +6,102 @@ import {
   stub,
 } from "@std/testing/mock";
 import { expect } from "@std/expect";
+
 import Paste, { PasteTooLargeError } from "./paste.ts";
-import { Database, getPasteDb } from "./mod.ts";
+import { getById, getKvInstance, insert } from "./mod.ts";
 
-Deno.test("PasteDatabase", async (t) => {
-  const testPaste = new Paste("test");
+Deno.test("getKvInstance returns a singleton instance of Deno.Kv", async () => {
+  using openKv = stub(Deno, "openKv", () => Promise.resolve({} as Deno.Kv));
 
-  const mockKv = {
-    get: (args: [string, string] | null) => {
-      if (args?.[1] === testPaste.id) {
-        return Promise.resolve({ value: testPaste });
-      }
-
-      return Promise.resolve({ value: null });
+  [await getKvInstance(), await getKvInstance(), await getKvInstance()].forEach(
+    (instance, _index, instances) => {
+      assertSpyCalls(openKv, 1);
+      expect(instance).toBeDefined();
+      expect(instances.every((i) => i === instance)).toBe(true);
     },
-    set: (_args: [string, string], paste: Paste) => {
-      if (paste.contents === "too large") {
-        throw new TypeError("value too large");
-      }
+  );
+});
 
-      return Promise.resolve();
+Deno.test("getById returns null when paste is not found", async () => {
+  using kv = await Deno.openKv(":memory:");
+  using getSpy = spy(kv, "get");
+
+  const result = await getById(kv, "notfound");
+
+  expect(result).toBeNull();
+  assertSpyCalls(getSpy, 1);
+  assertSpyCallArg(getSpy, 0, 0, ["pastes", "notfound"]);
+});
+
+Deno.test("getById returns paste when found", async () => {
+  using kv = await Deno.openKv(":memory:");
+  using getSpy = spy(kv, "get");
+
+  const paste = new Paste("test");
+  kv.set(["pastes", paste.id], paste);
+  const result = await getById(kv, paste.id);
+
+  expect(result).toEqual(paste);
+  assertSpyCalls(getSpy, 1);
+  assertSpyCallArg(getSpy, 0, 0, ["pastes", paste.id]);
+});
+
+Deno.test("insert adds paste to the database", async () => {
+  using kv = await Deno.openKv(":memory:");
+  using setSpy = spy(kv, "set");
+
+  const paste = new Paste("test");
+  await insert(kv, paste);
+
+  assertSpyCalls(setSpy, 1);
+  assertSpyCallArgs(setSpy, 0, [["pastes", paste.id], paste, {
+    expireIn: 60 * 60 * 1000,
+  }]);
+});
+
+Deno.test("insert adds paste with custom expiration time", async () => {
+  using kv = await Deno.openKv(":memory:");
+  using setSpy = spy(kv, "set");
+
+  const paste = new Paste("test");
+  await insert(kv, paste, 1000);
+
+  assertSpyCalls(setSpy, 1);
+  assertSpyCallArgs(setSpy, 0, [["pastes", paste.id], paste, {
+    expireIn: 1000,
+  }]);
+});
+
+Deno.test("insert throws 'PasteTooLargeError' when Kv throws a TypeError with a message indicating the value is too large", async () => {
+  const kv = {
+    set: () => {
+      throw new TypeError("value too large");
     },
   } as unknown as Deno.Kv;
+  const paste = new Paste("hello world!");
 
-  const db = new Database(mockKv);
+  try {
+    await insert(kv, paste);
+    expect(true).toBe(false); // expected error to be thrown
+  } catch (err) {
+    expect(err).toBeInstanceOf(PasteTooLargeError);
+  }
+});
 
-  await t.step(
-    "getInstance() should open a kv connection and return the same instance on subsequent calls",
-    async () => {
-      using openKv = stub(Deno, "openKv", () => Promise.resolve(mockKv));
-
-      [
-        await getPasteDb(),
-        await getPasteDb(),
-        await getPasteDb(),
-      ].forEach((instance, _index, instances) => {
-        assertSpyCalls(openKv, 1);
-        expect(instance).toBeDefined();
-        expect(instances.every((i) => i === instance)).toBe(true);
-      });
+Deno.test("insert should throw all other errors", async () => {
+  const error = new TypeError("test error");
+  const kv = {
+    set: () => {
+      throw error;
     },
-  );
+  } as unknown as Deno.Kv;
+  const paste = new Paste("hello world!");
 
-  await t.step(
-    "getPasteById() should return null when paste is not found",
-    async () => {
-      using getSpy = spy(mockKv, "get");
-
-      const id = "keyboardcat";
-      const result = await db.getPasteById(id);
-
-      expect(result).toBeNull();
-      assertSpyCalls(getSpy, 1);
-      assertSpyCallArg(getSpy, 0, 0, ["pastes", id]);
-    },
-  );
-
-  await t.step("getPasteById() should return paste when found", async () => {
-    using getSpy = spy(mockKv, "get");
-
-    const result = await db.getPasteById(testPaste.id);
-
-    expect(result).toEqual(testPaste);
-    assertSpyCalls(getSpy, 1);
-    assertSpyCallArg(getSpy, 0, 0, ["pastes", testPaste.id]);
-  });
-
-  await t.step(
-    "insertPaste() should insert a paste that expires in one hour by default",
-    async () => {
-      using setSpy = spy(mockKv, "set");
-
-      await db.insertPaste(testPaste);
-
-      assertSpyCalls(setSpy, 1);
-      assertSpyCallArgs(setSpy, 0, [
-        ["pastes", testPaste.id],
-        testPaste,
-        { expireIn: 60 * 60 * 1000 },
-      ]);
-    },
-  );
-
-  await t.step(
-    "insertPaste() should insert a paste that expires in the specified time",
-    async () => {
-      using setSpy = spy(mockKv, "set");
-
-      await db.insertPaste(testPaste, 1000);
-
-      assertSpyCalls(setSpy, 1);
-      assertSpyCallArgs(setSpy, 0, [
-        ["pastes", testPaste.id],
-        testPaste,
-        { expireIn: 1000 },
-      ]);
-    },
-  );
-
-  await t.step(
-    "insertPaste() should throw 'PasteTooLargeError' when kv throws 'TypeError' with 'value too large' in the message",
-    async () => {
-      using setSpy = spy(mockKv, "set");
-      const tooLargePaste = new Paste("too large");
-
-      try {
-        await db.insertPaste(tooLargePaste);
-        expect(true).toBe(false); // expected error to be thrown
-      } catch (err) {
-        expect(err).toBeInstanceOf(PasteTooLargeError);
-        assertSpyCalls(setSpy, 1);
-        assertSpyCallArgs(setSpy, 0, [
-          ["pastes", tooLargePaste.id],
-          tooLargePaste,
-          { expireIn: 60 * 60 * 1000 },
-        ]);
-      }
-    },
-  );
+  try {
+    await insert(kv, paste);
+    expect(true).toBe(false); // expected error to be thrown
+  } catch (err) {
+    expect(err).not.toBeInstanceOf(PasteTooLargeError);
+    expect(err).toEqual(error);
+  }
 });

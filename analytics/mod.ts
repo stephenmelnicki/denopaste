@@ -1,146 +1,101 @@
 import { FreshContext, HttpError } from "fresh";
-import { Pirsch, PirschHit, PirschNodeApiClient } from "pirsch";
-import { error, path, warn } from "../utils/logger.ts";
+import { PirschHit, PirschNodeApiClient } from "pirsch";
 
-export interface PirschReporter {
-  pageView(req: Request, ctx: FreshContext): Promise<void>;
-  pasteEvent(req: Request, res: Response, ctx: FreshContext): Promise<void>;
-  errorEvent(req: Request, ctx: FreshContext, err: unknown): Promise<void>;
+/**
+ * Reports a page hit event to the Pirsch client.
+ *
+ * @param client The Pirsch client
+ */
+export async function hit(
+  client: PirschNodeApiClient,
+  ctx: FreshContext,
+) {
+  await client.hit(createHit(ctx));
 }
 
-export const getReporter: () => PirschReporter | undefined = (() => {
-  let reporter: PirschReporter | undefined;
-
-  return () => {
-    if (!reporter) {
-      const hostname = Deno.env.get("PIRSCH_HOSTNAME");
-      const accessToken = Deno.env.get("PIRSCH_ACCESS_TOKEN");
-
-      if (!hostname || !accessToken) {
-        warn(
-          '"PIRSCH_HOSTNAME" and "PIRSCH_ACCESS_TOKEN" environment variables not set. Analytics reporting disabled.',
-        );
-
-        return undefined;
-      }
-
-      const client = new Pirsch({
-        hostname,
-        accessToken,
-        protocol: "https",
-      });
-
-      reporter = new Reporter(client);
-    }
-
-    return reporter;
+/**
+ * Reports a paste creation event to the Pirsch client.
+ *
+ * @param client The Pirsch client
+ * @param req The incoming request
+ * @param res The outgoing response
+ * @param ctx The Fresh context
+ */
+export async function pasteEvent(
+  client: PirschNodeApiClient,
+  ctx: FreshContext,
+  res: Response,
+) {
+  const metadata = {
+    id: `${res.headers.get("location")?.split("/").pop()!}`,
+    size: `${ctx.req.headers.get("content-length") ?? 0} bytes`,
   };
-})();
 
-export class Reporter implements PirschReporter {
-  readonly #pirsch: PirschNodeApiClient;
+  await client.event(
+    "Create Paste",
+    createHit(ctx),
+    undefined,
+    metadata,
+  );
+}
 
-  constructor(client: PirschNodeApiClient) {
-    this.#pirsch = client;
-  }
+/**
+ * Reports an error event to the Pirsch client.
+ *
+ * @param client The Pirsch client
+ * @param req The incoming request
+ * @param ctx The Fresh context
+ * @param err The error that occurred
+ */
+export async function errorEvent(
+  client: PirschNodeApiClient,
+  ctx: FreshContext,
+) {
+  const code = ctx.error instanceof HttpError ? ctx.error.status : 500;
+  const metadata = {
+    code,
+    method: ctx.req.method,
+    url: ctx.req.url,
+  };
 
-  async pageView(req: Request, ctx: FreshContext): Promise<void> {
-    const apiError = await this.#pirsch.hit(this.createHit(req, ctx));
+  await client.event(
+    getNameFromErrorCode(code),
+    createHit(ctx),
+    undefined,
+    metadata,
+  );
+}
 
-    if (apiError) {
-      error(
-        req.method,
-        path(req.url),
-        apiError.code,
-        apiError.message,
-        apiError.stack,
-      );
-    }
-  }
+function createHit(ctx: FreshContext): PirschHit {
+  const { req, info } = ctx;
+  const { url, headers } = req;
 
-  async pasteEvent(
-    req: Request,
-    res: Response,
-    ctx: FreshContext,
-  ): Promise<void> {
-    const apiError = await this.#pirsch.event(
-      "Create Paste",
-      this.createHit(req, ctx),
+  return {
+    url,
+    ip: (info.remoteAddr as Deno.NetAddr).hostname,
+    user_agent: headers.get("user-agent") || "unknown",
+    accept_language: headers.get("accept-language") || undefined,
+    sec_ch_ua: headers.get("sec-ch-ua") || undefined,
+    sec_ch_ua_mobile: headers.get("sec-ch-ua-mobile") || undefined,
+    sec_ch_ua_platform: headers.get("sec-ch-ua-platform") || undefined,
+    sec_ch_ua_platform_version: headers.get("sec-ch-ua-platform-version") ||
       undefined,
-      {
-        id: `${res.headers.get("location")?.split("/").pop()!}`,
-        size: `${req.headers.get("content-length") ?? 0} bytes`,
-      },
-    );
-
-    if (apiError) {
-      error(
-        req.method,
-        path(req.url),
-        apiError.code,
-        apiError.message,
-        apiError.stack,
-      );
-    }
-  }
-
-  async errorEvent(
-    req: Request,
-    ctx: FreshContext,
-    err: unknown,
-  ): Promise<void> {
-    const code = err instanceof HttpError ? err.status : 500;
-
-    const apiError = await this.#pirsch.event(
-      this.getNameFromErrorCode(code),
-      this.createHit(req, ctx),
+    sec_ch_width: headers.get("sec-ch-width") || undefined,
+    sec_ch_viewport_width: headers.get("sec-ch-viewport-width") ||
       undefined,
-      {
-        code,
-        method: req.method,
-        url: req.url,
-      },
-    );
+    referrer: headers.get("referer") || undefined,
+  };
+}
 
-    if (apiError) {
-      error(
-        req.method,
-        path(req.url),
-        apiError.code,
-        apiError.message,
-        apiError.stack,
-      );
-    }
-  }
-
-  private createHit(req: Request, ctx: FreshContext): PirschHit {
-    return {
-      url: req.url,
-      ip: (ctx.info.remoteAddr as Deno.NetAddr).hostname,
-      user_agent: req.headers.get("user-agent") || "",
-      accept_language: req.headers.get("accept-language") || undefined,
-      sec_ch_ua: req.headers.get("sec-ch-ua") || undefined,
-      sec_ch_ua_mobile: req.headers.get("sec-ch-ua-mobile") || undefined,
-      sec_ch_ua_platform: req.headers.get("sec-ch-ua-platform") || undefined,
-      sec_ch_ua_platform_version:
-        req.headers.get("sec-ch-ua-platform-version") || undefined,
-      sec_ch_width: req.headers.get("sec-ch-width") || undefined,
-      sec_ch_viewport_width: req.headers.get("sec-ch-viewport-width") ||
-        undefined,
-      referrer: req.headers.get("referer") || undefined,
-    };
-  }
-
-  private getNameFromErrorCode(code: number): string {
-    switch (code) {
-      case 400:
-        return "400 Bad request";
-      case 404:
-        return "404 Paste not found";
-      case 413:
-        return "413 Paste too large";
-      default:
-        return "500 Server error";
-    }
+function getNameFromErrorCode(code: number): string {
+  switch (code) {
+    case 400:
+      return "400 Bad request";
+    case 404:
+      return "404 Paste not found";
+    case 413:
+      return "413 Paste too large";
+    default:
+      return "500 Server error";
   }
 }

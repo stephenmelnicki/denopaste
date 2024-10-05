@@ -9,7 +9,6 @@ export default function Footer() {
           <li>
             <a
               class="p-2 hover:underline"
-              data-test-id="source-link"
               href="https://github.com/stephenmelnicki/denopaste"
               rel="noopener noreferrer"
               target="_blank"
