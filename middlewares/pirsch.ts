@@ -1,4 +1,4 @@
-import { type MiddlewareFn } from "fresh";
+import type { FreshContext, MiddlewareFn } from "fresh";
 import { Pirsch } from "pirsch";
 
 import { errorEvent, hit, pasteEvent } from "../analytics/mod.ts";
@@ -8,8 +8,10 @@ const accessToken = Deno.env.get("PIRSCH_ACCESS_TOKEN");
 
 let showedMissingEnvWarning = false;
 
-export default function reporter<T>(): MiddlewareFn<T> {
-  return async function reporterMiddleware(ctx) {
+export default function pirsch<T>(): MiddlewareFn<T> {
+  return async function pirschMiddleware(
+    ctx: FreshContext<T>,
+  ): Promise<Response> {
     if (hostname === undefined || accessToken === undefined) {
       if (!showedMissingEnvWarning) {
         showedMissingEnvWarning = true;

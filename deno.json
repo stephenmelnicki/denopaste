@@ -5,7 +5,7 @@
     "build": "deno run -A --unstable-kv dev.ts build",
     "preview": "deno run -A --unstable-kv main.ts",
     "check:types": "deno check .",
-    "test": "deno test -A --unstable-kv --ignore=e2e/",
+    "test": "deno test -A --unstable-kv --doc --ignore=e2e/",
     "e2e": "deno test -A e2e/"
   },
   "imports": {

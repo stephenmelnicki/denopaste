@@ -1,4 +1,4 @@
-import { type MiddlewareFn } from "fresh";
+import type { FreshContext, MiddlewareFn } from "fresh";
 
 enum Prefix {
   Incoming = "<--",
@@ -14,7 +14,9 @@ export function duration(start: number): string {
 }
 
 export default function logger<T>(): MiddlewareFn<T> {
-  return async function loggerMiddleware(ctx) {
+  return async function loggerMiddleware(
+    ctx: FreshContext<T>,
+  ): Promise<Response> {
     const { req, url } = ctx;
     console.info(`${Prefix.Incoming} ${req.method} ${url.pathname}`);
 

@@ -2,7 +2,7 @@ import { FreshContext, HttpError } from "fresh";
 import { PirschHit, PirschNodeApiClient } from "pirsch";
 
 /**
- * Reports a page hit event to the Pirsch client.
+ * Reports a page view to Pirsch.
  *
  * @param client The Pirsch client
  * @param ctx The Fresh context
@@ -15,7 +15,7 @@ export async function hit(
 }
 
 /**
- * Reports a paste creation event to the Pirsch client.
+ * Reports a paste creation event to Pirsch.
  *
  * @param client The Pirsch client
  * @param ctx The Fresh context
@@ -40,7 +40,7 @@ export async function pasteEvent(
 }
 
 /**
- * Reports an error event to the Pirsch client.
+ * Reports an error event to Pirsch.
  *
  * @param client The Pirsch client
  * @param ctx The Fresh context
@@ -64,6 +64,12 @@ export async function errorEvent(
   );
 }
 
+/**
+ * Create a Pirsch hit from the given Fresh context.
+ *
+ * @param ctx The Fresh context
+ * @returns The Pirsch hit
+ */
 function createHit(ctx: FreshContext): PirschHit {
   const { req, info } = ctx;
   const { url, headers } = req;
@@ -85,6 +91,12 @@ function createHit(ctx: FreshContext): PirschHit {
   };
 }
 
+/**
+ * Maps an HTTP status code to a human-readable error name.
+ *
+ * @param code The HTTP status code
+ * @returns The error name
+ */
 function getNameFromErrorCode(code: number): string {
   switch (code) {
     case 400:
