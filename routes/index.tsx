@@ -19,9 +19,11 @@ export const handler = define.handlers({
       const paste = new Paste(contents);
       await insert(ctx.state.kv, paste);
 
-      return new Response(undefined, {
-        headers: { "location": `/${paste.id}` },
-        status: 302,
+      const headers = new Headers();
+      headers.set("location", `/${paste.id}`);
+      return new Response(null, {
+        status: 303,
+        headers,
       });
     } catch (err: unknown) {
       if (err instanceof PasteEmptyError) {
