@@ -2,7 +2,7 @@
 
 <img align="right" src="https://deno.com/logo.svg" height="150px" alt="The Deno logo" >
 
-**Deno Paste** is a simple paste service built with Deno and Fresh.
+**Deno Paste** is a simple paste service built with Deno 🦕 and Fresh 🍋
 
 Some features:
 
