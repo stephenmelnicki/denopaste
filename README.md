@@ -7,9 +7,9 @@
 Some stand-out features:
 
 - Automatic paste expiration (one hour).
-- Easily copy a paste's contents to the clipboard.
-- Save a paste's contents to file.
-- Link directly to a paste's raw contents.
+- Copy paste to the clipboard.
+- Save paste to file.
+- Link directly to pastes' raw contents.
 
 ## Getting Started
 
