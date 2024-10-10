@@ -33,7 +33,7 @@ Deno.test("browser", async () => {
       .evaluate((el) => el.textContent);
 
     expect(title).toEqual(
-      "Deno Paste: A simple paste service built with Deno and Fresh",
+      "Deno Paste: A simple paste service built with Deno 🦕 and Fresh 🍋",
     );
 
     await page.locator("button").click();
