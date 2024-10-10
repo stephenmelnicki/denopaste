@@ -6,7 +6,7 @@ interface LineProps {
 export default function Line(props: LineProps) {
   const classes = [
     "before:bg-white",
-    "before:text-gray-500",
+    "before:text-gray-600",
     "before:inline-block",
     "before:mr-4",
     "before:pr-4",

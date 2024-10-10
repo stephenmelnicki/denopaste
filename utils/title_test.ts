@@ -3,6 +3,12 @@ import { HttpError } from "fresh";
 
 import { errorTitle, pageTitle } from "./title.ts";
 
+Deno.test("pageTitle returns default title when no contents are provided", () => {
+  expect(pageTitle()).toEqual(
+    "Deno Paste: A simple paste service built with Deno and Fresh",
+  );
+});
+
 Deno.test("pageTitle leaves contents untouched when under 64 chars long", () => {
   const title = "Hello, world!";
   expect(pageTitle(title)).toEqual(`${title} | Deno Paste`);

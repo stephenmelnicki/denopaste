@@ -5,6 +5,7 @@ import { PirschHit, PirschNodeApiClient } from "pirsch";
  * Reports a page hit event to the Pirsch client.
  *
  * @param client The Pirsch client
+ * @param ctx The Fresh context
  */
 export async function hit(
   client: PirschNodeApiClient,
@@ -17,9 +18,8 @@ export async function hit(
  * Reports a paste creation event to the Pirsch client.
  *
  * @param client The Pirsch client
- * @param req The incoming request
- * @param res The outgoing response
  * @param ctx The Fresh context
+ * @param res The outgoing response
  */
 export async function pasteEvent(
   client: PirschNodeApiClient,
@@ -43,9 +43,7 @@ export async function pasteEvent(
  * Reports an error event to the Pirsch client.
  *
  * @param client The Pirsch client
- * @param req The incoming request
  * @param ctx The Fresh context
- * @param err The error that occurred
  */
 export async function errorEvent(
   client: PirschNodeApiClient,

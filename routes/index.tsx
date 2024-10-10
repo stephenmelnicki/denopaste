@@ -1,15 +1,14 @@
 import { type FreshContext, HttpError, page } from "fresh";
 
 import { define, type State } from "../utils/define.ts";
+import { pageTitle } from "../utils/title.ts";
 import { insert } from "../data/mod.ts";
 import Paste, { PasteEmptyError, PasteTooLargeError } from "../data/paste.ts";
 import PasteForm from "../islands/PasteForm.tsx";
 
 export const handler = define.handlers({
   GET(ctx: FreshContext<State>) {
-    ctx.state.title =
-      "Deno Paste - A simple paste service built with Deno 🦕 and Fresh 🍋";
-
+    ctx.state.title = pageTitle("");
     return page();
   },
   async POST(ctx: FreshContext<State>) {

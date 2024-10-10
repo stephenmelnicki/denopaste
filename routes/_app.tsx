@@ -15,10 +15,8 @@ function App({ Component, state }: PageProps<never, State>) {
           name="description"
           content="A simple paste service built with Deno 🦕 and Fresh 🍋"
         />
-        <link
-          rel="icon"
-          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%221em%22 font-size=%2280%22>🦕</text></svg>"
-        />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="stylesheet" type="text/css" href="/styles.css" />
       </head>
       <body class="flex flex-col px-4 sm:px-6 py-8 mx-auto min-h-screen max-w-screen-md">

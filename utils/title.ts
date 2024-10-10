@@ -8,6 +8,7 @@ import { HttpError } from "fresh";
  * ```ts
  * import { expect } from "@std/expect";
  *
+ * expect(pageTitle()).toEqual("Deno Paste: A simple paste service built with Deno and Fresh");
  * expect(pageTitle("Hello, world!")).toEqual("Hello, world! | Deno Paste");
  * expect(pageTitle("A".repeat(70))).toEqual(`${"A".repeat(64)}... | Deno Paste`);
  * ```
@@ -15,7 +16,11 @@ import { HttpError } from "fresh";
  * @param contents The contents to create a title from
  * @returns The page title
  */
-export function pageTitle(contents: string): string {
+export function pageTitle(contents?: string): string {
+  if (!contents) {
+    return "Deno Paste: A simple paste service built with Deno and Fresh";
+  }
+
   const truncated = contents.length > 64
     ? `${contents.substring(0, 64)}...`
     : contents;

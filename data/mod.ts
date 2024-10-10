@@ -4,6 +4,14 @@ import Paste, { PasteTooLargeError } from "./paste.ts";
  * Retrieves a singleton instance of the Deno.Kv database. The connection is
  * opened on the first call to this function.
  *
+ * @example Usage
+ * ```ts
+ * import Paste from "./paste.ts";
+ *
+ * using kv = await getKvInstance();
+ * kv.list<Paste>({ prefix: ["pastes"]}) // []
+ * ```
+ *
  * @returns The Deno.Kv instance
  */
 export const getKvInstance: () => Promise<Deno.Kv> = (() => {
@@ -24,11 +32,11 @@ export const getKvInstance: () => Promise<Deno.Kv> = (() => {
  *
  * @example Usage
  * ```ts
- * const kv = await Deno.openKv(":memory:");
+ * using kv = await Deno.openKv(":memory:");
  * const paste = await getById(kv, "1");
- * paste.id // "1"
- * paste.contents // "Hello, world!"
- * paste.createdAt // Date object
+ * paste?.id // "1"
+ * paste?.contents // "Hello, world!"
+ * paste?.createdAt // Date object
  * ```
  *
  * @param kv The Deno.Kv instance to retrieve the paste from
@@ -46,7 +54,9 @@ export async function getById(kv: Deno.Kv, id: string): Promise<Paste | null> {
  *
  * @example Usage
  * ```ts
- * const kv = await Deno.openKv(":memory:");
+ * import Paste from "./paste.ts";
+ *
+ * using kv = await Deno.openKv(":memory:");
  * const paste = new Paste("Hello, world!");
  * await insert(kv, paste);
  * ```

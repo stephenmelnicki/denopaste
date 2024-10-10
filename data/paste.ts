@@ -4,7 +4,6 @@ import { ulid } from "@std/ulid";
  * Error object thrown when attempting to create an empty paste.
  */
 export class PasteEmptyError extends Error {
-  /** message indicating pastes can't be empty */
   override readonly message = "Paste can not be empty.";
 }
 
@@ -47,28 +46,22 @@ export default class Paste {
    *
    * const paste = new Paste("Hello, world!");
    * expect(paste.contents).toEqual("Hello, world!");
+   * expect(paste.id).toBeDefined();
+   * expect(paste.createdAt).toBeDefined();
    * ```
    *
    * @example Throw paste empty error
    * ```ts
    * import { expect } from "jsr:@std/expect";
    *
-   * try {
-   *  new Paste("");
-   * } catch (err) {
-   *  expect(err).toBeInstanceOf(PasteEmptyError);
-   * }
+   * expect(() => new Paste("")).toThrow(PasteEmptyError);
    * ```
    *
    * @example Throw paste too large error
    * ```ts
    * import { expect } from "jsr:@std/expect";
    *
-   * try {
-   *  new Paste("paste".repeat(1024 * 64));
-   * } catch (err) {
-   *  expect(err).toBeInstanceOf(PasteTooLargeError);
-   * }
+   * expect(() => new Paste("paste".repeat(1024 * 64))).toThrow(PasteTooLargeError);
    * ```
    *
    * @param contents The text contents of the paste.

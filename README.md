@@ -1,17 +1,15 @@
-<picture>
-  <img
-    alt="denopaste.com screenshot"
-    src="https://raw.githubusercontent.com/stephenmelnicki/denopaste/main/.readme-assets/screenshot.png"
-  >
-</picture>
-
-[![Denopaste](https://github.com/stephenmelnicki/denopaste/actions/workflows/ci.yml/badge.svg)](https://github.com/stephenmelnicki/denopaste/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-
 # Deno Paste
 
-A simple paste service built with [Deno](https://deno.land) 🦕 and
-[Fresh](https://fresh.deno.dev) 🍋
+<img align="right" src="https://deno.com/logo.svg" height="150px" alt="The Deno logo" >
+
+**Deno Paste** is a simple paste service built with Deno and Fresh.
+
+Some features:
+
+- Pastes automatically expire in one hour.
+- Easily copy paste contents to the clipboard.
+- Save the paste to file.
+- Link directly to a paste's raw content.
 
 ## Getting Started
 

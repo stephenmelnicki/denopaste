@@ -29,7 +29,7 @@ export default function ErrorPage({ error }: PageProps) {
         {description}
       </p>
       <div class="mt-16">
-        <a class="text-gray-500 hover:underline" href="/">
+        <a class="text-gray-600 hover:underline hover:text-blue-600" href="/">
           Back to the Homepage
         </a>
       </div>

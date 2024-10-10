@@ -30,7 +30,7 @@ export default function PasteActions({ paste }: Props) {
       <nav class="px-2 flex items-center justify-end">
         <a
           data-testid="view-raw"
-          class="p-2 hover:underline"
+          class="p-2 hover:underline hover:text-blue-600"
           href={`/${paste.id}/raw`}
         >
           View Raw

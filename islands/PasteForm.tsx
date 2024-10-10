@@ -1,7 +1,7 @@
 import { useCallback, useRef } from "preact/hooks";
 import { useSignal } from "@preact/signals";
 import type { JSX } from "preact";
-import { GoAlert } from "@preact-icons/go";
+import { GoAlert, GoUpload } from "@preact-icons/go";
 
 export default function PasteForm() {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -71,7 +71,7 @@ export default function PasteForm() {
         id="contents"
         name="contents"
         type="text"
-        class="font-mono block w-full h-56 mt-1 px-4 py-2 border rounded-md shadow-sm border-gray-200 hover:border-gray-500 focus:border-gray-500 transition-colors"
+        class="font-mono block w-full h-56 mt-1 px-4 py-2 border rounded-md shadow-sm outline-none border-gray-200 hover:border-gray-600 focus:border-gray-600 transition-colors"
         value={contents.value}
         onInput={onInput}
         onKeyDown={onKeyDown}
@@ -86,15 +86,16 @@ export default function PasteForm() {
           <span>{error.value}</span>
         </span>
       )}
-      <span class="block mt-2 text-sm text-gray-500">
+      <span class="block mt-2 text-sm text-gray-600">
         Pastes expire in one hour.
       </span>
       <div class="flex justify-end mt-4">
         <button
           type="submit"
-          class="font-medium px-4 py-2 rounded-md transition-colors duration-150 ease-in-out border-green-800 bg-green-700 text-white hover:bg-green-800 hover:border-green-900 shadow-sm"
+          class="px-4 py-2 inline-flex flex-shrink-0 whitespace-nowrap items-center gap-2 font-medium rounded-md transition-colors duration-150 ease-in-out border-green-800 bg-green-700 text-white hover:bg-green-800 hover:border-green-900 shadow-sm"
         >
-          Create Paste
+          <GoUpload class="h-4 w-4" />
+          Upload
         </button>
       </div>
     </form>
