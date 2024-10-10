@@ -4,12 +4,12 @@
 
 **Deno Paste** is a simple paste service built with Deno 🦕 and Fresh 🍋
 
-Some features:
+Some stand-out features:
 
-- Pastes automatically expire in one hour.
-- Easily copy paste contents to the clipboard.
-- Save the paste to file.
-- Link directly to a paste's raw content.
+- Automatic paste expiration (one hour).
+- Easily copy a paste's contents to the clipboard.
+- Save a paste's contents to file.
+- Link directly to a paste's raw contents.
 
 ## Getting Started
 
