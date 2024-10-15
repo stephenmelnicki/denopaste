@@ -16,16 +16,6 @@ export class PasteTooLargeError extends Error {
 }
 
 /**
- * An object representing the result of validating a paste's content.
- */
-export type ValidationResult = {
-  /** A boolean indicating whether validation was successful. */
-  ok: boolean;
-  /** A message describing why validation failed. */
-  message: string;
-};
-
-/**
  * An object representing a paste, including its unique identifier, contents,
  * and the date it was created on.
  */
@@ -50,20 +40,13 @@ export default class Paste {
    * expect(paste.createdAt).toBeDefined();
    * ```
    *
-   * @example Throw paste empty error
+   * @example Throw error
    * ```ts
    * import { expect } from "jsr:@std/expect";
    *
    * expect(() => new Paste("")).toThrow(PasteEmptyError);
-   * ```
-   *
-   * @example Throw paste too large error
-   * ```ts
-   * import { expect } from "jsr:@std/expect";
-   *
    * expect(() => new Paste("paste".repeat(1024 * 64))).toThrow(PasteTooLargeError);
    * ```
-   *
    * @param contents The text contents of the paste.
    * @throws {PasteEmptyError} If the contents are empty.
    * @throws {PasteTooLargeError} If the contents exceed 64KB in size.

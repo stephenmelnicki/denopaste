@@ -12,18 +12,18 @@ interface Data {
   paste: Paste;
 }
 
-export const handler = define.handlers<Data>({
-  async GET(ctx: FreshContext<State>) {
-    const paste = await getById(ctx.state.kv, ctx.params.id);
+async function GET(ctx: FreshContext<State>) {
+  const paste = await getById(ctx.state.kv, ctx.params.id);
 
-    if (!paste) {
-      throw new HttpError(404);
-    }
+  if (!paste) {
+    throw new HttpError(404);
+  }
 
-    ctx.state.title = pageTitle(paste.contents);
-    return page({ paste });
-  },
-});
+  ctx.state.title = pageTitle(paste.contents);
+  return page({ paste });
+}
+
+export const handler = define.handlers<Data>({ GET });
 
 function PasteById(props: PageProps<Data>) {
   const { paste } = props.data;

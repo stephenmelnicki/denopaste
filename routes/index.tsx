@@ -6,37 +6,41 @@ import { insert } from "../data/mod.ts";
 import Paste, { PasteEmptyError, PasteTooLargeError } from "../data/paste.ts";
 import PasteForm from "../islands/PasteForm.tsx";
 
-export const handler = define.handlers({
-  GET(ctx: FreshContext<State>) {
-    ctx.state.title = pageTitle("");
-    return page();
-  },
-  async POST(ctx: FreshContext<State>) {
-    const formData = await ctx.req.formData();
-    const contents = formData.get("contents")?.toString() ?? "";
+function GET(ctx: FreshContext<State>) {
+  ctx.state.title = pageTitle("");
+  return page();
+}
 
-    try {
-      const paste = new Paste(contents);
-      await insert(ctx.state.kv, paste);
+async function POST(ctx: FreshContext<State>) {
+  const formData = await ctx.req.formData();
+  const contents = formData.get("contents")?.toString() ?? "";
 
-      const headers = new Headers();
-      headers.set("location", `/${paste.id}`);
-      return new Response(null, {
-        status: 303,
-        headers,
-      });
-    } catch (err: unknown) {
-      if (err instanceof PasteEmptyError) {
-        throw new HttpError(400, err.message);
-      }
+  try {
+    const paste = new Paste(contents);
+    await insert(ctx.state.kv, paste);
 
-      if (err instanceof PasteTooLargeError) {
-        throw new HttpError(413, err.message);
-      }
-
-      throw err;
+    const headers = new Headers();
+    headers.set("location", `/${paste.id}`);
+    return new Response(null, {
+      status: 303,
+      headers,
+    });
+  } catch (err: unknown) {
+    if (err instanceof PasteEmptyError) {
+      throw new HttpError(400, err.message);
     }
-  },
+
+    if (err instanceof PasteTooLargeError) {
+      throw new HttpError(413, err.message);
+    }
+
+    throw err;
+  }
+}
+
+export const handler = define.handlers({
+  GET,
+  POST,
 });
 
 function Home() {
