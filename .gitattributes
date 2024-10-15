@@ -1,2 +1,5 @@
-# enforce unix newlines
+# use unix line endings in all text files
 * text=auto eol=lf
+
+# images
+*.png filter=lfs diff=lfs merge=lfs -text
