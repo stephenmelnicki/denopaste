@@ -4,8 +4,9 @@ on: [deployment_status]
 
 jobs:
   test:
-    name: test
+    name: e2e
     runs-on: ubuntu-latest
+
     timeout-minutes: 5
     if: github.event.deployment_status.state == 'success' && github.event.deployment_status.creator.login == 'deno-deploy[bot]'
 
@@ -14,9 +15,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup deno
-        uses: denoland/setup-deno@v1
+        uses: denoland/setup-deno@v2
         with:
-          deno-version: canary
+          deno-version: v2.x
 
       - name: Run e2e tests
         run: deno task e2e -- --deployed

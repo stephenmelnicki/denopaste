@@ -19,10 +19,10 @@ jobs:
       - name: Clone repository
         uses: actions/checkout@v4
 
-      - name: Install deno
-        uses: denoland/setup-deno@v1
+      - name: Setup deno
+        uses: denoland/setup-deno@v2
         with:
-          deno-version: canary
+          deno-version: 2.x
 
       - name: Build step
         run: deno task build
