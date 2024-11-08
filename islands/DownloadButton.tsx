@@ -24,7 +24,7 @@ export default function DownloadButton({ id, contents }: Props) {
     } catch (err) {
       console.error("error downloading paste", err);
     }
-  }, []);
+  }, [id, contents]);
 
   return (
     <button
