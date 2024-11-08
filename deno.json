@@ -20,7 +20,6 @@
     "fresh": "jsr:@fresh/core@^2.0.0-alpha.19",
     "pirsch": "npm:pirsch-sdk@^2.7.0",
     "preact": "npm:preact@^10.22.1",
-    "preact-hint": "npm:preact-hint@^0.3.0",
     "tailwindcss": "npm:tailwindcss@3.4.1",
     "tailwindcss/plugin": "npm:/tailwindcss@3.4.1/plugin.js"
   },
