@@ -1,7 +1,7 @@
 import { expect } from "@std/expect";
 
 const address = Deno.args.includes("--deployed")
-  ? "https://denopaste.com"
+  ? "https://denopaste.deno.dev"
   : "http://localhost:8000";
 
 function createPaste(
