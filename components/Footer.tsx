@@ -8,7 +8,7 @@ export default function Footer() {
         <ul class="flex flex-row justify-center items-center gap-4">
           <li>
             <a
-              class="p-2 hover:underline hover:text-blue-600"
+              class="p-2 hover:text-blue-600"
               href="https://github.com/stephenmelnicki/denopaste"
               rel="noopener noreferrer"
               target="_blank"
@@ -18,7 +18,7 @@ export default function Footer() {
           </li>
           <li>
             <a
-              class="p-2 hover:underline hover:text-blue-600"
+              class="p-2 hover:text-blue-600"
               href="https://raw.githubusercontent.com/stephenmelnicki/denopaste/main/LICENSE"
               rel="noopener noreferrer"
               target="_blank"

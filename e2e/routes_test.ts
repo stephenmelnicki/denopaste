@@ -24,7 +24,7 @@ Deno.test("GET / 200 OK", async () => {
   expect(response.status).toBe(200);
   expect(text).toContain("Deno Paste");
   expect(text).toContain(
-    "A simple paste service built with Deno 🦕 and Fresh 🍋",
+    "A simple plain text storage service built with Deno 🦕 and Fresh 🍋",
   );
 });
 

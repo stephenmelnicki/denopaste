@@ -1,10 +1,14 @@
 import { type FreshContext, HttpError, page } from "fresh";
 
-import { define, type State } from "../utils/define.ts";
-import { pageTitle } from "../utils/title.ts";
-import { insert } from "../data/mod.ts";
-import Paste, { PasteEmptyError, PasteTooLargeError } from "../data/paste.ts";
-import PasteForm from "../islands/PasteForm.tsx";
+import PasteForm from "islands/PasteForm.tsx";
+import { define, type State } from "utils/fresh.ts";
+import {
+  addPaste,
+  createPaste,
+  PasteEmptyError,
+  PasteTooLargeError,
+} from "data/pastes.ts";
+import { pageTitle } from "utils/title.ts";
 
 function GET(ctx: FreshContext<State>) {
   ctx.state.title = pageTitle("");
@@ -16,8 +20,8 @@ async function POST(ctx: FreshContext<State>) {
   const contents = formData.get("contents")?.toString() ?? "";
 
   try {
-    const paste = new Paste(contents);
-    await insert(ctx.state.kv, paste);
+    const paste = createPaste(contents);
+    await addPaste(paste);
 
     const headers = new Headers();
     headers.set("location", `/${paste.id}`);
@@ -51,4 +55,4 @@ function Home() {
   );
 }
 
-export default define.page(Home);
+export default define.page<typeof handler>(Home);

@@ -1,11 +1,10 @@
-import { type PageProps } from "fresh";
-import { asset } from "fresh/runtime";
+import type { PageProps } from "fresh";
 
-import { define, type State } from "../utils/define.ts";
-import Header from "../components/Header.tsx";
-import Footer from "../components/Footer.tsx";
+import type { State } from "utils/fresh.ts";
+import Header from "components/Header.tsx";
+import Footer from "components/Footer.tsx";
 
-function App({ Component, state }: PageProps<never, State>) {
+export default function App({ Component, state }: PageProps<never, State>) {
   return (
     <html lang="en">
       <head>
@@ -14,13 +13,12 @@ function App({ Component, state }: PageProps<never, State>) {
         <title>{state.title}</title>
         <meta
           name="description"
-          content="A simple paste service built with Deno 🦕 and Fresh 🍋"
+          content="A simple plain text storage service built with Deno 🦕 and Fresh 🍋"
         />
-        <link rel="icon" href={asset("/favicon.ico")} />
-        <link rel="apple-touch-icon" href={asset("/apple-touch-icon.png")} />
-        <link rel="stylesheet" type="text/css" href={asset("/styles.css")} />
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="stylesheet" type="text/css" href="/styles.css" />
       </head>
-      <body class="flex flex-col px-4 sm:px-6 py-8 mx-auto min-h-screen max-w-screen-md">
+      <body class="flex flex-col px-4 sm:px-6 py-8 mx-auto min-h-screen max-w-screen-lg">
         <Header />
         <Component />
         <Footer />
@@ -28,5 +26,3 @@ function App({ Component, state }: PageProps<never, State>) {
     </html>
   );
 }
-
-export default define.page(App);

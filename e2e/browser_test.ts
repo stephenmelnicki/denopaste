@@ -23,23 +23,55 @@ async function withBrowser(
   }
 }
 
-Deno.test("browser", async () => {
+Deno.test("renders", async () => {
   await withBrowser(async (page, address) => {
     await page.goto(address, { waitUntil: "load" });
     await page.waitForSelector("form");
 
-    let title = await page
+    const title = await page
       .locator<HTMLTitleElement>("title")
       .evaluate((el) => el.textContent);
 
     expect(title).toEqual(
-      "Deno Paste: A simple paste service built with Deno 🦕 and Fresh 🍋",
+      "Deno Paste: A simple plain text storage service built with Deno 🦕 and Fresh 🍋",
     );
+
+    const label = await page
+      .locator<HTMLLabelElement>("label")
+      .evaluate((el) => el.textContent);
+
+    expect(label).toEqual("Paste");
+
+    const textarea = await page
+      .locator<HTMLTextAreaElement>("textarea")
+      .evaluate((el) => el.textContent);
+
+    expect(textarea).toBeDefined();
+    expect(textarea).toEqual("");
+
+    const expirationMessage = await page
+      .locator<HTMLSpanElement>("span")
+      .evaluate((el) => el.textContent);
+
+    expect(expirationMessage).toEqual("Pastes expire in one hour.");
+
+    const button = await page
+      .locator<HTMLButtonElement>("button")
+      .evaluate((el) => el.textContent);
+
+    expect(button).toEqual("Create Paste");
+  });
+});
+
+Deno.test("empty paste", async () => {
+  await withBrowser(async (page, address) => {
+    await page.goto(address, { waitUntil: "load" });
+    await page.waitForSelector("form");
 
     await page.locator("button").click();
 
     let errorMessage = await page
-      .locator<HTMLSpanElement>("span[data-testid='error-message'")
+      .locator<HTMLSpanElement>("span")
       .evaluate((el) => el.textContent);
 
     expect(errorMessage).toEqual("Paste must not be empty.");
@@ -48,20 +80,25 @@ Deno.test("browser", async () => {
     await page.locator("button").click();
 
     errorMessage = await page
-      .locator<HTMLSpanElement>("span[data-testid='error-message'")
+      .locator<HTMLSpanElement>("span")
       .evaluate((el) => el.textContent);
 
     expect(errorMessage).toEqual("Paste must not be empty.");
+  });
+});
 
-    await page.reload();
+Deno.test("paste submit", async () => {
+  await withBrowser(async (page, address) => {
+    await page.goto(address, { waitUntil: "load" });
     await page.waitForSelector("form");
+
     await page.locator("textarea").fill("Hello, deno paste!");
     await page.locator("button").click();
     await page.waitForNavigation();
 
     expect(page.url).not.toEqual(address);
 
-    title = await page
+    const title = await page
       .locator<HTMLTitleElement>("title")
       .evaluate((el) => el.textContent);
 

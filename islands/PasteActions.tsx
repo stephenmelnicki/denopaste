@@ -1,9 +1,9 @@
 import { useMemo } from "preact/hooks";
 
-import Paste from "../data/paste.ts";
-import CopyToClipboardButton from "../islands/CopyToClipboardButton.tsx";
-import DownloadButton from "../islands/DownloadButton.tsx";
-import { byteSize } from "../utils/bytes.ts";
+import CopyToClipboardButton from "islands/CopyToClipboardButton.tsx";
+import DownloadButton from "islands/DownloadButton.tsx";
+import type { Paste } from "data/pastes.ts";
+import { byteSize } from "utils/bytes.ts";
 
 interface Props {
   paste: Paste;
@@ -16,12 +16,12 @@ export default function PasteActions({ paste }: Props) {
   );
 
   const bytes = useMemo(
-    () => byteSize(paste.contents),
+    () => byteSize(paste.contents.trim()),
     [paste],
   );
 
   return (
-    <div class="flex items-center justify-between border rounded-t-md bg-gray-100 border-gray-300">
+    <div class="flex items-center justify-between border rounded-t-md bg-gray-100 border-gray-300 text-sm">
       <div class="pl-3 py-3 flex items-center gap-2">
         <p>{`${lines} lines`}</p>
         <span>&bull;</span>

@@ -17,7 +17,7 @@ export default function CopyToClipboardButton({ contents }: Props) {
     } catch (err) {
       console.error("error copying paste to clipboard", err);
     }
-  }, [title, contents]);
+  }, [contents]);
 
   return (
     <button

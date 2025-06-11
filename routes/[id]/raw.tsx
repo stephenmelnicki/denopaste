@@ -1,10 +1,10 @@
 import { type FreshContext } from "fresh";
 
-import { define, type State } from "../../utils/define.ts";
-import { getById } from "../../data/mod.ts";
+import { define, type State } from "utils/fresh.ts";
+import { getPasteById } from "data/pastes.ts";
 
 async function GET(ctx: FreshContext<State>) {
-  const paste = await getById(ctx.state.kv, ctx.params.id);
+  const paste = await getPasteById(ctx.params.id);
 
   if (!paste) {
     return new Response("Not found", { status: 404 });

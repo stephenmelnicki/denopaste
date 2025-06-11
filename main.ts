@@ -1,17 +1,14 @@
-import "@std/dotenv/load";
+import { App, fsRoutes, staticFiles } from "fresh";
 
-import { App, fsRoutes, staticFiles, trailingSlashes } from "fresh";
+import logger from "middlewares/logger.ts";
+import type { State } from "utils/fresh.ts";
 
-import logger from "./middlewares/logger.ts";
-import pirsch from "./middlewares/pirsch.ts";
-
-export const app = new App({ root: import.meta.url })
+export const app = new App<State>()
   .use(staticFiles())
-  .use(trailingSlashes("never"))
-  .use(logger())
-  .use(pirsch());
+  .use(logger());
 
 await fsRoutes(app, {
+  dir: "./",
   loadIsland: (path) => import(`./islands/${path}`),
   loadRoute: (path) => import(`./routes/${path}`),
 });

@@ -1,7 +1,6 @@
+_fresh/
+vendor/
+node_modules/
 .env
 .DS_Store
-*.sqlite3*
-
-_fresh/
 coverage/
-node_modules/

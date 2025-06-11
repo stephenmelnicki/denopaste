@@ -6,7 +6,7 @@ export default function Header() {
           <a href="/">Deno Paste</a>
         </h1>
         <p class="text-gray-600 mt-1">
-          A simple paste service built with Deno 🦕 and Fresh 🍋
+          A simple plain text storage service built with Deno 🦕 and Fresh 🍋
         </p>
       </hgroup>
     </header>
